@@ -10,3 +10,10 @@ export type Jar = {
   is_finished: boolean;
   accumulated: number;
 };
+
+export type JarStatisticRecord = {
+  id: number;
+  jar_id: number;
+  accumulated: number;
+  created_at: string;
+};

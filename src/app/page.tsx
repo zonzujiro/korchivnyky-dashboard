@@ -3,8 +3,11 @@ import Image from 'next/image';
 import type { Jar } from './types';
 import styles from './page.module.css';
 import { getJars } from './dal/api';
+
 import { JarsList } from './JarsList/JarsList';
 import { Progress } from './Progress/Progress';
+import { Statistics } from './Statistics/Statistics';
+import { statistics } from './dal/mocks';
 
 const GOAL = 2500000;
 
@@ -34,6 +37,7 @@ export default async function Home() {
       <main className={styles.main}>
         <Progress goal={GOAL} currentSum={currentSum} />
         <JarsList jars={jars} />
+        <Statistics jars={jars} statistics={statistics} />
       </main>
     </>
   );
