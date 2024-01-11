@@ -1,13 +1,13 @@
 import Image from 'next/image';
+import randomColor from 'randomcolor';
 
 import type { Jar } from './types';
 import styles from './page.module.css';
-import { getJars } from './dal/api';
+import { getJars, getStatistics } from './dal/api';
 
 import { JarsList } from './JarsList/JarsList';
 import { Progress } from './Progress/Progress';
 import { Statistics } from './Statistics/Statistics';
-import { statistics } from './dal/mocks';
 import { StateProvider } from './dal/StateProvider';
 
 const GOAL = 2500000;
@@ -20,6 +20,12 @@ const getGatheredMoney = (jars: Array<Jar>) => {
 
 export default async function Home() {
   const jars = await getJars();
+  const statistics = await getStatistics();
+
+  const jarsWithColors = jars.map((jar) => ({
+    ...jar,
+    color: randomColor(),
+  }));
 
   const currentSum = getGatheredMoney(jars);
 
@@ -38,8 +44,8 @@ export default async function Home() {
       <main className={styles.main}>
         <StateProvider>
           <Progress goal={GOAL} currentSum={currentSum} />
-          <JarsList jars={jars} />
-          <Statistics jars={jars} statistics={statistics} />
+          <JarsList jars={jarsWithColors} />
+          <Statistics jars={jarsWithColors} statistics={statistics} />
         </StateProvider>
       </main>
     </>

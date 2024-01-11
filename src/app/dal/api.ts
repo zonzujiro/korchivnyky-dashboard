@@ -3,8 +3,22 @@ import { jars, statistics } from './mocks';
 
 type FoundersIds = number;
 
-export const getJars = (): Promise<Array<Jar>> => Promise.resolve(jars);
-export const getJarsStatistics = () => Promise.resolve(statistics);
+const getData = async (url: string) => {
+  const response = await fetch(url);
+  const json = await response.json();
+
+  return json;
+};
+
+export const getJars = async (): Promise<Array<Jar>> => {
+  return getData('https://jars.fly.dev/jars');
+};
+
+export const getStatistics = () => {
+  return Promise.resolve(statistics);
+  // return getData('https://jars.fly.dev/statistics');
+};
+
 export const addJar = async (post: {
   url: string;
   ownerName: 'Іра';
