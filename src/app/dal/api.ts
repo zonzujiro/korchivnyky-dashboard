@@ -10,19 +10,35 @@ const getData = async (url: string) => {
   return json;
 };
 
+const postData = async (url: string, payload?: Record<string, any>) => {
+  const options = payload ? { body: JSON.stringify(payload) } : {};
+
+  const response = await fetch(url, {
+    method: 'post',
+    ...options,
+  });
+
+  const json = await response.json();
+
+  return json;
+};
+
 export const getJars = async (): Promise<Array<Jar>> => {
   return getData('https://jars.fly.dev/jars');
 };
 
 export const getStatistics = () => {
-  return Promise.resolve(statistics);
-  // return getData('https://jars.fly.dev/statistics');
+  // return Promise.resolve(statistics);
+  return postData('https://jars.fly.dev/statistics');
 };
 
 export const addJar = async (post: {
   url: string;
-  ownerName: 'Іра';
+  owner: string;
   parentJarId?: FoundersIds;
 }) => {
-  return post;
+  await new Promise((r) => {
+    setTimeout(r, 500);
+  });
+  return { ...jars[0], ...post };
 };

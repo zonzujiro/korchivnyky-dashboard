@@ -8,6 +8,7 @@ import type { Jar, JarStatisticRecord } from '../types';
 
 import styles from './Statistics.module.css';
 import { AppContext } from '../dal/StateProvider';
+import { getStatistics } from '../dal/api';
 
 const percentages = ['100%', '50%', '0%'];
 
@@ -99,15 +100,13 @@ const StatisticsSection = ({
 
 export const Statistics = ({
   statistics,
-  jars,
 }: {
   statistics: Array<JarStatisticRecord>;
-  jars: Array<Jar>;
 }) => {
+  const { selectedJars, jars } = useContext(AppContext);
+
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndData] = useState('');
-
-  const { selectedJars } = useContext(AppContext);
 
   const filteredStatistics =
     selectedJars.length > 0
