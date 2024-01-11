@@ -339,4 +339,70 @@ export const statistics = [
     accumulated: 98000,
     created_at: '2023-12-29T10:40:07.670Z',
   },
-];
+
+  {
+    id: 430,
+    jar_id: 12,
+    accumulated: 100200,
+    created_at: '2023-12-30T14:00:08.922Z',
+  },
+  {
+    id: 410,
+    jar_id: 12,
+    accumulated: 100200,
+    created_at: '2023-12-30T13:30:07.073Z',
+  },
+  {
+    id: 390,
+    jar_id: 12,
+    accumulated: 100200,
+    created_at: '2023-12-30T13:29:06.602Z',
+  },
+  {
+    id: 360,
+    jar_id: 12,
+    accumulated: 100200,
+    created_at: '2023-12-30T13:28:06.783Z',
+  },
+  {
+    id: 350,
+    jar_id: 12,
+    accumulated: 100200,
+    created_at: '2023-12-30T13:27:06.325Z',
+  },
+  {
+    id: 330,
+    jar_id: 12,
+    accumulated: 100200,
+    created_at: '2023-12-30T13:26:06.667Z',
+  },
+  {
+    id: 310,
+    jar_id: 12,
+    accumulated: 100200,
+    created_at: '2023-12-30T13:25:09.089Z',
+  },
+  {
+    id: 280,
+    jar_id: 12,
+    accumulated: 98000,
+    created_at: '2023-12-30T10:42:07.037Z',
+  },
+  {
+    id: 270,
+    jar_id: 12,
+    accumulated: 98000,
+    created_at: '2023-12-30T10:41:07.185Z',
+  },
+  {
+    id: 250,
+    jar_id: 12,
+    accumulated: 98000,
+    created_at: '2023-12-30T10:40:07.670Z',
+  },
+].map((item) => {
+  return {
+    ...item,
+    created_at: item.created_at.slice(0, 10),
+  };
+});
