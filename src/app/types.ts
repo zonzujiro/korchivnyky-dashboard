@@ -9,6 +9,7 @@ export type Jar = {
   logo: null | string;
   is_finished: boolean;
   accumulated: number;
+  color: string;
 };
 
 export type JarStatisticRecord = {

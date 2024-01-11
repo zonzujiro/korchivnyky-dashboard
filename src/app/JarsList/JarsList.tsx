@@ -1,12 +1,13 @@
 'use client';
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useContext } from 'react';
 import Image from 'next/image';
 import classNames from 'classnames';
 
 import type { Jar } from '../types';
 
 import styles from './JarsList.module.css';
+import { AppContext } from '../dal/StateProvider';
 
 type JarItemProps = {
   jar: Jar;
@@ -65,8 +66,8 @@ const JarItem = ({ jar, isSelected, onClick }: JarItemProps) => {
         {/* <a className={styles['jar-link']} href={url}>
           Посилання на банку
         </a> */}
-        <span>Зібрано: {accumulated}</span>
-        {goal && <span> 🎯 Мета: {goal}</span>}
+        <span>Зібрано: {accumulated}₴</span>
+        {goal && <span> 🎯 Мета: {goal}₴</span>}
       </div>
     </li>
   );
@@ -79,16 +80,8 @@ type JarsListProps = {
 export const JarsList = (props: JarsListProps) => {
   const { jars } = props;
 
-  const [selectedJars, setSelectedJars] = useState<number[]>([]);
   const [isAllVisible, setIsAllVisible] = useState(jars.length < 10);
-
-  const toggleJarSelection = (jarId: number) => {
-    if (selectedJars.includes(jarId)) {
-      setSelectedJars(selectedJars.filter((id) => jarId !== id));
-    } else {
-      setSelectedJars([...selectedJars, jarId]);
-    }
-  };
+  const { selectedJars, setSelectedJars } = useContext(AppContext);
 
   const toRender = isAllVisible ? jars : jars.slice(0, 10);
 
@@ -111,7 +104,7 @@ export const JarsList = (props: JarsListProps) => {
             key={item.id}
             jar={item}
             isSelected={selectedJars.includes(item.id)}
-            onClick={() => toggleJarSelection(item.id)}
+            onClick={() => setSelectedJars(item.id)}
           />
         ))}
       </ol>

@@ -10,9 +10,9 @@ export const Progress = ({ goal, currentSum }: ProgressProps) => {
 
   return (
     <div className={styles.progress}>
-      <h3>Мета: {goal} гривень</h3>
+      <h3>Мета: {goal}₴</h3>
       <h3>
-        Зібрано {percentage}: {currentSum} гривень
+        Зібрано {percentage}: {currentSum}₴
       </h3>
       <div className={styles['progress-bar']}>
         <div

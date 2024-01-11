@@ -10,8 +10,7 @@
 .statistics-section {
   display: flex;
   height: 100%;
-  align-items: flex-end;
-  border-bottom: 1px solid black;
+  align-items: baseline;
   padding-right: 30px;
 }
 
@@ -28,6 +27,18 @@
   display: flex;
 }
 
+.statistics-item {
+  height: 100%;
+  display: flex;
+  flex-flow: column;
+}
+
+.jar-owner {
+  transform: rotate(45deg);
+  margin-top: 30px;
+  font-size: 0.75em;
+}
+
 .statistics-item-date {
   align-self: center;
   padding: 10px;
@@ -38,19 +49,21 @@
   flex-direction: column;
   justify-content: space-between;
   padding-right: 15px;
-  padding-bottom: calc(1em + 20px);
+  padding-top: calc(1em + 20px);
+  height: 350px;
 }
 
 .chart {
-  height: 400px;
+  height: 450px;
   width: 100%;
   display: flex;
   align-items: flex-end;
+  overflow-x: scroll;
 }
 
-.statistics-item {
+.statistics-bar {
   width: 30px;
   height: 100px;
-  background: green;
   margin-right: 15px;
+  max-height: 300px;
 }

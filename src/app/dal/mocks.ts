@@ -1,3 +1,5 @@
+import randomColor from 'randomcolor';
+
 export const jars = [
   {
     id: 20,
@@ -276,7 +278,10 @@ export const jars = [
     is_finished: false,
     accumulated: 41552,
   },
-];
+].map((jar) => ({
+  ...jar,
+  color: randomColor(),
+}));
 
 export const statistics = [
   {
@@ -287,43 +292,43 @@ export const statistics = [
   },
   {
     id: 41,
-    jar_id: 12,
-    accumulated: 100200,
+    jar_id: 36,
+    accumulated: 200,
     created_at: '2023-12-29T13:30:07.073Z',
   },
   {
     id: 39,
-    jar_id: 12,
-    accumulated: 100200,
+    jar_id: 35,
+    accumulated: 1200,
     created_at: '2023-12-29T13:29:06.602Z',
   },
   {
     id: 36,
-    jar_id: 12,
-    accumulated: 100200,
+    jar_id: 36,
+    accumulated: 10200,
     created_at: '2023-12-29T13:28:06.783Z',
   },
   {
     id: 35,
-    jar_id: 12,
+    jar_id: 35,
     accumulated: 100200,
     created_at: '2023-12-29T13:27:06.325Z',
   },
   {
     id: 33,
-    jar_id: 12,
+    jar_id: 33,
     accumulated: 100200,
     created_at: '2023-12-29T13:26:06.667Z',
   },
   {
     id: 31,
-    jar_id: 12,
+    jar_id: 31,
     accumulated: 100200,
     created_at: '2023-12-29T13:25:09.089Z',
   },
   {
     id: 28,
-    jar_id: 12,
+    jar_id: 28,
     accumulated: 98000,
     created_at: '2023-12-29T10:42:07.037Z',
   },
@@ -391,7 +396,7 @@ export const statistics = [
   {
     id: 270,
     jar_id: 12,
-    accumulated: 98000,
+    accumulated: 8000,
     created_at: '2023-12-30T10:41:07.185Z',
   },
   {
