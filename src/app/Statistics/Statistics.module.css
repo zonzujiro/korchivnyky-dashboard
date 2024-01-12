@@ -12,6 +12,7 @@
   height: 100%;
   align-items: baseline;
   padding-right: 30px;
+  overflow-y: hidden;
 }
 
 .date-inputs {
@@ -37,6 +38,7 @@
   transform: rotate(45deg);
   margin-top: 30px;
   font-size: 0.75em;
+  width: 60px;
 }
 
 .statistics-item-date {

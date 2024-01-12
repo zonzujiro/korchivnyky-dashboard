@@ -11,6 +11,15 @@ import { AppContext } from '../dal/StateProvider';
 import { getStatistics } from '../dal/api';
 
 const percentages = ['100%', '50%', '0%'];
+const STRIPES_COLOR = randomColor();
+
+const getInitialDate = () => {
+  const today = new Date();
+
+  const month = `${today.getMonth() + 1}`.padStart(2, '0');
+
+  return `${today.getFullYear()}-${month}-${today.getDate()}`;
+};
 
 const useDateFilter = (
   byDates: Record<string, Array<JarStatisticRecord>>,
@@ -45,10 +54,22 @@ const getBarHeight = (
   item: JarStatisticRecord,
   jar: Jar
 ): React.CSSProperties => {
-  const { goal, color } = jar;
+  const GOAL = 30000;
+
+  let { goal, color } = jar;
   const { accumulated } = item;
 
-  const percentage = `${Math.round((100 * accumulated) / goal)}%`;
+  const percentage = `${Math.round((100 * accumulated) / (goal || GOAL))}%`;
+
+  if (goal === null) {
+    color = `repeating-linear-gradient(
+      45deg,
+      ${color},
+      ${color} 10px,
+      ${STRIPES_COLOR} 10px,
+      ${STRIPES_COLOR} 20px
+    )`;
+  }
 
   return {
     height: percentage,
@@ -81,7 +102,7 @@ const StatisticsSection = ({
                 className={styles['statistics-bar']}
                 style={getBarHeight(entry, jar)}
               />
-              <span className={styles['jar-owner']}>{jar.owner_name}</span>
+              <div className={styles['jar-owner']}>{jar.owner_name}</div>
               <Tooltip anchorSelect={`#statistics-bar-${index}`}>
                 <p>
                   <strong>Зібрано:</strong> {jar.accumulated}₴
@@ -105,8 +126,8 @@ export const Statistics = ({
 }) => {
   const { selectedJars, jars } = useContext(AppContext);
 
-  const [startDate, setStartDate] = useState('');
-  const [endDate, setEndData] = useState('');
+  const [startDate, setStartDate] = useState(getInitialDate());
+  const [endDate, setEndData] = useState(getInitialDate());
 
   const filteredStatistics =
     selectedJars.length > 0
@@ -122,6 +143,8 @@ export const Statistics = ({
     ({ created_at }) => created_at
   ) as Record<string, Array<JarStatisticRecord>>;
 
+  console.log({ recordsByDates });
+
   const filteredDates = useDateFilter(recordsByDates, startDate, endDate);
 
   return (
@@ -134,6 +157,7 @@ export const Statistics = ({
           className={styles['date-input']}
           onChange={(ev) => setStartDate(ev.target.value)}
           value={startDate}
+          max={endDate}
         />
         <label htmlFor='end-date'>Кінцева дата</label>
         <input
@@ -142,6 +166,7 @@ export const Statistics = ({
           className={styles['date-input']}
           onChange={(ev) => setEndData(ev.target.value)}
           value={endDate}
+          min={startDate}
         />
       </div>
       <div className={styles.statistics}>

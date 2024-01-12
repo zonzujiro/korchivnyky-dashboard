@@ -44,14 +44,17 @@
   margin: 10px 0 20px 0;
 }
 
+.add-jar-inputs > button {
+  margin-top: 10px;
+}
+
 .add-jar-inputs > h3 {
   margin-bottom: 10px;
 }
 
-#url-input {
-  width: 100px;
+.jar-url-input {
+  width: 270px;
 }
-
 .loader {
   position: absolute;
   width: 100%;
@@ -94,4 +97,10 @@
 .controls {
   display: flex;
   justify-content: space-between;
+}
+
+.form-error {
+  margin-top: 20px;
+  font-size: 0.8em;
+  color: orange;
 }

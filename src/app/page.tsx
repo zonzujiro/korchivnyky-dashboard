@@ -1,5 +1,4 @@
 import Image from 'next/image';
-import randomColor from 'randomcolor';
 
 import type { Jar } from './types';
 import styles from './page.module.css';
@@ -23,10 +22,12 @@ export default async function Home() {
   const jars = await getJars();
   const statistics = await getStatistics();
 
-  const jarsWithColors = jars.map((jar) => ({
-    ...jar,
-    color: randomColor(),
-  }));
+  const statisticsWithClearedDates = statistics.map((item) => {
+    return {
+      ...item,
+      created_at: item.created_at.slice(0, 10),
+    };
+  });
 
   const currentSum = getGatheredMoney(jars);
 
@@ -43,10 +44,10 @@ export default async function Home() {
         <h1 className={styles['site-name']}>Корчівникі</h1>
       </header>
       <main className={styles.main}>
-        <StateProvider jars={jarsWithColors}>
+        <StateProvider jars={jars}>
           <Progress goal={GOAL} currentSum={currentSum} />
           <JarsList />
-          <Statistics statistics={statistics} />
+          <Statistics statistics={statisticsWithClearedDates} />
         </StateProvider>
       </main>
     </>

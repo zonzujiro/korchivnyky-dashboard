@@ -1,4 +1,4 @@
-import type { Jar } from '../types';
+import type { Jar, JarStatisticRecord } from '../types';
 import { jars, statistics } from './mocks';
 
 type FoundersIds = number;
@@ -27,12 +27,11 @@ export const getJars = async (): Promise<Array<Jar>> => {
   return getData('https://jars.fly.dev/jars');
 };
 
-export const getStatistics = () => {
-  // return Promise.resolve(statistics);
+export const getStatistics = (): Promise<Array<JarStatisticRecord>> => {
   return postData('https://jars.fly.dev/statistics');
 };
 
-export const addJar = async (post: {
+export const postJar = async (post: {
   url: string;
   owner: string;
   parentJarId?: FoundersIds;

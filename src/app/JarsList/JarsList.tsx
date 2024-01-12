@@ -7,8 +7,10 @@ import classNames from 'classnames';
 import type { Jar } from '../types';
 
 import styles from './JarsList.module.css';
-import { AppContext } from '../dal/StateProvider';
-import { addJar } from '../dal/api';
+import { AppContext, AppState } from '../dal/StateProvider';
+import { postJar } from '../dal/api';
+import { jars } from '../dal/mocks';
+import { CURATORS } from '../constants';
 
 type JarItemProps = {
   jar: Jar;
@@ -16,10 +18,12 @@ type JarItemProps = {
   onClick(): void;
 };
 
-const AddJar = () => {
+const AddJarPopup = ({ addJar }: { addJar: AppState['addJar'] }) => {
   const dialogRef = useRef<HTMLDialogElement>(null);
   const formRef = useRef<HTMLFormElement>(null);
+
   const [isLoading, setIsLoading] = useState(false);
+  const [errorText, setErrorText] = useState('');
 
   const openDialog = () => {
     dialogRef.current?.showModal();
@@ -39,14 +43,23 @@ const AddJar = () => {
       curator: HTMLSelectElement;
     };
 
-    // console.log({ url, owner, curator });
-    setIsLoading(true);
+    const existingJar = jars.find((jar) => {
+      return jar.url === url.value || jar.owner_name === owner.value;
+    });
 
-    const response = await addJar({
+    if (existingJar) {
+      setErrorText(`Така банка вже є у ${existingJar.owner_name}`);
+      setIsLoading(false);
+      return;
+    }
+
+    const response = await postJar({
       url: url.value,
       owner: owner.value,
       parentJarId: Number(curator.value),
     });
+
+    addJar(response);
 
     setIsLoading(false);
     formRef.current?.reset();
@@ -87,19 +100,23 @@ const AddJar = () => {
               type='url'
               required
               pattern='https://send.monobank.ua/jar/.*'
+              className={styles['jar-url-input']}
             />
             <label htmlFor='curator-input'>Обери куратора</label>
             <select id='curator-input' name='curator'>
               <option value=''>Жодного</option>
-              <option value=''>Антон Грищенко</option>
-              <option value=''>Дмитро Петруняк</option>
-              <option value=''>Іван Титаренко</option>
-              <option value=''>Олександр Бабенко</option>
-              <option value=''>Олександр Волощенко</option>
-              <option value=''>Сергій Макогон</option>
+              <option value={CURATORS.gryshenko}>Антон Грищенко</option>
+              <option value={CURATORS.petrynyak}>Дмитро Петруняк</option>
+              <option value={CURATORS.tytarenko}>Іван Титаренко</option>
+              <option value={CURATORS.babenko}>Олександр Бабенко</option>
+              <option value={CURATORS.voloshenko}>Олександр Волощенко</option>
+              <option value={CURATORS.makogon}>Сергій Макогон</option>
             </select>
             <button type='submit'>Створити банку</button>
             <button onClick={closeDialog}>Закрити</button>
+            {errorText && (
+              <span className={styles['form-error']}>⚠️ {errorText}</span>
+            )}
           </form>
         </div>
       </dialog>
@@ -141,7 +158,8 @@ const JarItem = ({ jar, isSelected, onClick }: JarItemProps) => {
 };
 
 export const JarsList = () => {
-  const { selectedJars, setSelectedJars, jars } = useContext(AppContext);
+  const { selectedJars, setSelectedJars, jars, addJar } =
+    useContext(AppContext);
   const [isAllVisible, setIsAllVisible] = useState(jars.length < 10);
 
   const toRender = isAllVisible ? jars : jars.slice(0, 10);
@@ -159,7 +177,7 @@ export const JarsList = () => {
         )}
       </div>
       <ol className={styles['jars-list']}>
-        <AddJar />
+        <AddJarPopup addJar={addJar} />
         {toRender.map((item) => (
           <JarItem
             key={item.id}
