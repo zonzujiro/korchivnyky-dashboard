@@ -11,7 +11,15 @@ const getData = async (url: string) => {
 };
 
 const postData = async (url: string, payload?: Record<string, any>) => {
-  const options = payload ? { body: JSON.stringify(payload) } : {};
+  const options = payload
+    ? {
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      }
+    : {};
 
   const response = await fetch(url, {
     method: 'post',
@@ -31,13 +39,10 @@ export const getStatistics = (): Promise<Array<JarStatisticRecord>> => {
   return postData('https://jars.fly.dev/statistics');
 };
 
-export const postJar = async (post: {
+export const postJar = async (payload: {
   url: string;
-  owner: string;
+  ownerName: string;
   parentJarId?: FoundersIds;
 }) => {
-  await new Promise((r) => {
-    setTimeout(r, 500);
-  });
-  return { ...jars[0], ...post };
+  return postData('https://jars.fly.dev/jars', payload);
 };

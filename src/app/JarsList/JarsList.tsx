@@ -30,6 +30,8 @@ const AddJarPopup = ({ addJar }: { addJar: AppState['addJar'] }) => {
   };
 
   const closeDialog = () => {
+    formRef.current?.reset();
+    setErrorText('');
     dialogRef.current?.close();
   };
 
@@ -53,16 +55,19 @@ const AddJarPopup = ({ addJar }: { addJar: AppState['addJar'] }) => {
       return;
     }
 
+    const maybeWithCurator = curator.value
+      ? { parentJarId: Number(curator.value) }
+      : {};
+
     const response = await postJar({
       url: url.value,
-      owner: owner.value,
-      parentJarId: Number(curator.value),
+      ownerName: owner.value,
+      ...maybeWithCurator,
     });
 
     addJar(response);
 
     setIsLoading(false);
-    formRef.current?.reset();
     closeDialog();
   };
 
@@ -163,6 +168,8 @@ export const JarsList = () => {
   const [isAllVisible, setIsAllVisible] = useState(jars.length < 10);
 
   const toRender = isAllVisible ? jars : jars.slice(0, 10);
+
+  console.log({ jars });
 
   return (
     <>

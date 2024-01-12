@@ -42,7 +42,10 @@ export const StateProvider = ({
   };
 
   const addJar = (jar: Jar) => {
-    setJars([...jars, jar]);
+    const nextJars = [...jars];
+    nextJars.unshift(jar);
+
+    setJars(nextJars);
   };
 
   const value = {
