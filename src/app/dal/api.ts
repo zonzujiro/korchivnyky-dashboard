@@ -1,3 +1,4 @@
+import { error } from 'console';
 import type { Jar, JarStatisticRecord } from '../types';
 import { jars, statistics } from './mocks';
 
@@ -25,6 +26,10 @@ const postData = async (url: string, payload?: Record<string, any>) => {
     method: 'post',
     ...options,
   });
+
+  if (response.status > 200) {
+    throw new Error(response.statusText);
+  }
 
   const json = await response.json();
 

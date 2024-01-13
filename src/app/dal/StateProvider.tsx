@@ -6,16 +6,20 @@ import randomColor from 'randomcolor';
 
 export type AppState = {
   selectedJars: Array<number>;
-  setSelectedJars(id: number): void;
+  toggleJarSelection(id: number): void;
   jars: Array<Jar>;
   addJar(jar: Jar): void;
+  selectMultipleJars(jars: Array<number>): void;
+  deselectMultipleJars(jars: Array<number>): void;
 };
 
 export const AppContext = React.createContext<AppState>({
   selectedJars: [],
-  setSelectedJars: () => {},
+  toggleJarSelection: () => {},
   jars: [],
   addJar: () => {},
+  selectMultipleJars: () => {},
+  deselectMultipleJars: () => {},
 });
 
 export const StateProvider = ({
@@ -33,11 +37,27 @@ export const StateProvider = ({
   const [selectedJars, setSelectedJars] = React.useState<Array<number>>([]);
   const [clientJars, setJars] = React.useState(jarsWithColors);
 
-  const toggleJarSelection = (jarId: number) => {
-    if (selectedJars.includes(jarId)) {
-      setSelectedJars(selectedJars.filter((id) => jarId !== id));
+  const selectMultipleJars = (value: Array<number>) => {
+    const nextSelectedJars = value.filter((jarId) => {
+      return !selectedJars.includes(jarId);
+    });
+
+    setSelectedJars([...selectedJars, ...nextSelectedJars]);
+  };
+
+  const deselectMultipleJars = (value: Array<number>) => {
+    setSelectedJars(
+      selectedJars.filter((id) => {
+        return !value.includes(id);
+      })
+    );
+  };
+
+  const toggleJarSelection = (value: number) => {
+    if (selectedJars.includes(value)) {
+      setSelectedJars(selectedJars.filter((id) => value !== id));
     } else {
-      setSelectedJars([...selectedJars, jarId]);
+      setSelectedJars([...selectedJars, value]);
     }
   };
 
@@ -50,9 +70,11 @@ export const StateProvider = ({
 
   const value = {
     selectedJars,
-    setSelectedJars: toggleJarSelection,
+    toggleJarSelection,
     jars: clientJars,
     addJar,
+    deselectMultipleJars,
+    selectMultipleJars,
   };
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;

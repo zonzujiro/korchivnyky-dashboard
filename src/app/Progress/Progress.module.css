@@ -1,18 +1,23 @@
 .progress {
-    margin-bottom: 30px;
+  margin-bottom: 30px;
+}
+
+.progress-bar-wrapper {
+  display: flex;
+  align-items: center;
+  margin-top: 10px;
 }
 
 .progress-bar {
-    width: 350px;
-    height: 15px;
-    border-radius: 5px;
-    background: white;
-    margin-top: 10px;
-    border: 1px solid;
+  width: 350px;
+  height: 15px;
+  border-radius: 5px;
+  background: white;
+  border: 1px solid;
+  overflow: hidden;
+  margin-right: 10px;
 }
 
 .current-progress {
-    height: inherit;
-    background-color: green;
-    background-image: url('/images/progress-bar.png');
+  height: inherit;
 }

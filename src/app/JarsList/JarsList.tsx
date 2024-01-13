@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useRef, useContext } from 'react';
+import React, { useState, useRef, useContext, useEffect } from 'react';
 import Image from 'next/image';
 import classNames from 'classnames';
 
@@ -10,12 +10,37 @@ import styles from './JarsList.module.css';
 import { AppContext, AppState } from '../dal/StateProvider';
 import { postJar } from '../dal/api';
 import { jars } from '../dal/mocks';
-import { CURATORS } from '../constants';
+import { CURATORS_IDS, CURATORS_NAMES } from '../constants';
+import { toCurrency } from '../utils';
 
 type JarItemProps = {
   jar: Jar;
   isSelected: boolean;
   onClick(): void;
+};
+
+const CuratorsDropdown = ({
+  onChange,
+}: {
+  onChange?: (value: string) => void;
+}) => {
+  return (
+    <select
+      id='curator-input'
+      name='curator'
+      onChange={(ev) => onChange?.(ev.target.value)}
+    >
+      <option value=''>Жодного</option>
+      <option value={CURATORS_IDS.gryshenko}>{CURATORS_NAMES.gryshenko}</option>
+      <option value={CURATORS_IDS.petrynyak}>{CURATORS_NAMES.petrynyak}</option>
+      <option value={CURATORS_IDS.tytarenko}>{CURATORS_NAMES.tytarenko}</option>
+      <option value={CURATORS_IDS.babenko}>{CURATORS_NAMES.babenko}</option>
+      <option value={CURATORS_IDS.voloshenko}>
+        {CURATORS_NAMES.voloshenko}
+      </option>
+      <option value={CURATORS_IDS.makogon}>{CURATORS_NAMES.makogon}</option>
+    </select>
+  );
 };
 
 const AddJarPopup = ({ addJar }: { addJar: AppState['addJar'] }) => {
@@ -108,15 +133,7 @@ const AddJarPopup = ({ addJar }: { addJar: AppState['addJar'] }) => {
               className={styles['jar-url-input']}
             />
             <label htmlFor='curator-input'>Обери куратора</label>
-            <select id='curator-input' name='curator'>
-              <option value=''>Жодного</option>
-              <option value={CURATORS.gryshenko}>Антон Грищенко</option>
-              <option value={CURATORS.petrynyak}>Дмитро Петруняк</option>
-              <option value={CURATORS.tytarenko}>Іван Титаренко</option>
-              <option value={CURATORS.babenko}>Олександр Бабенко</option>
-              <option value={CURATORS.voloshenko}>Олександр Волощенко</option>
-              <option value={CURATORS.makogon}>Сергій Макогон</option>
-            </select>
+            <CuratorsDropdown />
             <button type='submit'>Створити банку</button>
             <button onClick={closeDialog}>Закрити</button>
             {errorText && (
@@ -155,21 +172,25 @@ const JarItem = ({ jar, isSelected, onClick }: JarItemProps) => {
         {/* <a className={styles['jar-link']} href={url}>
           Посилання на банку
         </a> */}
-        <span>Зібрано: {accumulated}₴</span>
-        {goal && <span> 🎯 Мета: {goal}₴</span>}
+        <span>Зібрано: {toCurrency(accumulated)}</span>
+        {goal && <span>Мета: {toCurrency(goal)}</span>}
       </div>
     </li>
   );
 };
 
 export const JarsList = () => {
-  const { selectedJars, setSelectedJars, jars, addJar } =
+  const { selectedJars, toggleJarSelection, jars, addJar } =
     useContext(AppContext);
   const [isAllVisible, setIsAllVisible] = useState(jars.length < 10);
+  const [selectedCurator, setSelectedCurator] = useState('');
 
-  const toRender = isAllVisible ? jars : jars.slice(0, 10);
+  const byCurator = selectedCurator
+    ? jars.filter((jar) => `${jar.parent_jar_id}` === selectedCurator)
+    : jars;
 
-  console.log({ jars });
+  const toRender =
+    !selectedCurator && isAllVisible ? byCurator : byCurator.slice(0, 10);
 
   return (
     <>
@@ -177,8 +198,15 @@ export const JarsList = () => {
         <h3>
           Загалом банок: {jars.length} | Обрано: {selectedJars.length}
         </h3>
+        <div className={styles['curators-filter']}>
+          <span>Фільтр по куратору</span>
+          <CuratorsDropdown onChange={setSelectedCurator} />
+        </div>
         {jars.length > 10 && (
-          <span onClick={() => setIsAllVisible(!isAllVisible)}>
+          <span
+            className={styles['jars-visibility-toggle']}
+            onClick={() => setIsAllVisible(!isAllVisible)}
+          >
             {!isAllVisible ? 'Є приховані' : 'Всі банки відображено'}
           </span>
         )}
@@ -190,7 +218,7 @@ export const JarsList = () => {
             key={item.id}
             jar={item}
             isSelected={selectedJars.includes(item.id)}
-            onClick={() => setSelectedJars(item.id)}
+            onClick={() => toggleJarSelection(item.id)}
           />
         ))}
       </ol>

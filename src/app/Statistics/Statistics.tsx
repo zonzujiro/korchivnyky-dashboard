@@ -8,7 +8,7 @@ import type { Jar, JarStatisticRecord } from '../types';
 
 import styles from './Statistics.module.css';
 import { AppContext } from '../dal/StateProvider';
-import { getStatistics } from '../dal/api';
+import { toCurrency } from '../utils';
 
 const percentages = ['100%', '50%', '0%'];
 const STRIPES_COLOR = randomColor();
@@ -105,11 +105,13 @@ const StatisticsSection = ({
               <div className={styles['jar-owner']}>{jar.owner_name}</div>
               <Tooltip anchorSelect={`#statistics-bar-${index}`}>
                 <p>
-                  <strong>Зібрано:</strong> {jar.accumulated}₴
+                  <strong>Зібрано:</strong> {toCurrency(jar.accumulated)}
                 </p>
-                <p>
-                  <strong>Мета:</strong> {jar.goal}₴
-                </p>
+                {jar.goal && (
+                  <p>
+                    <strong>Мета:</strong> {toCurrency(jar.goal)}
+                  </p>
+                )}
               </Tooltip>
             </div>
           );
@@ -142,8 +144,6 @@ export const Statistics = ({
     //@ts-expect-error
     ({ created_at }) => created_at
   ) as Record<string, Array<JarStatisticRecord>>;
-
-  console.log({ recordsByDates });
 
   const filteredDates = useDateFilter(recordsByDates, startDate, endDate);
 
