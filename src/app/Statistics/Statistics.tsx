@@ -9,6 +9,7 @@ import type { Jar, JarStatisticRecord } from '../types';
 import styles from './Statistics.module.css';
 import { AppContext } from '../dal/StateProvider';
 import { toCurrency } from '../utils';
+import { DEFAULT_JAR_GOAL } from '../constants';
 
 const percentages = ['100%', '50%', '0%'];
 const STRIPES_COLOR = randomColor();
@@ -50,16 +51,11 @@ const useDateFilter = (
   }, [startDate, endDate]);
 };
 
-const getBarHeight = (
-  item: JarStatisticRecord,
-  jar: Jar
+const getProgressBarStyle = (
+  jar: Jar,
+  percentageOfGoal: string
 ): React.CSSProperties => {
-  const GOAL = 30000;
-
   let { goal, color } = jar;
-  const { accumulated } = item;
-
-  const percentage = `${Math.round((100 * accumulated) / (goal || GOAL))}%`;
 
   if (goal === null) {
     color = `repeating-linear-gradient(
@@ -72,7 +68,7 @@ const getBarHeight = (
   }
 
   return {
-    height: percentage,
+    width: percentageOfGoal,
     background: color,
   };
 };
@@ -94,14 +90,20 @@ const StatisticsSection = ({
       <div className={styles['statistics-section']}>
         {records.map((entry, index) => {
           const jar = jars.find(({ id }) => id === entry.jar_id)!;
+          const percentageOfGoal = `${Math.round(
+            (100 * jar.accumulated) / (jar.goal || DEFAULT_JAR_GOAL)
+          )}%`;
 
           return (
             <div key={index} className={styles['statistics-item']}>
-              <div
-                id={`statistics-bar-${index}`}
-                className={styles['statistics-bar']}
-                style={getBarHeight(entry, jar)}
-              />
+              <div className={styles['statistics-bar-wrapper']}>
+                <div
+                  id={`statistics-bar-${index}`}
+                  className={styles['statistics-bar']}
+                  style={getProgressBarStyle(jar, percentageOfGoal)}
+                />
+                <span>{percentageOfGoal}</span>
+              </div>
               <div className={styles['jar-owner']}>{jar.owner_name}</div>
               <Tooltip anchorSelect={`#statistics-bar-${index}`}>
                 <p>
@@ -170,13 +172,13 @@ export const Statistics = ({
         />
       </div>
       <div className={styles.statistics}>
-        <div className={styles.percentages}>
+        {/* <div className={styles.percentages}>
           {percentages.map((percentage) => (
             <span key={percentage} className={styles.percentage}>
               {percentage}
             </span>
           ))}
-        </div>
+        </div> */}
         <div className={styles.chart}>
           {filteredDates.map((date) => {
             if (!recordsByDates[date]?.length) {

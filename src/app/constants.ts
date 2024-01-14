@@ -15,3 +15,5 @@ export const CURATORS_NAMES = {
   tytarenko: 'Іван Титаренко',
   makogon: 'Сергій Макогон',
 };
+
+export const DEFAULT_JAR_GOAL = 30000;
