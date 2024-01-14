@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useRef, useContext, useEffect } from 'react';
+import React, { useState, useRef, useContext } from 'react';
 import Image from 'next/image';
 import classNames from 'classnames';
 
@@ -9,7 +9,6 @@ import type { Jar } from '../types';
 import styles from './JarsList.module.css';
 import { AppContext, AppState } from '../dal/StateProvider';
 import { postJar } from '../dal/api';
-import { jars } from '../dal/mocks';
 import { CURATORS_IDS, CURATORS_NAMES } from '../constants';
 import { toCurrency } from '../utils';
 
@@ -169,9 +168,9 @@ const JarItem = ({ jar, isSelected, onClick }: JarItemProps) => {
       </div>
       <div className={styles['item-column']}>
         <h3>{owner_name}</h3>
-        {/* <a className={styles['jar-link']} href={url}>
+        <a className={styles['jar-link']} href={url}>
           Посилання на банку
-        </a> */}
+        </a>
         <span>Зібрано: {toCurrency(accumulated)}</span>
         {goal && <span>Мета: {toCurrency(goal)}</span>}
       </div>

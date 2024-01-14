@@ -19,6 +19,7 @@
 
 .date-inputs {
   display: flex;
+  flex-wrap: wrap;
   padding: 20px 0;
 }
 
@@ -71,4 +72,28 @@
   height: 30px;
   margin-right: 15px;
   max-height: 300px;
+}
+
+.statistics-tabs {
+  display: flex;
+  list-style: none;
+}
+
+.statistics-tab {
+  cursor: pointer;
+  margin-right: 15px;
+  padding: 3px;
+}
+
+.statistics-tab.active {
+  color: white;
+  background: black;
+}
+
+.statistics-tab.active:hover {
+  text-decoration: underline dashed white;
+}
+
+.statistics-tab:hover {
+  text-decoration: underline dashed;
 }
