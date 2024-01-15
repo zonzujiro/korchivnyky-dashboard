@@ -42,7 +42,13 @@ const CuratorsDropdown = ({
   );
 };
 
-const AddJarPopup = ({ addJar }: { addJar: AppState['addJar'] }) => {
+const AddJarPopup = ({
+  addJar,
+  jars,
+}: {
+  addJar: AppState['addJar'];
+  jars: Array<Jar>;
+}) => {
   const dialogRef = useRef<HTMLDialogElement>(null);
   const formRef = useRef<HTMLFormElement>(null);
 
@@ -179,7 +185,7 @@ const JarItem = ({ jar, isSelected, onClick }: JarItemProps) => {
 };
 
 export const JarsList = () => {
-  const { selectedJars, toggleJarSelection, jars, addJar } =
+  const { selectedJars, toggleJarSelection, jars, addJar, resetJarSelection } =
     useContext(AppContext);
   const [isAllVisible, setIsAllVisible] = useState(jars.length < 10);
   const [selectedCurator, setSelectedCurator] = useState('');
@@ -194,16 +200,25 @@ export const JarsList = () => {
   return (
     <>
       <div className={styles.controls}>
-        <h3>
+        <span>
           Загалом банок: {jars.length} | Обрано: {selectedJars.length}
-        </h3>
+        </span>
+        <span
+          className={classNames(styles['pseudo-button'], {
+            [styles['disabled']]: !selectedJars.length,
+          })}
+          onClick={resetJarSelection}
+        >
+          Відминити вибір
+        </span>
+
         <div className={styles['curators-filter']}>
           <span>Фільтр по куратору</span>
           <CuratorsDropdown onChange={setSelectedCurator} />
         </div>
         {jars.length > 10 && (
           <span
-            className={styles['jars-visibility-toggle']}
+            className={styles['pseudo-button']}
             onClick={() => setIsAllVisible(!isAllVisible)}
           >
             {!isAllVisible ? 'Є приховані' : 'Всі банки відображено'}
@@ -211,13 +226,15 @@ export const JarsList = () => {
         )}
       </div>
       <ol className={styles['jars-list']}>
-        <AddJarPopup addJar={addJar} />
+        <AddJarPopup addJar={addJar} jars={jars} />
         {toRender.map((item) => (
           <JarItem
             key={item.id}
             jar={item}
-            isSelected={selectedJars.includes(item.id)}
-            onClick={() => toggleJarSelection(item.id)}
+            isSelected={Boolean(
+              selectedJars.find((selectedJar) => selectedJar.id === item.id)
+            )}
+            onClick={() => toggleJarSelection(item)}
           />
         ))}
       </ol>

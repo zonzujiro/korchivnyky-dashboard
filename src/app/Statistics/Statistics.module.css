@@ -1,4 +1,7 @@
 .statistics-wrapper {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
 }
 
 .statistics-section-wrapper {
@@ -27,8 +30,18 @@
   margin: 0 20px;
 }
 
-.statistics {
+.column {
   display: flex;
+  flex-direction: column;
+}
+
+.column-header {
+  margin: 15px 0;
+  font-weight: bold;
+}
+
+.statistics {
+  width: 70%;
 }
 
 .statistics-item {
@@ -57,10 +70,15 @@
 }
 
 .chart {
-  width: 70%;
+  width: 100%;
   display: flex;
   align-items: flex-start;
   flex-direction: column;
+}
+
+.analytics {
+  flex-grow: 1;
+  padding-left: 60px;
 }
 
 .statistics-bar-wrapper {
@@ -96,4 +114,47 @@
 
 .statistics-tab:hover {
   text-decoration: underline dashed;
+}
+
+.growth {
+  display: flex;
+  flex-direction: column;
+  border-bottom: 1px black dashed;
+}
+
+.growth-header {
+  margin: 15px 0 10px 0;
+  text-decoration: underline;
+}
+
+.growth-list {
+  list-style: none;
+  display: flex;
+}
+
+.growth-list > li {
+  margin: 20px 0;
+}
+
+.jar-owners {
+  width: 60%;
+}
+
+.growth-amount,
+.growth-jar-owner {
+  margin-left: 10px;
+  padding: 3px;
+  width: fit-content;
+}
+
+.growth-amount.positive {
+  background: rgb(85, 209, 157);
+}
+
+.growth-amount.neutral {
+  background: white;
+}
+
+.growth-amount.negative {
+  background: red;
 }

@@ -1,21 +1,20 @@
 'use client';
 
 import React, { useState, useMemo, useContext } from 'react';
-import { Tooltip } from 'react-tooltip';
-import randomColor from 'randomcolor';
 
-import type { Jar, JarStatisticRecord } from '../types';
+import type { JarStatisticRecord } from '../types';
 
 import styles from './Statistics.module.css';
 import { AppContext } from '../dal/StateProvider';
-import { toCurrency } from '../utils';
-import { DEFAULT_JAR_GOAL } from '../constants';
+import { StatisticsSection } from './StatisticsSection/StatisticsSection';
+import { gatherGrowthAnalytics } from './gatherAnalytics';
 import classNames from 'classnames';
-
-const STRIPES_COLOR = randomColor();
+import { toCurrency } from '../utils';
 
 const FIVE_DAYS_AGO = new Date();
 FIVE_DAYS_AGO.setDate(FIVE_DAYS_AGO.getDate() - 5);
+
+const TODAY = new Date();
 
 const extractCalendarDate = (date: Date) => [
   `${date.getDate()}`.padStart(2, '0'),
@@ -23,21 +22,8 @@ const extractCalendarDate = (date: Date) => [
   date.getFullYear(),
 ];
 
-const accumulatedDataPeriod = () => {
-  const today = new Date();
-
-  const start = extractCalendarDate(FIVE_DAYS_AGO).join('/');
-  const end = extractCalendarDate(today).join('/');
-
-  return `${start} → ${end}`;
-};
-
-const getTodayDate = () => {
-  const today = new Date();
-
-  const month = `${today.getMonth() + 1}`.padStart(2, '0');
-
-  return `${today.getFullYear()}-${month}-${today.getDate()}`;
+const getDateInputsInitialValue = () => {
+  return extractCalendarDate(new Date()).toReversed().join('-');
 };
 
 const useDateFilter = (
@@ -86,78 +72,6 @@ const useAccumulatedData = (
     .filter(Boolean) as Array<JarStatisticRecord>;
 };
 
-const getProgressBarStyle = (
-  jar: Jar,
-  percentageOfGoal: string
-): React.CSSProperties => {
-  let { goal, color } = jar;
-
-  if (goal === null) {
-    color = `repeating-linear-gradient(
-      45deg,
-      ${color},
-      ${color} 10px,
-      ${STRIPES_COLOR} 10px,
-      ${STRIPES_COLOR} 20px
-    )`;
-  }
-
-  return {
-    width: percentageOfGoal,
-    background: color,
-  };
-};
-
-const StatisticsSection = ({
-  date,
-  records,
-  jars,
-}: {
-  date: string;
-  records: Array<JarStatisticRecord>;
-  jars: Array<Jar>;
-}) => {
-  return (
-    <div className={styles['statistics-section-wrapper']}>
-      <span className={styles['statistics-item-date']}>
-        {date.split('-').toReversed().join('/')}
-      </span>
-      <div className={styles['statistics-section']}>
-        {records.map((entry, index) => {
-          const jar = jars.find(({ id }) => id === entry.jar_id)!;
-          const percentageOfGoal = `${Math.round(
-            (100 * jar.accumulated) / (jar.goal || DEFAULT_JAR_GOAL)
-          )}%`;
-
-          return (
-            <div key={index} className={styles['statistics-item']}>
-              <div className={styles['statistics-bar-wrapper']}>
-                <div
-                  id={`statistics-bar-${index}`}
-                  className={styles['statistics-bar']}
-                  style={getProgressBarStyle(jar, percentageOfGoal)}
-                />
-                <span>{percentageOfGoal}</span>
-              </div>
-              <div className={styles['jar-owner']}>{jar.owner_name}</div>
-              <Tooltip anchorSelect={`#statistics-bar-${index}`}>
-                <p>
-                  <strong>Зібрано:</strong> {toCurrency(jar.accumulated)}
-                </p>
-                {jar.goal && (
-                  <p>
-                    <strong>Мета:</strong> {toCurrency(jar.goal)}
-                  </p>
-                )}
-              </Tooltip>
-            </div>
-          );
-        })}
-      </div>
-    </div>
-  );
-};
-
 export const Statistics = ({
   statistics,
 }: {
@@ -165,35 +79,48 @@ export const Statistics = ({
 }) => {
   const { selectedJars, jars } = useContext(AppContext);
 
-  const [startDate, setStartDate] = useState(getTodayDate());
-  const [endDate, setEndDate] = useState(getTodayDate());
+  // const [startDate, setStartDate] = useState(getDateInputsInitialValue());
+  // const [endDate, setEndDate] = useState(getDateInputsInitialValue());
 
-  const [selectedTab, setSelectedTab] = useState<'accumulated' | 'by-dates'>(
-    'accumulated'
-  );
+  // const [selectedTab, setSelectedTab] = useState<'accumulated' | 'by-dates'>(
+  //   'accumulated'
+  // );
 
-  const filteredStatistics =
-    selectedJars.length > 0
-      ? statistics.filter((record) => {
-          return selectedJars.includes(record.jar_id);
-        })
-      : statistics;
+  const usedJars = selectedJars.length ? selectedJars : jars;
 
-  //@ts-expect-error
-  const recordsByDates = Object.groupBy(
+  const filteredStatistics = selectedJars.length
+    ? statistics.filter((record) => {
+        return selectedJars.find(
+          (selectedJar) => selectedJar.id === record.jar_id
+        );
+      })
+    : statistics;
+
+  // //@ts-expect-error
+  // const recordsByDates = Object.groupBy(
+  //   filteredStatistics,
+  //   ({ created_at }: { created_at: string }) => created_at
+  // ) as Record<string, Array<JarStatisticRecord>>;
+
+  // const accumulatedData = useAccumulatedData(
+  //   statistics,
+  //   usedJars.map(({ id }) => id)
+  // );
+
+  // const filteredDates = useDateFilter(recordsByDates, startDate, endDate);
+
+  const growth = gatherGrowthAnalytics(
+    usedJars,
     filteredStatistics,
-    ({ created_at }: { created_at: string }) => created_at
-  ) as Record<string, Array<JarStatisticRecord>>;
-
-  const accumulatedData = useAccumulatedData(
-    statistics,
-    selectedJars.length ? selectedJars : jars.map(({ id }) => id)
+    new Date('2024-01-05'),
+    new Date('2024-01-12')
+    // FIVE_DAYS_AGO,
+    // TODAY
   );
-  const filteredDates = useDateFilter(recordsByDates, startDate, endDate);
 
   return (
     <div className={styles['statistics-wrapper']}>
-      <ul
+      {/* <ul
         className={styles['statistics-tabs']}
         onClick={(ev: any) => setSelectedTab(ev.target.dataset.tabName)}
       >
@@ -213,8 +140,8 @@ export const Statistics = ({
         >
           Фільтр по датам
         </li>
-      </ul>
-      {selectedTab === 'by-dates' && (
+      </ul> */}
+      {/* {selectedTab === 'by-dates' && (
         <div className={styles['date-inputs']}>
           <label htmlFor='start-date'>Початкова дата</label>
           <input
@@ -235,32 +162,63 @@ export const Statistics = ({
             min={startDate}
           />
         </div>
-      )}
-      <div className={styles.statistics}>
+      )} */}
+      <div className={classNames(styles.column, styles.statistics)}>
+        <div className={styles['column-header']}>Поточний стан</div>
         <div className={styles.chart}>
-          {selectedTab === 'accumulated' && (
-            <StatisticsSection
-              date={accumulatedDataPeriod()}
-              records={accumulatedData}
-              jars={jars}
-            />
-          )}
+          <StatisticsSection jars={usedJars} />
 
-          {selectedTab === 'by-dates' &&
+          {/* {selectedTab === 'by-dates' &&
             filteredDates.map((date) => {
               if (!recordsByDates[date]?.length) {
                 return null;
               }
 
-              return (
-                <StatisticsSection
-                  key={date}
-                  date={date}
-                  records={recordsByDates[date]}
-                  jars={jars}
-                />
-              );
-            })}
+              return <StatisticsSection key={date} date={date} jars={jars} />;
+            })} */}
+        </div>
+      </div>
+      <div className={classNames(styles.column, styles.analytics)}>
+        <div className={styles['column-header']}>
+          <span>
+            Аналітика за період:{' '}
+            {`${extractCalendarDate(FIVE_DAYS_AGO).join(
+              '/'
+            )} → ${extractCalendarDate(TODAY).join('/')}`}
+          </span>
+        </div>
+        <div className={styles['analytics-content']}>
+          <div className={styles['growth']}>
+            <span className={styles['growth-header']}>Динаміка</span>
+            <div className={styles['growth-list']}>
+              <div className={classNames(styles.column, styles['jar-owners'])}>
+                {growth.map(({ jarId }) => {
+                  const jar = jars.find((jar) => jar.id === Number(jarId));
+                  return (
+                    <span className={styles['growth-jar-owner']} key={jarId}>
+                      {jar?.owner_name}
+                    </span>
+                  );
+                })}
+              </div>
+              <div className={styles.column}>
+                {growth.map(({ jarId, percentage, amount }, index) => {
+                  return (
+                    <span
+                      key={`${jarId}-${index}`}
+                      className={classNames(styles['growth-amount'], {
+                        [styles.positive]: amount > 0,
+                        [styles['no-changes']]: amount === 0,
+                        [styles.negative]: amount < 0,
+                      })}
+                    >
+                      {toCurrency(amount)} ({percentage})
+                    </span>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>

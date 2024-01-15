@@ -124,11 +124,16 @@
   padding-right: 10px;
 }
 
-.jars-visibility-toggle {
+.pseudo-button {
   cursor: pointer;
   user-select: none;
 }
 
-.jars-visibility-toggle:hover {
+.pseudo-button.disabled {
+  color: grey;
+  cursor: default;
+}
+
+.pseudo-button:not(.disabled):hover {
   text-decoration: underline dashed;
 }
