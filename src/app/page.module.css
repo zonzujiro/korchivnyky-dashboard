@@ -16,3 +16,8 @@
 .site-name {
   font-family: var(--eUkraineHeadLogo);
 }
+
+.general-info {
+  display: flex;
+  flex-wrap: wrap;
+}

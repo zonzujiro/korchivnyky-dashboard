@@ -8,6 +8,7 @@ import { JarsList } from './JarsList/JarsList';
 import { Progress } from './Progress/Progress';
 import { Statistics } from './Statistics/Statistics';
 import { StateProvider } from './dal/StateProvider';
+import { CampaignDescription } from './CampaignDescription/CampaignDescription';
 
 const GOAL = 2500000;
 
@@ -44,7 +45,10 @@ export default async function Home() {
       </header>
       <main className={styles.main}>
         <StateProvider jars={jars}>
-          <Progress goal={GOAL} currentSum={currentSum} />
+          <div className={styles['general-info']}>
+            <Progress goal={GOAL} currentSum={currentSum} />
+            <CampaignDescription />
+          </div>
           <JarsList />
           <Statistics statistics={statisticsWithClearedDates} />
         </StateProvider>

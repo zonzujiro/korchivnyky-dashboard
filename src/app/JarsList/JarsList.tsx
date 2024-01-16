@@ -229,16 +229,18 @@ export const JarsList = () => {
       </div>
       <ol className={styles['jars-list']}>
         <AddJarPopup addJar={addJar} jars={jars} />
-        {toRender.map((item) => (
-          <JarItem
-            key={item.id}
-            jar={item}
-            isSelected={Boolean(
-              selectedJars.find((selectedJar) => selectedJar.id === item.id)
-            )}
-            onClick={() => toggleJarSelection(item)}
-          />
-        ))}
+        {toRender.map((item) => {
+          return (
+            <JarItem
+              key={item.id}
+              jar={item}
+              isSelected={Boolean(
+                selectedJars.find((selectedJar) => selectedJar.id === item.id)
+              )}
+              onClick={() => toggleJarSelection(item)}
+            />
+          );
+        })}
       </ol>
     </>
   );
