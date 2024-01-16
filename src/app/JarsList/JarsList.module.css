@@ -82,10 +82,18 @@
   background-color: lightgrey;
 }
 
+.jar-info {
+  padding: 0 10px;
+}
+
 .item-column {
-  margin: 10px;
   display: flex;
   flex-direction: column;
+  margin: 5px 0;
+}
+
+.item-column:first-child {
+  align-items: center;
 }
 
 .item-column > h3 {
@@ -96,9 +104,17 @@
   border-radius: 50%;
 }
 
-.jar-link {
-  padding: 5px 0;
-  font-size: 0.75em;
+.jar-settings {
+  display: flex;
+}
+
+.icon {
+  font-size: 16px;
+  padding: 5px;
+}
+
+.icon:hover {
+  text-decoration: dashed underline;
 }
 
 .controls {

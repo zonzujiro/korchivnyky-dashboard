@@ -2,10 +2,15 @@ export const toCurrency = (value: number) => {
   return `${value.toLocaleString('ua-UA').replaceAll(',', ' ')} ₴`;
 };
 
-export const groupBy = (
-  collection: Record<string, any>,
-  callback: (value: any) => string | number
+export const groupBy = <TItem = any>(
+  collection: Array<TItem>,
+  callback: (value: TItem) => string | number
 ) => {
-  //@ts-expect-error
-  return Object.groupBy(collection, callback);
+  return collection.reduce((acc: Record<string, Array<TItem>>, item: TItem) => {
+    const key = callback(item);
+
+    const items = acc[key] ? [...acc[key], item] : [item];
+
+    return { ...acc, [key]: items };
+  }, {} as Record<string, Array<TItem>>);
 };

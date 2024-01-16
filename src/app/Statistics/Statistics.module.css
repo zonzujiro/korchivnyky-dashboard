@@ -93,6 +93,24 @@
   flex-grow: 1;
 }
 
+.export-button {
+  cursor: pointer;
+}
+
+.export-button:hover {
+  text-decoration: underline dashed;
+}
+
+.export-dialog-content {
+  width: 800px;
+  height: 700px;
+  font-weight: normal;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  padding: 30px;
+}
+
 .statistics-bar-wrapper {
   width: 100%;
   display: flex;
@@ -165,6 +183,30 @@
 
 .negative-dynamic {
   background: red;
+}
+
+.voloshenko {
+  background: #c9daf8;
+}
+
+.petrynyak {
+  background: #d9d2e9;
+}
+
+.babenko {
+  background: #fff2cc;
+}
+
+.gryshenko {
+  background: #ff85dc;
+}
+
+.tytarenko {
+  background: #b6d7a8;
+}
+
+.makogon {
+  background: #d5a6bd;
 }
 
 @media screen and (max-width: 900px) {

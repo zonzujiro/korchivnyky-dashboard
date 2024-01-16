@@ -17,6 +17,11 @@
   font-family: var(--eUkraineHeadLogo);
 }
 
+.name-and-slogan {
+  display: flex;
+  flex-direction: column;
+}
+
 .general-info {
   display: flex;
   flex-wrap: wrap;

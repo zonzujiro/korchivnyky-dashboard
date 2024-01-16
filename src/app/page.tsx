@@ -41,7 +41,10 @@ export default async function Home() {
           height={100}
           alt='site logo'
         />
-        <h1 className={styles['site-name']}>Корчівникі</h1>
+        <div className={styles['name-and-slogan']}>
+          <h1 className={styles['site-name']}>Корчівники</h1>
+          <span>Non nobis solum nati sumus</span>
+        </div>
       </header>
       <main className={styles.main}>
         <StateProvider jars={jars}>

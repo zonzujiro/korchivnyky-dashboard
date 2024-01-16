@@ -17,7 +17,7 @@ const eUkraineFont = localFont({
   src: [
     {
       path: './fonts/e-Ukraine/e-Ukraine-Bold.otf',
-      weight: '700',
+      weight: '600',
       style: 'bold',
     },
     {

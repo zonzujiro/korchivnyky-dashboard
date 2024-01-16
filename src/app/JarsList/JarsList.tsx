@@ -4,13 +4,13 @@ import React, { useState, useRef, useContext } from 'react';
 import Image from 'next/image';
 import classNames from 'classnames';
 
+import { Dialog } from '../Dialog/Dialog';
 import type { Jar } from '../types';
+import { AppContext, AppState, postJar } from '../dal';
+import { CURATORS, CURATORS_IDS, CURATORS_NAMES } from '../constants';
+import { toCurrency } from '../utils';
 
 import styles from './JarsList.module.css';
-import { AppContext, AppState } from '../dal/StateProvider';
-import { postJar } from '../dal/api';
-import { CURATORS_IDS, CURATORS_NAMES } from '../constants';
-import { toCurrency } from '../utils';
 
 type JarItemProps = {
   jar: Jar;
@@ -29,7 +29,7 @@ const CuratorsDropdown = ({
       name='curator'
       onChange={(ev) => onChange?.(ev.target.value)}
     >
-      <option value=''>Жодного</option>
+      <option value=''>Всі</option>
       <option value={CURATORS_IDS.gryshenko}>{CURATORS_NAMES.gryshenko}</option>
       <option value={CURATORS_IDS.petrynyak}>{CURATORS_NAMES.petrynyak}</option>
       <option value={CURATORS_IDS.tytarenko}>{CURATORS_NAMES.tytarenko}</option>
@@ -49,23 +49,21 @@ const AddJarPopup = ({
   addJar: AppState['addJar'];
   jars: Array<Jar>;
 }) => {
-  const dialogRef = useRef<HTMLDialogElement>(null);
   const formRef = useRef<HTMLFormElement>(null);
 
   const [isLoading, setIsLoading] = useState(false);
   const [errorText, setErrorText] = useState('');
 
-  const openDialog = () => {
-    dialogRef.current?.showModal();
-  };
-
-  const closeDialog = () => {
+  const handleDialogClosing = (closeDialog: () => void) => {
     formRef.current?.reset();
     setErrorText('');
-    dialogRef.current?.close();
+    closeDialog();
   };
 
-  const handleSubmit = async (ev: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (
+    ev: React.FormEvent<HTMLFormElement>,
+    closeDialog: () => void
+  ) => {
     ev.preventDefault();
 
     const { url, owner, curator } = (ev.target as HTMLFormElement)
@@ -95,28 +93,32 @@ const AddJarPopup = ({
       ...maybeWithCurator,
     });
 
-    addJar(response);
-
     setIsLoading(false);
+    addJar(response);
     closeDialog();
   };
 
   return (
-    <>
-      <li
-        className={classNames(styles.item, styles['add-jar'])}
-        onClick={openDialog}
-      >
-        + Додати банку
-      </li>
-      <dialog ref={dialogRef} className={styles['add-jar-dialog']}>
+    <Dialog
+      renderButton={({ openDialog }) => (
+        <li
+          className={classNames(styles.item, styles['add-jar'])}
+          onClick={openDialog}
+        >
+          + Додати банку
+        </li>
+      )}
+      renderContent={({ closeDialog }) => (
         <div className={styles['add-jar-inputs-wrapper']}>
           {isLoading && (
             <div className={styles['loader']}>
               <h4>Праця робиться...</h4>
             </div>
           )}
-          <form className={styles['add-jar-inputs']} onSubmit={handleSubmit}>
+          <form
+            className={styles['add-jar-inputs']}
+            onSubmit={(ev) => handleSubmit(ev, closeDialog)}
+          >
             <h3>Давай додамо баночку!</h3>
             <label htmlFor='owner-input'>Як звуть власника банки?</label>
             <input
@@ -140,21 +142,21 @@ const AddJarPopup = ({
             <label htmlFor='curator-input'>Обери куратора</label>
             <CuratorsDropdown />
             <button type='submit'>Створити банку</button>
-            <button onClick={closeDialog}>Закрити</button>
+            <button onClick={() => handleDialogClosing(closeDialog)}>
+              Закрити
+            </button>
             {errorText && (
               <span className={styles['form-error']}>⚠️ {errorText}</span>
             )}
           </form>
         </div>
-      </dialog>
-    </>
+      )}
+    />
   );
 };
 
 const JarItem = ({ jar, isSelected, onClick }: JarItemProps) => {
-  const { url, goal, accumulated, owner_name } = jar;
-
-  const logoSrc = '/images/jar-logo.jpg';
+  const { url, goal, accumulated, owner_name, parent_jar_id } = jar;
 
   return (
     <li
@@ -165,20 +167,31 @@ const JarItem = ({ jar, isSelected, onClick }: JarItemProps) => {
     >
       <div className={styles['item-column']}>
         <Image
-          src={logoSrc}
+          src='/images/jar-logo.jpg'
           alt='jar logo'
           className={styles.logo}
           width={50}
           height={50}
         />
+        <div className={styles['jar-settings']}>
+          <span
+            className={styles.icon}
+            onClick={() => navigator.clipboard.writeText(url)}
+          >
+            🔗
+          </span>
+          <span className={styles.icon}>🔧</span>
+        </div>
       </div>
-      <div className={styles['item-column']}>
+      <div className={classNames(styles['item-column'], styles['jar-info'])}>
         <h3>{owner_name}</h3>
-        <a className={styles['jar-link']} href={url}>
-          Посилання на банку
-        </a>
-        <span>Зібрано: {toCurrency(accumulated)}</span>
-        {goal && <span>Мета: {toCurrency(goal)}</span>}
+        <span>
+          Куратор: {parent_jar_id ? CURATORS[parent_jar_id] : 'Немає'}
+        </span>
+        <div className={styles['item-column']}>
+          <span>Зібрано: {toCurrency(accumulated)}</span>
+          <span>Мета: {goal ? toCurrency(goal) : 'Немає'}</span>
+        </div>
       </div>
     </li>
   );
@@ -197,8 +210,6 @@ export const JarsList = () => {
   const toRender =
     !selectedCurator && isAllVisible ? byCurator : byCurator.slice(0, 10);
 
-  console.log({ selectedJars });
-
   return (
     <>
       <div className={styles.controls}>
@@ -211,7 +222,7 @@ export const JarsList = () => {
           })}
           onClick={resetJarSelection}
         >
-          Відминити вибір
+          Відмінити вибір
         </span>
 
         <div className={styles['curators-filter']}>

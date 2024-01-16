@@ -9,23 +9,6 @@ const isSameDate = (startDate: Date, endDate: Date) => {
   return isSameDay && isSameMonth && isSameYear;
 };
 
-const useAccumulatedData = (
-  statistics: Array<JarStatisticRecord>,
-  jarIds: Array<number>
-) => {
-  const fiveDaysAgo = new Date();
-  fiveDaysAgo.setDate(fiveDaysAgo.getDate() - 5);
-  const fiveDaysAgoInMs = fiveDaysAgo.valueOf();
-
-  const freshData = statistics.filter((entry) => {
-    return new Date(entry.created_at).valueOf() > fiveDaysAgoInMs;
-  });
-
-  return jarIds
-    .map((id) => freshData.find(({ jar_id }) => jar_id === id))
-    .filter(Boolean) as Array<JarStatisticRecord>;
-};
-
 const withSign = (value: number) => {
   return value > 0 ? `+${value}` : `${value}`;
 };
@@ -47,8 +30,7 @@ export const getAccountsMovements = (
     return isInTimeWindow && forSelectedJar;
   });
 
-  const groupedByJar: Record<string, [JarStatisticRecord, JarStatisticRecord]> =
-    groupBy(currentRecords, (record) => record.jar_id);
+  const groupedByJar = groupBy(currentRecords, (record) => record.jar_id);
 
   const growth = Object.keys(groupedByJar)
     .filter((jarId) => groupedByJar[jarId].length > 1)
@@ -64,8 +46,8 @@ export const getAccountsMovements = (
         jarId,
         percentage: `${withSign(Math.round(percentageValue))}%`,
         difference,
-        startDate: startDayData.accumulated,
-        endDate: endDayData.accumulated,
+        startDateAmount: startDayData.accumulated,
+        endDateAmount: endDayData.accumulated,
       };
     });
 
