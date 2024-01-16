@@ -8,7 +8,6 @@ import { JarsList } from './JarsList/JarsList';
 import { Progress } from './Progress/Progress';
 import { Statistics } from './Statistics/Statistics';
 import { StateProvider } from './dal/StateProvider';
-// import { statistics } from './dal/mocks';
 
 const GOAL = 2500000;
 

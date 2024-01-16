@@ -197,6 +197,8 @@ export const JarsList = () => {
   const toRender =
     !selectedCurator && isAllVisible ? byCurator : byCurator.slice(0, 10);
 
+  console.log({ selectedJars });
+
   return (
     <>
       <div className={styles.controls}>

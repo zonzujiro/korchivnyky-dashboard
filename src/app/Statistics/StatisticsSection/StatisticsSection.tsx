@@ -27,7 +27,7 @@ const getProgressBarStyle = (
   }
 
   return {
-    width: percentageOfGoal,
+    width: parseInt(percentageOfGoal) ? percentageOfGoal : `1%`,
     background: color,
   };
 };

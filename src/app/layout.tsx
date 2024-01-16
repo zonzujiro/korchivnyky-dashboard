@@ -35,7 +35,7 @@ const eUkraineFont = localFont({
 });
 
 export const metadata: Metadata = {
-  title: 'Корчівники',
+  title: 'Корчівники - Non nobis solum nati sumus',
   description: 'Ми і є Корчівники, довбойоб',
 };
 

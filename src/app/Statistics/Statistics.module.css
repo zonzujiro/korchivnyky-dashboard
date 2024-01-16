@@ -16,23 +16,36 @@
   display: flex;
   height: 100%;
   align-items: baseline;
-  padding-right: 30px;
+  padding-right: 70px;
   flex-direction: column;
 }
 
-.date-inputs {
+.inputs-title-prefix {
+  margin-right: 10px;
+}
+
+.date-inputs-wrapper {
   display: flex;
   flex-wrap: wrap;
-  padding: 20px 0;
+}
+
+.date-inputs,
+.inputs-title-prefix {
+  margin-top: 10px;
 }
 
 .date-input {
-  margin: 0 20px;
+  margin-right: 10px;
+}
+
+.date-input:last-child {
+  margin-left: 10px;
 }
 
 .column {
   display: flex;
   flex-direction: column;
+  margin-right: 20px;
 }
 
 .column-header {
@@ -41,7 +54,7 @@
 }
 
 .statistics {
-  width: 70%;
+  width: 60%;
 }
 
 .statistics-item {
@@ -78,7 +91,6 @@
 
 .analytics {
   flex-grow: 1;
-  padding-left: 60px;
 }
 
 .statistics-bar-wrapper {
@@ -119,7 +131,7 @@
 .growth {
   display: flex;
   flex-direction: column;
-  border-bottom: 1px black dashed;
+  padding: 5px;
 }
 
 .growth-header {
@@ -127,34 +139,45 @@
   text-decoration: underline;
 }
 
-.growth-list {
-  list-style: none;
-  display: flex;
-}
-
-.growth-list > li {
-  margin: 20px 0;
+.grid-row {
+  display: grid;
+  grid-template-columns: 35% 30% 35%;
 }
 
 .jar-owners {
-  width: 60%;
+  width: 35%;
 }
 
-.growth-amount,
-.growth-jar-owner {
+.cell {
   margin-left: 10px;
-  padding: 3px;
+  padding: 6px;
+  border-bottom: dashed 1px;
   width: fit-content;
 }
 
-.growth-amount.positive {
+.positive-dynamic {
   background: rgb(85, 209, 157);
 }
 
-.growth-amount.neutral {
+.no-dynamic {
   background: white;
 }
 
-.growth-amount.negative {
+.negative-dynamic {
   background: red;
+}
+
+@media screen and (max-width: 900px) {
+  .statistics {
+    width: 100%;
+  }
+
+  .statistics-section {
+    padding-right: 0;
+  }
+
+  .grid-row {
+    display: grid;
+    grid-template-columns: 40% 30% 30%;
+  }
 }

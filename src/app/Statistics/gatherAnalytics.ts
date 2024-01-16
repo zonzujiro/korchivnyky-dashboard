@@ -26,7 +26,11 @@ const useAccumulatedData = (
     .filter(Boolean) as Array<JarStatisticRecord>;
 };
 
-export const gatherGrowthAnalytics = (
+const withSign = (value: number) => {
+  return value > 0 ? `+${value}` : `${value}`;
+};
+
+export const getAccountsMovements = (
   jars: Array<Jar>,
   records: Array<JarStatisticRecord>,
   startDate: Date,
@@ -34,30 +38,36 @@ export const gatherGrowthAnalytics = (
 ) => {
   const currentRecords = records.filter((record) => {
     const recordDate = new Date(record.created_at);
-    return isSameDate(recordDate, startDate) || isSameDate(recordDate, endDate);
+    const isInTimeWindow =
+      isSameDate(recordDate, startDate) || isSameDate(recordDate, endDate);
+    const forSelectedJar = Boolean(
+      jars.find((jar) => jar.id === record.jar_id)
+    );
+
+    return isInTimeWindow && forSelectedJar;
   });
 
   const groupedByJar: Record<string, [JarStatisticRecord, JarStatisticRecord]> =
     groupBy(currentRecords, (record) => record.jar_id);
 
-  console.log({ groupedByJar });
-
   const growth = Object.keys(groupedByJar)
-    .filter((jarId) => groupedByJar[jarId].length === 2)
+    .filter((jarId) => groupedByJar[jarId].length > 1)
     .map((jarId) => {
       const [endDayData, startDayData] = groupedByJar[jarId];
       const difference = endDayData.accumulated - startDayData.accumulated;
+      const percentageValue =
+        difference > 0
+          ? (100 * difference) / endDayData.accumulated
+          : (100 * difference) / startDayData.accumulated;
 
       return {
         jarId,
-        percentage: `${Math.round(
-          (100 * difference) / endDayData.accumulated
-        )}%`,
-        amount: difference,
+        percentage: `${withSign(Math.round(percentageValue))}%`,
+        difference,
+        startDate: startDayData.accumulated,
+        endDate: endDayData.accumulated,
       };
     });
-
-  console.log({ growth });
 
   return growth;
 };
