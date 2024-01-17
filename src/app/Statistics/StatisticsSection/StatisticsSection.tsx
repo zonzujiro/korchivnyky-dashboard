@@ -15,15 +15,15 @@ const getProgressBarStyle = (
 
   const stripes = randomColor();
 
-  if (goal === null) {
-    color = `repeating-linear-gradient(
-          45deg,
-          ${color},
-          ${color} 10px,
-          ${stripes} 10px,
-          ${stripes} 20px
-        )`;
-  }
+  // if (goal === null) {
+  //   color = `repeating-linear-gradient(
+  //         45deg,
+  //         ${color},
+  //         ${color} 10px,
+  //         ${stripes} 10px,
+  //         ${stripes} 20px
+  //       )`;
+  // }
 
   return {
     width: parseInt(percentageOfGoal) ? percentageOfGoal : `1%`,
