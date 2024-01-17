@@ -103,7 +103,14 @@
 
 .grid-row {
   display: grid;
+}
+
+.grid-row.three-cells {
   grid-template-columns: 35% 30% 35%;
+}
+
+.grid-row.two-cells {
+  grid-template-columns: 50% 50%;
 }
 
 .jar-owners {

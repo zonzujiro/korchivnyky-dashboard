@@ -11,6 +11,7 @@ import { CURATORS, CURATORS_IDS, CURATORS_NAMES } from '../constants';
 import { toCurrency } from '../utils';
 
 import styles from './JarsList.module.css';
+import { Tooltip } from 'react-tooltip';
 
 type JarItemProps = {
   jar: Jar;
@@ -156,7 +157,8 @@ const AddJarPopup = ({
 };
 
 const JarItem = ({ jar, isSelected, onClick }: JarItemProps) => {
-  const { url, goal, accumulated, owner_name, parent_jar_id } = jar;
+  const { url, goal, accumulated, owner_name, parent_jar_id, is_finished } =
+    jar;
 
   return (
     <li
@@ -184,7 +186,10 @@ const JarItem = ({ jar, isSelected, onClick }: JarItemProps) => {
         </div>
       </div>
       <div className={classNames(styles['item-column'], styles['jar-info'])}>
-        <h3>{owner_name}</h3>
+        <h3>
+          {owner_name} {is_finished ? <span id='lock'>🔒</span> : null}
+        </h3>
+        <Tooltip anchorSelect='#lock'>Збір завершено</Tooltip>
         <span>
           Куратор: {parent_jar_id ? CURATORS[parent_jar_id] : 'Немає'}
         </span>

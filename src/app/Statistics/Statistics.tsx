@@ -103,7 +103,13 @@ export const Statistics = ({
                 const jar = jars.find((jar) => jar.id === Number(jarId));
 
                 return (
-                  <div key={jarId} className={styles['grid-row']}>
+                  <div
+                    key={jarId}
+                    className={classNames(
+                      styles['grid-row'],
+                      styles['three-cells']
+                    )}
+                  >
                     <span className={styles.cell}>{jar?.owner_name}</span>
                     <span
                       className={classNames(styles.cell, {
@@ -131,7 +137,13 @@ export const Statistics = ({
               const jar = jars.find((jar) => jar.id === Number(jarId));
 
               return (
-                <div key={jarId} className={styles['grid-row']}>
+                <div
+                  key={jarId}
+                  className={classNames(
+                    styles['grid-row'],
+                    styles['two-cells']
+                  )}
+                >
                   <span className={styles.cell}>{jar?.owner_name}</span>
                   <span className={styles.cell}>{speed}</span>
                 </div>
