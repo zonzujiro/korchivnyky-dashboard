@@ -10,7 +10,7 @@ import { AppContext } from '../dal';
 
 import styles from './Statistics.module.css';
 import { StatisticsSection } from './StatisticsSection/StatisticsSection';
-import { getAccountsMovements } from './gatherAnalytics';
+import { getAccountsMovements, getGatheringSpeed } from './analytics';
 import { ExportStatistics } from './ExportStatistics/ExportStatistics';
 
 const FIVE_DAYS_AGO = new Date();
@@ -45,6 +45,13 @@ export const Statistics = ({
     // TODAY
   );
 
+  const speed = getGatheringSpeed(
+    usedJars,
+    filteredStatistics,
+    new Date(startDate),
+    new Date(endDate)
+  );
+
   return (
     <div className={styles['statistics-wrapper']}>
       <div className={classNames(styles.column, styles.statistics)}>
@@ -59,7 +66,7 @@ export const Statistics = ({
         <div className={styles['column-header']}>
           <div className={styles['date-inputs-wrapper']}>
             <span className={styles['inputs-title-prefix']}>
-              Динаміка за період:
+              Аналітика за період:
             </span>
             <div className={styles['date-inputs']}>
               <input
@@ -83,6 +90,7 @@ export const Statistics = ({
           </div>
         </div>
         <div className={styles['analytics-content']}>
+          <h4>Динаміка по банкам</h4>
           <div className={styles.growth}>
             {growth.map(
               ({
@@ -114,6 +122,21 @@ export const Statistics = ({
                 );
               }
             )}
+          </div>
+        </div>
+        <div className={styles['analytics-content']}>
+          <h4>Середня швидкість</h4>
+          <div className={styles['gathering-speed-list']}>
+            {speed.map(({ jarId, speed }) => {
+              const jar = jars.find((jar) => jar.id === Number(jarId));
+
+              return (
+                <div key={jarId} className={styles['grid-row']}>
+                  <span className={styles.cell}>{jar?.owner_name}</span>
+                  <span className={styles.cell}>{speed}</span>
+                </div>
+              );
+            })}
           </div>
         </div>
       </div>

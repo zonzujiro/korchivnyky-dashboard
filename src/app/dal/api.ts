@@ -1,5 +1,6 @@
 import type { Jar, JarStatisticRecord } from '../types';
 import randomColor from 'randomcolor';
+import { addColorToJar } from '../utils';
 
 type FoundersIds = number;
 
@@ -36,11 +37,6 @@ const postData = async (url: string, payload?: Record<string, any>) => {
 };
 
 export const getJars = async (): Promise<Array<Jar>> => {
-  const addColorToJar = (jar: Jar) => ({
-    ...jar,
-    color: randomColor(),
-  });
-
   const jars = await getData('https://jars.fly.dev/jars');
 
   return jars.map(addColorToJar);

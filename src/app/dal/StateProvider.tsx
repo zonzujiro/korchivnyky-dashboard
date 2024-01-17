@@ -2,6 +2,7 @@
 
 import React from 'react';
 import type { Jar } from '../types';
+import { addColorToJar } from '../utils';
 
 export type AppState = {
   selectedJars: Array<Jar>;

@@ -57,6 +57,10 @@
   flex-direction: column;
 }
 
+.analytics-content {
+  margin-bottom: 25px;
+}
+
 .analytics {
   flex-grow: 1;
 }
