@@ -6,6 +6,7 @@ import classNames from 'classnames';
 type DialogProps = {
   renderButton({ openDialog }: { openDialog: () => void }): ReactElement;
   renderContent({ closeDialog }: { closeDialog: () => void }): ReactElement;
+  prepareClosing?: () => void | Promise<void>;
   title: string;
   className?: string;
 };
@@ -15,6 +16,7 @@ export const Dialog = ({
   renderContent,
   className,
   title,
+  prepareClosing,
 }: DialogProps) => {
   const dialogRef = useRef<HTMLDialogElement>(null);
 
@@ -22,7 +24,8 @@ export const Dialog = ({
     dialogRef.current?.showModal();
   };
 
-  const closeDialog = () => {
+  const closeDialog = async () => {
+    await prepareClosing?.();
     dialogRef.current?.close();
   };
 

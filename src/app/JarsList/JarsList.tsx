@@ -55,10 +55,9 @@ const AddJarPopup = ({
   const [isLoading, setIsLoading] = useState(false);
   const [errorText, setErrorText] = useState('');
 
-  const handleDialogClosing = (closeDialog: () => void) => {
+  const resetForm = () => {
     formRef.current?.reset();
     setErrorText('');
-    closeDialog();
   };
 
   const handleSubmit = async (
@@ -96,12 +95,14 @@ const AddJarPopup = ({
 
     setIsLoading(false);
     addJar(response);
+    resetForm();
     closeDialog();
   };
 
   return (
     <Dialog
       title='Давай додамо баночку!'
+      prepareClosing={resetForm}
       renderButton={({ openDialog }) => (
         <li
           className={classNames(styles.item, styles['add-jar'])}
@@ -143,9 +144,7 @@ const AddJarPopup = ({
             <label htmlFor='curator-input'>Обери куратора</label>
             <CuratorsDropdown />
             <button type='submit'>Створити банку</button>
-            <button onClick={() => handleDialogClosing(closeDialog)}>
-              Закрити
-            </button>
+
             {errorText && (
               <span className={styles['form-error']}>⚠️ {errorText}</span>
             )}
@@ -238,7 +237,7 @@ export const JarsList = () => {
             className={styles['pseudo-button']}
             onClick={() => setIsAllVisible(!isAllVisible)}
           >
-            {!isAllVisible ? 'Є приховані' : 'Всі банки відображено'}
+            {!isAllVisible ? 'Є приховані' : '👀 Всі банки відображено'}
           </span>
         )}
       </div>

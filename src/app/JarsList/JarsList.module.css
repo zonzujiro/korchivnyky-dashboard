@@ -130,6 +130,7 @@
 .controls {
   display: flex;
   flex-wrap: wrap;
+  align-items: center;
 }
 
 .controls > * {
@@ -152,14 +153,24 @@
 
 .pseudo-button {
   cursor: pointer;
+  padding: 6px;
+  border-radius: 6px;
+  font-size: 0.8em;
+  color: white;
+  background: black;
+  border: 1px solid black;
+  transition: 0.15s;
   user-select: none;
 }
 
-.pseudo-button.disabled {
-  color: grey;
-  cursor: default;
+.pseudo-button:hover {
+  background: white;
+  color: black;
 }
 
-.pseudo-button:not(.disabled):hover {
-  text-decoration: underline dashed;
+.pseudo-button.disabled {
+  color: white;
+  cursor: default;
+  background: lightgrey;
+  border: 1px solid lightgrey;
 }
