@@ -107,7 +107,7 @@ const AddJarPopup = ({
           className={classNames(styles.item, styles['add-jar'])}
           onClick={openDialog}
         >
-          + Додати банку
+          ➕ Додати банку
         </li>
       )}
       renderContent={({ closeDialog }) => (
@@ -187,9 +187,8 @@ const JarItem = ({ jar, isSelected, onClick }: JarItemProps) => {
       </div>
       <div className={classNames(styles['item-column'], styles['jar-info'])}>
         <h3>
-          {owner_name} {is_finished ? <span id='lock'>🔒</span> : null}
+          {owner_name} {is_finished ? <span>🔒</span> : null}
         </h3>
-        <Tooltip anchorSelect='#lock'>Збір завершено</Tooltip>
         <span>
           Куратор: {parent_jar_id ? CURATORS[parent_jar_id] : 'Немає'}
         </span>

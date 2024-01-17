@@ -16,9 +16,19 @@
 }
 
 .add-jar {
-  color: blue;
   justify-content: center;
   align-items: center;
+  background: black;
+  color: white;
+  padding: 15px;
+  border-radius: 35px;
+  transition: 0.15s;
+}
+
+.add-jar:hover {
+  background: white;
+  color: black;
+  border-radius: 0 35px;
 }
 
 .add-jar-dialog {

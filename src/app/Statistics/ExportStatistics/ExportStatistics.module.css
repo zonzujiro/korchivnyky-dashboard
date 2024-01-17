@@ -6,6 +6,7 @@
   color: white;
   background: black;
   border: 1px solid black;
+  transition: 0.15s;
 }
 
 .export-button:hover {
