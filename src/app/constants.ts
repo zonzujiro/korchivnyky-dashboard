@@ -1,3 +1,4 @@
+// Order matters
 export const CURATORS_IDS = {
   babenko: 17,
   voloshenko: 26,
@@ -24,16 +25,6 @@ export const CURATORS_COLORS = {
   [CURATORS_IDS.tytarenko]: '#B6D7A8',
   [CURATORS_IDS.makogon]: '#D5A6BD',
 };
-
-export const CURATORS_NICKNAMES = Object.entries(CURATORS_IDS).reduce(
-  (acc, [nickname, id]) => {
-    return {
-      ...acc,
-      [id]: nickname,
-    };
-  },
-  {} as Record<number, string>
-);
 
 export const CURATORS = (
   Object.keys(CURATORS_IDS) as Array<keyof typeof CURATORS_IDS>

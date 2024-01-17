@@ -12,12 +12,6 @@ import { CampaignDescription } from './CampaignDescription/CampaignDescription';
 
 const GOAL = 2500000;
 
-const getGatheredMoney = (jars: Array<Jar>) => {
-  return Object.values(jars).reduce((acc, { accumulated }) => {
-    return acc + accumulated;
-  }, 0);
-};
-
 export default async function Home() {
   const jars = await getJars();
   const statistics = await getStatistics();
@@ -28,8 +22,6 @@ export default async function Home() {
       created_at: item.created_at.slice(0, 10),
     };
   });
-
-  const currentSum = getGatheredMoney(jars);
 
   return (
     <>
@@ -49,7 +41,7 @@ export default async function Home() {
       <main className={styles.main}>
         <StateProvider jars={jars}>
           <div className={styles['general-info']}>
-            <Progress goal={GOAL} currentSum={currentSum} />
+            <Progress goal={GOAL} jars={jars} />
             <CampaignDescription />
           </div>
           <JarsList />

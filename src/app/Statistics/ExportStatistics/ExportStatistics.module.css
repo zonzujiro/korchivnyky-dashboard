@@ -1,0 +1,17 @@
+.export-button {
+  cursor: pointer;
+}
+
+.export-button:hover {
+  text-decoration: underline dashed;
+}
+
+.export-dialog-content {
+  width: 800px;
+  height: 700px;
+  font-weight: normal;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  padding: 30px;
+}

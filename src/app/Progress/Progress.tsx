@@ -1,15 +1,23 @@
 import randomColor from 'randomcolor';
 import { toCurrency } from '../utils';
 import styles from './Progress.module.css';
+import type { Jar } from '../types';
 
 type ProgressProps = {
-  currentSum: number;
   goal: number;
+  jars: Array<Jar>;
 };
 
 const progressColor = randomColor();
 
-export const Progress = ({ goal, currentSum }: ProgressProps) => {
+const getGatheredMoney = (jars: Array<Jar>) => {
+  return Object.values(jars).reduce((acc, { accumulated }) => {
+    return acc + accumulated;
+  }, 0);
+};
+
+export const Progress = ({ goal, jars }: ProgressProps) => {
+  const currentSum = getGatheredMoney(jars);
   const percentage = `${Math.round((100 * currentSum) / goal)}%`;
 
   return (
