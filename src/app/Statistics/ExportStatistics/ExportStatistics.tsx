@@ -23,62 +23,69 @@ const StatisticsRow = ({ jar }: { jar: Jar }) => (
 export const ExportStatistics = ({ jars }: { jars: Array<Jar> }) => {
   return (
     <Dialog
+      title='Експорт даних'
       renderButton={({ openDialog }) => (
         <span className={styles['export-button']} onClick={openDialog}>
           📑 Експорт
         </span>
       )}
-      renderContent={({ closeDialog }) => {
+      renderContent={() => {
         return (
           <div className={styles['export-dialog-content']}>
-            <table>
-              <tbody>
-                {Object.values(CURATORS_IDS).map((curatorId) => {
-                  const curator = jars.find((jar) => jar.id === curatorId)!;
-                  const curated = jars.filter(
-                    (jar) => jar.parent_jar_id === curatorId
-                  );
-
-                  if (!curated.length) {
-                    return (
-                      <tr
-                        key={curator.id}
-                        style={{ backgroundColor: CURATORS_COLORS[curator.id] }}
-                      >
-                        <td>{curator.owner_name}</td>
-                        <StatisticsRow jar={curator} />
-                      </tr>
+            <span>Просто скопіюй та вставь у нашу таблицю</span>
+            <div className={styles['export-table']}>
+              <table>
+                <tbody>
+                  {Object.values(CURATORS_IDS).map((curatorId) => {
+                    const curator = jars.find((jar) => jar.id === curatorId)!;
+                    const curated = jars.filter(
+                      (jar) => jar.parent_jar_id === curatorId
                     );
-                  }
 
-                  const [first, ...rest] = curated;
+                    if (!curated.length) {
+                      return (
+                        <tr
+                          key={curator.id}
+                          style={{
+                            backgroundColor: CURATORS_COLORS[curator.id],
+                          }}
+                        >
+                          <td>{curator.owner_name}</td>
+                          <StatisticsRow jar={curator} />
+                        </tr>
+                      );
+                    }
 
-                  return (
-                    <Fragment key={curator.id}>
-                      <tr
-                        style={{ backgroundColor: CURATORS_COLORS[curator.id] }}
-                      >
-                        <td rowSpan={curated.length}>{curator.owner_name}</td>
-                        <StatisticsRow jar={first} />
-                      </tr>
-                      {rest.map((jar) => {
-                        return (
-                          <tr
-                            key={jar.id}
-                            style={{
-                              backgroundColor: CURATORS_COLORS[curator.id],
-                            }}
-                          >
-                            <StatisticsRow jar={jar} />
-                          </tr>
-                        );
-                      })}
-                    </Fragment>
-                  );
-                })}
-              </tbody>
-            </table>
-            <button onClick={closeDialog}>Close</button>
+                    const [first, ...rest] = curated;
+
+                    return (
+                      <Fragment key={curator.id}>
+                        <tr
+                          style={{
+                            backgroundColor: CURATORS_COLORS[curator.id],
+                          }}
+                        >
+                          <td rowSpan={curated.length}>{curator.owner_name}</td>
+                          <StatisticsRow jar={first} />
+                        </tr>
+                        {rest.map((jar) => {
+                          return (
+                            <tr
+                              key={jar.id}
+                              style={{
+                                backgroundColor: CURATORS_COLORS[curator.id],
+                              }}
+                            >
+                              <StatisticsRow jar={jar} />
+                            </tr>
+                          );
+                        })}
+                      </Fragment>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
           </div>
         );
       }}

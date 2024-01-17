@@ -7,3 +7,30 @@
   margin: auto;
   min-width: 400px;
 }
+
+.dialog-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 30px;
+  border-bottom: 1px solid black;
+}
+
+.close-button {
+  padding: 6px;
+  cursor: pointer;
+  border-radius: 6px;
+  color: white;
+  background: black;
+  font-size: 0.8em;
+  border: 1px solid black;
+}
+
+.close-button:hover {
+  color: black;
+  background: white;
+}
+
+.dialog-content {
+  padding: 30px;
+}

@@ -1,17 +1,27 @@
 .export-button {
   cursor: pointer;
+  padding: 6px;
+  border-radius: 6px;
+  font-size: 0.8em;
+  color: white;
+  background: black;
+  border: 1px solid black;
 }
 
 .export-button:hover {
-  text-decoration: underline dashed;
+  color: black;
+  background: white;
 }
 
 .export-dialog-content {
   width: 800px;
-  height: 700px;
+  height: 500px;
   font-weight: normal;
+}
+
+.export-table {
   display: flex;
   justify-content: center;
   flex-direction: column;
-  padding: 30px;
+  margin-top: 20px;
 }

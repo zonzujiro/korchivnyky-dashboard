@@ -100,6 +100,7 @@ const AddJarPopup = ({
 
   return (
     <Dialog
+      title='Давай додамо баночку!'
       renderButton={({ openDialog }) => (
         <li
           className={classNames(styles.item, styles['add-jar'])}
@@ -119,7 +120,6 @@ const AddJarPopup = ({
             className={styles['add-jar-inputs']}
             onSubmit={(ev) => handleSubmit(ev, closeDialog)}
           >
-            <h3>Давай додамо баночку!</h3>
             <label htmlFor='owner-input'>Як звуть власника банки?</label>
             <input
               name='owner'

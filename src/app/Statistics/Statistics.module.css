@@ -35,6 +35,7 @@
 .column-header {
   margin: 15px 0;
   font-weight: bold;
+  align-items: center;
 }
 
 .statistics {
