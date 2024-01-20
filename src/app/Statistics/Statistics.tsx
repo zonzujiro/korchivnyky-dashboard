@@ -3,7 +3,7 @@
 import React, { useState, useContext } from 'react';
 import classNames from 'classnames';
 
-import type { JarStatisticRecord } from '../types';
+import type { Jar, JarStatisticRecord } from '../types';
 
 import { toCurrency } from '../utils';
 import { AppContext } from '../dal';
@@ -15,6 +15,55 @@ import { ExportStatistics } from './ExportStatistics/ExportStatistics';
 
 const FIVE_DAYS_AGO = new Date();
 FIVE_DAYS_AGO.setDate(FIVE_DAYS_AGO.getDate() - 5);
+
+const NO_DATA_TEXT = 'Немає даних 🤷‍♂️';
+
+const GrowthRow = ({
+  jarId,
+  startDateAmount,
+  endDateAmount,
+  percentage,
+  difference,
+  jars,
+}: ReturnType<typeof getAccountsMovements>[number] & { jars: Array<Jar> }) => {
+  const jar = jars.find((jar) => jar.id === Number(jarId));
+
+  return (
+    <div className={classNames(styles['grid-row'], styles['three-cells'])}>
+      <span className={styles.cell}>{jar?.owner_name}</span>
+      <span
+        className={classNames(styles.cell, {
+          [styles['positive-dynamic']]: difference > 0,
+          [styles['no-dynamic']]: difference === 0,
+          [styles['negative-dynamic']]: difference < 0,
+        })}
+      >
+        {toCurrency(difference)} ({percentage})
+      </span>
+      <span className={styles.cell}>
+        {toCurrency(startDateAmount)} → {toCurrency(endDateAmount)}
+      </span>
+    </div>
+  );
+};
+
+const SpeedRow = ({
+  jarId,
+  speed,
+  jars,
+}: ReturnType<typeof getGatheringSpeed>[number] & { jars: Array<Jar> }) => {
+  const jar = jars.find((jar) => jar.id === Number(jarId));
+
+  return (
+    <div
+      key={jarId}
+      className={classNames(styles['grid-row'], styles['two-cells'])}
+    >
+      <span className={styles.cell}>{jar?.owner_name}</span>
+      <span className={styles.cell}>{speed}</span>
+    </div>
+  );
+};
 
 export const Statistics = ({
   statistics,
@@ -92,63 +141,21 @@ export const Statistics = ({
         <div className={styles['analytics-content']}>
           <h4>Динаміка по банкам</h4>
           <div className={styles.growth}>
-            {growth.map(
-              ({
-                jarId,
-                startDateAmount,
-                endDateAmount,
-                percentage,
-                difference,
-              }) => {
-                const jar = jars.find((jar) => jar.id === Number(jarId));
-
-                return (
-                  <div
-                    key={jarId}
-                    className={classNames(
-                      styles['grid-row'],
-                      styles['three-cells']
-                    )}
-                  >
-                    <span className={styles.cell}>{jar?.owner_name}</span>
-                    <span
-                      className={classNames(styles.cell, {
-                        [styles['positive-dynamic']]: difference > 0,
-                        [styles['no-dynamic']]: difference === 0,
-                        [styles['negative-dynamic']]: difference < 0,
-                      })}
-                    >
-                      {toCurrency(difference)} ({percentage})
-                    </span>
-                    <span className={styles.cell}>
-                      {toCurrency(startDateAmount)} →{' '}
-                      {toCurrency(endDateAmount)}
-                    </span>
-                  </div>
-                );
-              }
-            )}
+            {growth.length
+              ? growth.map((dataEntry) => (
+                  <GrowthRow key={dataEntry.jarId} jars={jars} {...dataEntry} />
+                ))
+              : NO_DATA_TEXT}
           </div>
         </div>
         <div className={styles['analytics-content']}>
           <h4>Середня швидкість</h4>
           <div className={styles['gathering-speed-list']}>
-            {speed.map(({ jarId, speed }) => {
-              const jar = jars.find((jar) => jar.id === Number(jarId));
-
-              return (
-                <div
-                  key={jarId}
-                  className={classNames(
-                    styles['grid-row'],
-                    styles['two-cells']
-                  )}
-                >
-                  <span className={styles.cell}>{jar?.owner_name}</span>
-                  <span className={styles.cell}>{speed}</span>
-                </div>
-              );
-            })}
+            {speed.length
+              ? speed.map((dataEntry) => (
+                  <SpeedRow key={dataEntry.jarId} jars={jars} {...dataEntry} />
+                ))
+              : NO_DATA_TEXT}
           </div>
         </div>
       </div>
