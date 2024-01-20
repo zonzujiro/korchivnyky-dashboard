@@ -11,7 +11,6 @@ import { CURATORS, CURATORS_IDS, CURATORS_NAMES } from '../constants';
 import { toCurrency } from '../utils';
 
 import styles from './JarsList.module.css';
-import { Tooltip } from 'react-tooltip';
 
 type JarItemProps = {
   jar: Jar;
@@ -217,8 +216,14 @@ export const JarsList = () => {
     <>
       <div className={styles.controls}>
         <span>
-          Загалом банок: {jars.length} | Обрано: {selectedJars.length}
+          Загалом банок: {jars.length} | Закрили збір:{' '}
+          {jars.filter((jar) => jar.is_finished).length} | Обрано:{' '}
+          {selectedJars.length}
         </span>
+        <div className={styles['curators-filter']}>
+          <span>Фільтр по куратору</span>
+          <CuratorsDropdown onChange={setSelectedCurator} />
+        </div>
         <span
           className={classNames(styles['pseudo-button'], {
             [styles['disabled']]: !selectedJars.length,
@@ -227,11 +232,6 @@ export const JarsList = () => {
         >
           Відмінити вибір
         </span>
-
-        <div className={styles['curators-filter']}>
-          <span>Фільтр по куратору</span>
-          <CuratorsDropdown onChange={setSelectedCurator} />
-        </div>
         {jars.length > 10 && (
           <span
             className={styles['pseudo-button']}

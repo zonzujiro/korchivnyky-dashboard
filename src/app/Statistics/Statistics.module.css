@@ -146,4 +146,16 @@
     display: grid;
     grid-template-columns: 40% 30% 30%;
   }
+
+  .column {
+    margin-right: 0;
+  }
+
+  .growth {
+    padding: 0;
+  }
+
+  .cell {
+    margin-left: 0;
+  }
 }
