@@ -1,10 +1,10 @@
 'use client';
 
 import React, { useState, useRef, useContext } from 'react';
-import Image from 'next/image';
 import classNames from 'classnames';
 
-import { Dialog } from '../Dialog/Dialog';
+import { Image } from '../Image';
+import { Dialog } from '../Dialog';
 import type { Jar } from '../types';
 import { AppContext, AppState, postJar } from '../dal';
 import { CURATORS, CURATORS_IDS, CURATORS_NAMES } from '../constants';
@@ -155,8 +155,20 @@ const AddJarPopup = ({
 };
 
 const JarItem = ({ jar, isSelected, onClick }: JarItemProps) => {
-  const { url, goal, accumulated, owner_name, parent_jar_id, is_finished } =
-    jar;
+  const {
+    url,
+    goal,
+    accumulated,
+    owner_name,
+    parent_jar_id,
+    is_finished,
+    logo,
+  } = jar;
+
+  const copyJarLink = (ev: React.MouseEvent<HTMLSpanElement>) => {
+    ev.stopPropagation();
+    navigator.clipboard.writeText(url);
+  };
 
   return (
     <li
@@ -167,20 +179,18 @@ const JarItem = ({ jar, isSelected, onClick }: JarItemProps) => {
     >
       <div className={styles['item-column']}>
         <Image
-          src='/images/jar-logo.jpg'
+          src={logo ? logo : '/images/jar-logo.jpg'}
+          fallbackSrc='/images/jar-logo.jpg'
           alt='jar logo'
           className={styles.logo}
           width={50}
           height={50}
         />
         <div className={styles['jar-settings']}>
-          <span
-            className={styles.icon}
-            onClick={() => navigator.clipboard.writeText(url)}
-          >
+          <span className={styles.icon} onClick={copyJarLink}>
             🔗
           </span>
-          <span className={styles.icon}>🔧</span>
+          {/* <span className={styles.icon}>🔧</span> */}
         </div>
       </div>
       <div className={classNames(styles['item-column'], styles['jar-info'])}>

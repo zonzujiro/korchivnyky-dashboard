@@ -1,5 +1,4 @@
 import { Tooltip } from 'react-tooltip';
-import randomColor from 'randomcolor';
 
 import type { Jar } from '@/app/types';
 import { toCurrency } from '@/app/utils';
@@ -11,19 +10,7 @@ const getProgressBarStyle = (
   jar: Jar,
   percentageOfGoal: string
 ): React.CSSProperties => {
-  let { goal, color } = jar;
-
-  const stripes = randomColor();
-
-  // if (goal === null) {
-  //   color = `repeating-linear-gradient(
-  //         45deg,
-  //         ${color},
-  //         ${color} 10px,
-  //         ${stripes} 10px,
-  //         ${stripes} 20px
-  //       )`;
-  // }
+  const { color } = jar;
 
   return {
     width: parseInt(percentageOfGoal) ? percentageOfGoal : `1%`,

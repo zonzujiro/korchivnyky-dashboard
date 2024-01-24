@@ -13,10 +13,19 @@ import { StatisticsSection } from './StatisticsSection/StatisticsSection';
 import { getAccountsMovements, getGatheringSpeed } from './analytics';
 import { ExportStatistics } from './ExportStatistics/ExportStatistics';
 
+const TODAY = new Date();
 const FIVE_DAYS_AGO = new Date();
 FIVE_DAYS_AGO.setDate(FIVE_DAYS_AGO.getDate() - 5);
 
 const NO_DATA_TEXT = 'Немає даних 🤷‍♂️';
+
+const getDateInputInitialValue = (date: Date) => {
+  const day = date.getDate();
+  const month = `${date.getMonth() + 1}`;
+  const year = date.getFullYear();
+
+  return `${year}-${month}-${day}`;
+};
 
 const GrowthRow = ({
   jarId,
