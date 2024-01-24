@@ -1,5 +1,4 @@
 import type { Jar, JarStatisticRecord } from '../types';
-import randomColor from 'randomcolor';
 import { addColorToJar } from '../utils';
 
 type FoundersIds = number;
@@ -11,7 +10,10 @@ const getData = async (url: string) => {
   return json;
 };
 
-const postData = async (url: string, payload?: Record<string, any>) => {
+const postData = async (
+  url: string,
+  payload?: Record<string, string | number | boolean>
+) => {
   const options = payload
     ? {
         headers: {

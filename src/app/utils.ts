@@ -5,7 +5,7 @@ export const toCurrency = (value: number) => {
   return `${value.toLocaleString('ua-UA').replaceAll(',', ' ')} ₴`;
 };
 
-export const groupBy = <TItem = any>(
+export const groupBy = <TItem>(
   collection: Array<TItem>,
   callback: (value: TItem) => string | number
 ) => {

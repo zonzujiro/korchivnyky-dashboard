@@ -1,5 +1,5 @@
-import { Fragment, useRef } from 'react';
-import { Dialog } from '@/app/Dialog/Dialog';
+import { Fragment } from 'react';
+import { Dialog } from '@/app/library/Dialog/Dialog';
 import {
   CURATORS_COLORS,
   CURATORS_IDS,
@@ -8,6 +8,7 @@ import {
 import { Jar } from '@/app/types';
 
 import styles from './ExportStatistics.module.css';
+import { Button } from '@/app/library';
 
 const StatisticsRow = ({ jar }: { jar: Jar }) => (
   <>
@@ -25,9 +26,7 @@ export const ExportStatistics = ({ jars }: { jars: Array<Jar> }) => {
     <Dialog
       title='Експорт даних'
       renderButton={({ openDialog }) => (
-        <span className={styles['export-button']} onClick={openDialog}>
-          📑 Експорт
-        </span>
+        <Button onClick={openDialog}>📑 Експорт</Button>
       )}
       renderContent={() => {
         return (

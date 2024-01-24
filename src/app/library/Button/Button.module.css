@@ -1,0 +1,22 @@
+.button {
+  cursor: pointer;
+  padding: 6px;
+  border-radius: 6px;
+  font-size: 0.8em;
+  color: white;
+  background: black;
+  border: 1px solid black;
+  transition: 0.15s;
+}
+
+.button:hover {
+  background: white;
+  color: black;
+}
+
+.button:disabled {
+  color: white;
+  cursor: default;
+  background: lightgrey;
+  border: 1px solid lightgrey;
+}

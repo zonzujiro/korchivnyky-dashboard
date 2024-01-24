@@ -1,6 +1,5 @@
 import Image from 'next/image';
 
-import type { Jar } from './types';
 import styles from './page.module.css';
 import { getJars, getStatistics } from './dal/api';
 

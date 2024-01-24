@@ -3,8 +3,7 @@
 import React, { useState, useRef, useContext } from 'react';
 import classNames from 'classnames';
 
-import { Image } from '../Image';
-import { Dialog } from '../Dialog';
+import { Image, Dialog, Button } from '../library';
 import type { Jar } from '../types';
 import { AppContext, AppState, postJar } from '../dal';
 import { CURATORS, CURATORS_IDS, CURATORS_NAMES } from '../constants';
@@ -118,6 +117,7 @@ const AddJarPopup = ({
             </div>
           )}
           <form
+            ref={formRef}
             className={styles['add-jar-inputs']}
             onSubmit={(ev) => handleSubmit(ev, closeDialog)}
           >
@@ -138,11 +138,10 @@ const AddJarPopup = ({
               type='url'
               required
               pattern='https://send.monobank.ua/jar/.*'
-              className={styles['jar-url-input']}
             />
             <label htmlFor='curator-input'>Обери куратора</label>
             <CuratorsDropdown />
-            <button type='submit'>Створити банку</button>
+            <Button type='submit'>💾 Створити банку</Button>
 
             {errorText && (
               <span className={styles['form-error']}>⚠️ {errorText}</span>
@@ -234,21 +233,13 @@ export const JarsList = () => {
           <span>Фільтр по куратору</span>
           <CuratorsDropdown onChange={setSelectedCurator} />
         </div>
-        <span
-          className={classNames(styles['pseudo-button'], {
-            [styles['disabled']]: !selectedJars.length,
-          })}
-          onClick={resetJarSelection}
-        >
+        <Button disabled={!selectedJars.length} onClick={resetJarSelection}>
           Відмінити вибір
-        </span>
+        </Button>
         {jars.length > 10 && (
-          <span
-            className={styles['pseudo-button']}
-            onClick={() => setIsAllVisible(!isAllVisible)}
-          >
+          <Button onClick={() => setIsAllVisible(!isAllVisible)}>
             {!isAllVisible ? 'Є приховані' : '👀 Всі банки відображено'}
-          </span>
+          </Button>
         )}
       </div>
       <ol className={styles['jars-list']}>

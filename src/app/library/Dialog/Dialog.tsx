@@ -2,6 +2,7 @@ import { ReactElement, useRef } from 'react';
 
 import styles from './Dialog.module.css';
 import classNames from 'classnames';
+import { Button } from '../Button/Button';
 
 type DialogProps = {
   renderButton({ openDialog }: { openDialog: () => void }): ReactElement;
@@ -35,9 +36,7 @@ export const Dialog = ({
       <dialog ref={dialogRef} className={classNames(styles.dialog, className)}>
         <div className={styles['dialog-header']}>
           <h4>{title}</h4>
-          <span className={styles['close-button']} onClick={closeDialog}>
-            X
-          </span>
+          <Button onClick={closeDialog}>X</Button>
         </div>
         <div className={styles['dialog-content']}>
           {renderContent({ closeDialog })}
