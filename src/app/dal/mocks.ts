@@ -1,4 +1,5 @@
 import randomColor from 'randomcolor';
+import type { ExpenseType } from '../types';
 
 export const jars = [
   {
@@ -411,3 +412,9 @@ export const statistics = [
     created_at: item.created_at.slice(0, 10),
   };
 });
+
+export const expenseTypes: Array<ExpenseType> = [
+  { id: 1, fundraisingCampaignId: 1, title: 'Дизель' },
+  { id: 2, fundraisingCampaignId: 2, title: 'Пікапи' },
+  { id: 3, fundraisingCampaignId: 3, title: 'Хімарси' },
+];

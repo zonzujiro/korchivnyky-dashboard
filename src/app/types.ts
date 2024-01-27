@@ -18,3 +18,18 @@ export type JarStatisticRecord = {
   accumulated: number;
   created_at: string;
 };
+
+export type ExpenseType = {
+  id: number;
+  fundraisingCampaignId: number;
+  title: string;
+};
+
+export type ExpenseRecord = {
+  id: number;
+  sum: string;
+  jarId: number;
+  createdAt: string;
+  expenseTypeId: ExpenseType['id'];
+  receipt: string;
+};

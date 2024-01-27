@@ -1,7 +1,6 @@
 import type { Jar, JarStatisticRecord } from '../types';
 import { addColorToJar } from '../utils';
-
-type FoundersIds = number;
+import { expenseTypes } from './mocks';
 
 const getData = async (url: string) => {
   const response = await fetch(url);
@@ -10,17 +9,14 @@ const getData = async (url: string) => {
   return json;
 };
 
-const postData = async (
-  url: string,
-  payload?: Record<string, string | number | boolean>
-) => {
+const postData = async (url: string, payload?: FormData) => {
   const options = payload
     ? {
         headers: {
           Accept: 'application/json',
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(payload),
+        body: payload,
       }
     : {};
 
@@ -48,10 +44,16 @@ export const getStatistics = (): Promise<Array<JarStatisticRecord>> => {
   return postData('https://jars.fly.dev/statistics');
 };
 
-export const postJar = async (payload: {
-  url: string;
-  ownerName: string;
-  parentJarId?: FoundersIds;
-}) => {
+// export const postJar = async (payload: {
+//   url: string;
+//   ownerName: string;
+//   parentJarId?: FoundersIds;
+// }) => {
+//   return postData('https://jars.fly.dev/jars', payload);
+// };
+
+export const postJar = async (payload: FormData) => {
   return postData('https://jars.fly.dev/jars', payload);
 };
+
+export const getExpensesTypes = () => Promise.resolve(expenseTypes);

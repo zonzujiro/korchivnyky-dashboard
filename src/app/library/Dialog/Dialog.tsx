@@ -1,4 +1,5 @@
 import { ReactElement, useRef } from 'react';
+import { createPortal } from 'react-dom';
 
 import styles from './Dialog.module.css';
 import classNames from 'classnames';
@@ -30,18 +31,32 @@ export const Dialog = ({
     dialogRef.current?.close();
   };
 
+  /**
+   * We need to catch event because events from portal will bubble
+   * into parent element
+   */
+  const catchEvent = (ev: React.MouseEvent<HTMLDialogElement>) =>
+    ev.stopPropagation();
+
   return (
     <>
       {renderButton({ openDialog })}
-      <dialog ref={dialogRef} className={classNames(styles.dialog, className)}>
-        <div className={styles['dialog-header']}>
-          <h4>{title}</h4>
-          <Button onClick={closeDialog}>X</Button>
-        </div>
-        <div className={styles['dialog-content']}>
-          {renderContent({ closeDialog })}
-        </div>
-      </dialog>
+      {createPortal(
+        <dialog
+          ref={dialogRef}
+          className={classNames(styles.dialog, className)}
+          onClick={catchEvent}
+        >
+          <div className={styles['dialog-header']}>
+            <h4>{title}</h4>
+            <Button onClick={closeDialog}>X</Button>
+          </div>
+          <div className={styles['dialog-content']}>
+            {renderContent({ closeDialog })}
+          </div>
+        </dialog>,
+        document.body
+      )}
     </>
   );
 };

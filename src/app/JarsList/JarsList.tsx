@@ -1,156 +1,23 @@
 'use client';
 
-import React, { useState, useRef, useContext } from 'react';
+import React, { useState, useContext } from 'react';
 import classNames from 'classnames';
 
-import { Image, Dialog, Button } from '../library';
+import { Image, Button } from '../library';
 import type { Jar } from '../types';
-import { AppContext, AppState, postJar } from '../dal';
-import { CURATORS, CURATORS_IDS, CURATORS_NAMES } from '../constants';
+import { AppContext } from '../dal';
+import { CURATORS } from '../constants';
 import { toCurrency } from '../utils';
 
 import styles from './JarsList.module.css';
+import { CuratorsDropdown } from './CuratorsDropdown';
+import { AddJarDialog } from './AddJarDialog/AddJarDialog';
+import { AddExpenseDialog } from './AddExpenseDialog/AddExpenseDialog';
 
 type JarItemProps = {
   jar: Jar;
   isSelected: boolean;
   onClick(): void;
-};
-
-const CuratorsDropdown = ({
-  onChange,
-}: {
-  onChange?: (value: string) => void;
-}) => {
-  return (
-    <select
-      id='curator-input'
-      name='curator'
-      onChange={(ev) => onChange?.(ev.target.value)}
-    >
-      <option value=''>Всі</option>
-      <option value={CURATORS_IDS.gryshenko}>{CURATORS_NAMES.gryshenko}</option>
-      <option value={CURATORS_IDS.petrynyak}>{CURATORS_NAMES.petrynyak}</option>
-      <option value={CURATORS_IDS.tytarenko}>{CURATORS_NAMES.tytarenko}</option>
-      <option value={CURATORS_IDS.babenko}>{CURATORS_NAMES.babenko}</option>
-      <option value={CURATORS_IDS.voloshenko}>
-        {CURATORS_NAMES.voloshenko}
-      </option>
-      <option value={CURATORS_IDS.makogon}>{CURATORS_NAMES.makogon}</option>
-    </select>
-  );
-};
-
-const AddJarPopup = ({
-  addJar,
-  jars,
-}: {
-  addJar: AppState['addJar'];
-  jars: Array<Jar>;
-}) => {
-  const formRef = useRef<HTMLFormElement>(null);
-
-  const [isLoading, setIsLoading] = useState(false);
-  const [errorText, setErrorText] = useState('');
-
-  const resetForm = () => {
-    formRef.current?.reset();
-    setErrorText('');
-  };
-
-  const handleSubmit = async (
-    ev: React.FormEvent<HTMLFormElement>,
-    closeDialog: () => void
-  ) => {
-    ev.preventDefault();
-
-    const { url, owner, curator } = (ev.target as HTMLFormElement)
-      .elements as unknown as {
-      url: HTMLInputElement;
-      owner: HTMLInputElement;
-      curator: HTMLSelectElement;
-    };
-
-    const existingJar = jars.find((jar) => {
-      return jar.url === url.value || jar.owner_name === owner.value;
-    });
-
-    if (existingJar) {
-      setErrorText(`Така банка вже є у ${existingJar.owner_name}`);
-      setIsLoading(false);
-      return;
-    }
-
-    const maybeWithCurator = curator.value
-      ? { parentJarId: Number(curator.value) }
-      : {};
-
-    const response = await postJar({
-      url: url.value,
-      ownerName: owner.value,
-      ...maybeWithCurator,
-    });
-
-    setIsLoading(false);
-    addJar(response);
-    resetForm();
-    closeDialog();
-  };
-
-  return (
-    <Dialog
-      title='Давай додамо баночку!'
-      prepareClosing={resetForm}
-      renderButton={({ openDialog }) => (
-        <li
-          className={classNames(styles.item, styles['add-jar'])}
-          onClick={openDialog}
-        >
-          ➕ Додати банку
-        </li>
-      )}
-      renderContent={({ closeDialog }) => (
-        <div className={styles['add-jar-inputs-wrapper']}>
-          {isLoading && (
-            <div className={styles['loader']}>
-              <h4>Праця робиться...</h4>
-            </div>
-          )}
-          <form
-            ref={formRef}
-            className={styles['add-jar-inputs']}
-            onSubmit={(ev) => handleSubmit(ev, closeDialog)}
-          >
-            <label htmlFor='owner-input'>Як звуть власника банки?</label>
-            <input
-              name='owner'
-              id='owner-input'
-              placeholder='Джейсон Стетхем'
-              type='text'
-              required
-              maxLength={30}
-            />
-            <label htmlFor='url-input'>Посилання на банку</label>
-            <input
-              id='url-input'
-              name='url'
-              placeholder='url'
-              type='url'
-              required
-              pattern='https://send.monobank.ua/jar/.*'
-            />
-            <label htmlFor='curator-input'>Обери куратора</label>
-            <CuratorsDropdown />
-            <Button type='submit'>💾 Створити банку</Button>
-
-            {errorText && (
-              <span className={styles['form-error']}>⚠️ {errorText}</span>
-            )}
-          </form>
-        </div>
-      )}
-    />
-  );
 };
 
 const JarItem = ({ jar, isSelected, onClick }: JarItemProps) => {
@@ -189,7 +56,7 @@ const JarItem = ({ jar, isSelected, onClick }: JarItemProps) => {
           <span className={styles.icon} onClick={copyJarLink}>
             🔗
           </span>
-          {/* <span className={styles.icon}>🔧</span> */}
+          <AddExpenseDialog jarId={jar.id} />
         </div>
       </div>
       <div className={classNames(styles['item-column'], styles['jar-info'])}>
@@ -243,7 +110,11 @@ export const JarsList = () => {
         )}
       </div>
       <ol className={styles['jars-list']}>
-        <AddJarPopup addJar={addJar} jars={jars} />
+        <AddJarDialog
+          buttonClassName={styles.item}
+          addJar={addJar}
+          jars={jars}
+        />
         {toRender.map((item) => {
           return (
             <JarItem
