@@ -1,4 +1,4 @@
-import { ReactElement, useRef } from 'react';
+import { ReactElement, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 
 import styles from './Dialog.module.css';
@@ -20,43 +20,58 @@ export const Dialog = ({
   title,
   prepareClosing,
 }: DialogProps) => {
+  const [isOpen, setIsOpen] = useState(false);
   const dialogRef = useRef<HTMLDialogElement>(null);
 
   const openDialog = () => {
-    dialogRef.current?.showModal();
+    setIsOpen(true);
   };
 
   const closeDialog = async () => {
     await prepareClosing?.();
-    dialogRef.current?.close();
+    setIsOpen(false);
   };
+
+  /**
+   * Because we don't want to render all dialogs at once
+   */
+  useEffect(() => {
+    if (isOpen) {
+      dialogRef.current?.showModal();
+    } else {
+      dialogRef.current?.close();
+    }
+  }, [isOpen]);
 
   /**
    * We need to catch event because events from portal will bubble
    * into parent element
    */
-  const catchEvent = (ev: React.MouseEvent<HTMLDialogElement>) =>
+  const catchEvent = (ev: React.MouseEvent<HTMLDialogElement>) => {
     ev.stopPropagation();
+    ev.preventDefault();
+  };
 
   return (
     <>
       {renderButton({ openDialog })}
-      {createPortal(
-        <dialog
-          ref={dialogRef}
-          className={classNames(styles.dialog, className)}
-          onClick={catchEvent}
-        >
-          <div className={styles['dialog-header']}>
-            <h4>{title}</h4>
-            <Button onClick={closeDialog}>X</Button>
-          </div>
-          <div className={styles['dialog-content']}>
-            {renderContent({ closeDialog })}
-          </div>
-        </dialog>,
-        document.body
-      )}
+      {isOpen &&
+        createPortal(
+          <dialog
+            ref={dialogRef}
+            className={classNames(styles.dialog, className)}
+            onClick={catchEvent}
+          >
+            <div className={styles['dialog-header']}>
+              <h4>{title}</h4>
+              <Button onClick={closeDialog}>X</Button>
+            </div>
+            <div className={styles['dialog-content']}>
+              {renderContent({ closeDialog })}
+            </div>
+          </dialog>,
+          document.body
+        )}
     </>
   );
 };
