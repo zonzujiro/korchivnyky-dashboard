@@ -2,7 +2,6 @@
   cursor: pointer;
   padding: 5px;
   border-radius: 6px;
-  font-size: 0.8em;
   color: white;
   background: black;
   border: 1px solid black;
@@ -10,7 +9,8 @@
   width: fit-content;
 }
 
-.button:hover {
+.button:hover,
+.button.pressed {
   background: white;
   color: black;
 }

@@ -49,7 +49,7 @@ export const Dialog = ({
    */
   const catchEvent = (ev: React.MouseEvent<HTMLDialogElement>) => {
     ev.stopPropagation();
-    ev.preventDefault();
+    // ev.preventDefault();
   };
 
   return (

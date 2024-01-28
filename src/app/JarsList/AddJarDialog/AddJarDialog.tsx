@@ -36,7 +36,7 @@ export const AddJarDialog = ({
     const formData = new FormData(formRef.current!);
 
     const url = formData.get('url');
-    const owner = formData.get('owner');
+    const owner = formData.get('ownerName');
 
     const existingJar = jars.find((jar) => {
       return jar.url === url || jar.owner_name === owner;
@@ -47,6 +47,8 @@ export const AddJarDialog = ({
       setIsLoading(false);
       return;
     }
+
+    setIsLoading(true);
 
     const response = await postJar(formData);
 
@@ -82,7 +84,7 @@ export const AddJarDialog = ({
           >
             <label htmlFor='owner-input'>Як звуть власника банки?</label>
             <input
-              name='owner'
+              name='ownerName'
               id='owner-input'
               placeholder='Джейсон Стетхем'
               type='text'

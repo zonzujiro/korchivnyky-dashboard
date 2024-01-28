@@ -7,7 +7,7 @@ import {
 } from '@/app/constants';
 import { Jar } from '@/app/types';
 
-import styles from './ExportStatistics.module.css';
+import styles from './ExportStatisticsDialog.module.css';
 import { Button } from '@/app/library';
 
 const StatisticsRow = ({ jar }: { jar: Jar }) => (
@@ -21,7 +21,7 @@ const StatisticsRow = ({ jar }: { jar: Jar }) => (
   </>
 );
 
-export const ExportStatistics = ({ jars }: { jars: Array<Jar> }) => {
+export const ExportStatisticsDialog = ({ jars }: { jars: Array<Jar> }) => {
   return (
     <Dialog
       title='Експорт даних'

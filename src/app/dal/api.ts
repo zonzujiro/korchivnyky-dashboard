@@ -16,7 +16,7 @@ const postData = async (url: string, payload?: FormData) => {
           Accept: 'application/json',
           'Content-Type': 'application/json',
         },
-        body: payload,
+        body: JSON.stringify(Object.fromEntries(payload.entries())),
       }
     : {};
 
@@ -52,14 +52,6 @@ export const getStatistics = async (): Promise<Array<JarStatisticRecord>> => {
     };
   });
 };
-
-// export const postJar = async (payload: {
-//   url: string;
-//   ownerName: string;
-//   parentJarId?: FoundersIds;
-// }) => {
-//   return postData('https://jars.fly.dev/jars', payload);
-// };
 
 export const postJar = async (payload: FormData) => {
   return postData('https://jars.fly.dev/jars', payload);
