@@ -31,9 +31,15 @@ const JarItem = ({ jar, isSelected, onClick }: JarItemProps) => {
     logo,
   } = jar;
 
-  const copyJarLink = (ev: React.MouseEvent<HTMLSpanElement>) => {
+  const [copyClicked, setCopyClicked] = useState(false);
+  const handleClickCopy = (ev: React.MouseEvent<HTMLSpanElement>) => {
     ev.stopPropagation();
-    navigator.clipboard.writeText(url);
+    const timeout = setTimeout(() => {
+      navigator.clipboard.writeText(url);
+      setCopyClicked((current) => !current);
+    }, 300);
+    setCopyClicked((current) => !current);
+    return () => clearTimeout(timeout);
   };
 
   return (
@@ -53,9 +59,12 @@ const JarItem = ({ jar, isSelected, onClick }: JarItemProps) => {
           height={50}
         />
         <div className={styles['jar-settings']}>
-          <span className={styles.icon} onClick={copyJarLink}>
-            🔗
-          </span>
+        <img
+            src='/images/copyIcon.png'
+            alt='copy icon'
+            className={copyClicked ? styles.copyIconClicked : styles.copyIcon}
+            onClick={handleClickCopy}
+          />
           <AddExpenseDialog jarId={jar.id} />
         </div>
       </div>
