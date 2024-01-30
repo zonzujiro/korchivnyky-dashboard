@@ -81,7 +81,7 @@ export const Statistics = ({
 }: {
   statistics: Array<JarStatisticRecord>;
 }) => {
-  const { selectedJars, jars } = useContext(AppContext);
+  const { selectedJars, jars, expenses, expenseTypes } = useContext(AppContext);
 
   const [activeTab, setActiveTab] = useState<'statistics' | 'expenses'>(
     'statistics'
@@ -149,7 +149,11 @@ export const Statistics = ({
         {activeTab === 'expenses' ? (
           <div className={classNames(styles.column, styles.statistics)}>
             <div className={styles.chart}>
-              <ExpensesSection />
+              <ExpensesSection
+                expenses={expenses}
+                expenseTypes={expenseTypes}
+                jars={selectedJars}
+              />
             </div>
           </div>
         ) : null}
