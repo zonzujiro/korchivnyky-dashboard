@@ -1,33 +1,44 @@
 'use client';
 
 import React from 'react';
-import type { Jar } from '../types';
+import type { ExpenseRecord, ExpenseType, Jar } from '../types';
 import { addColorToJar } from '../utils';
 
-export type AppState = {
+type StateProviderProps = {
+  jars: Array<Jar>;
+  expenses: Array<ExpenseRecord>;
+  expenseTypes: Array<ExpenseType>;
+};
+
+export type AppState = StateProviderProps & {
   selectedJars: Array<Jar>;
   toggleJarSelection(jar: Jar): void;
-  jars: Array<Jar>;
   addJar(jar: Jar): void;
   resetJarSelection(): void;
+  addExpense(expense: ExpenseRecord): void;
 };
 
 export const AppContext = React.createContext<AppState>({
   selectedJars: [],
-  toggleJarSelection: () => {},
+  expenses: [],
+  expenseTypes: [],
   jars: [],
+  toggleJarSelection: () => {},
   addJar: () => {},
   resetJarSelection: () => {},
+  addExpense: () => {},
 });
 
 export const StateProvider = ({
   jars: serverJars,
+  expenses: serverExpenses,
+  expenseTypes,
   children,
-}: {
-  jars: Array<Jar>;
+}: StateProviderProps & {
   children: Array<React.ReactElement>;
 }) => {
   const [selectedJars, setSelectedJars] = React.useState<Array<Jar>>([]);
+  const [expenses, setExpenses] = React.useState(serverExpenses);
   const [jars, setJars] = React.useState(serverJars);
 
   const resetJarSelection = () => {
@@ -49,12 +60,19 @@ export const StateProvider = ({
     setJars(nextJars);
   };
 
+  const addExpense = (expense: ExpenseRecord) => {
+    setExpenses([...expenses, expense]);
+  };
+
   const value = {
     selectedJars,
     toggleJarSelection,
     jars,
     addJar,
     resetJarSelection,
+    expenses,
+    expenseTypes,
+    addExpense,
   };
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;

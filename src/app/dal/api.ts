@@ -1,6 +1,6 @@
 import type { Jar, JarStatisticRecord } from '../types';
 import { addColorToJar } from '../utils';
-import { expenseTypes } from './mocks';
+import { expenseTypes, expenses } from './mocks';
 
 const getData = async (url: string) => {
   const response = await fetch(url);
@@ -16,7 +16,7 @@ const postData = async (url: string, payload?: FormData) => {
           Accept: 'application/json',
           'Content-Type': 'application/json',
         },
-        body: payload,
+        body: JSON.stringify(Object.fromEntries(payload.entries())),
       }
     : {};
 
@@ -40,20 +40,33 @@ export const getJars = async (): Promise<Array<Jar>> => {
   return jars.map(addColorToJar);
 };
 
-export const getStatistics = (): Promise<Array<JarStatisticRecord>> => {
-  return postData('https://jars.fly.dev/statistics');
-};
+export const getStatistics = async (): Promise<Array<JarStatisticRecord>> => {
+  const statistics = (await postData(
+    'https://jars.fly.dev/statistics'
+  )) as Array<JarStatisticRecord>;
 
-// export const postJar = async (payload: {
-//   url: string;
-//   ownerName: string;
-//   parentJarId?: FoundersIds;
-// }) => {
-//   return postData('https://jars.fly.dev/jars', payload);
-// };
+  return statistics.map((item) => {
+    return {
+      ...item,
+      created_at: item.created_at.slice(0, 10),
+    };
+  });
+};
 
 export const postJar = async (payload: FormData) => {
   return postData('https://jars.fly.dev/jars', payload);
 };
 
 export const getExpensesTypes = () => Promise.resolve(expenseTypes);
+export const getExpenses = () => Promise.resolve(expenses);
+
+export const getInitialData = async () => {
+  const [jars, expenses, expenseTypes, statistics] = await Promise.all([
+    getJars(),
+    getExpenses(),
+    getExpensesTypes(),
+    getStatistics(),
+  ]);
+
+  return { jars, expenses, expenseTypes, statistics };
+};

@@ -27,7 +27,7 @@ export type ExpenseType = {
 
 export type ExpenseRecord = {
   id: number;
-  sum: string;
+  sum: number;
   jarId: number;
   createdAt: string;
   expenseTypeId: ExpenseType['id'];

@@ -1,15 +1,9 @@
-import { useRef, useState } from 'react';
+import { useContext, useRef, useState } from 'react';
 
 import { Button, Dialog } from '@/app/library';
+import { AppContext } from '@/app/dal';
 
 import styles from './AddExpenseDialog.module.css';
-import type { ExpenseType } from '@/app/types';
-
-const expenseTypes: Array<ExpenseType> = [
-  { id: 1, fundraisingCampaignId: 1, title: 'Дизель' },
-  { id: 2, fundraisingCampaignId: 2, title: 'Пікапи' },
-  { id: 3, fundraisingCampaignId: 3, title: 'Хімарси' },
-];
 
 const fileTypes = ['image/png', 'image/jpeg', 'image/jpg', 'application/pdf'];
 
@@ -25,6 +19,8 @@ const isValidReceipt = (file: File) =>
   fileTypes.some((type) => type === file.type);
 
 export const AddExpenseDialog = ({ jarId }: { jarId: number }) => {
+  const { expenseTypes } = useContext(AppContext);
+
   const formRef = useRef<HTMLFormElement>(null);
 
   const [isLoading, setIsLoading] = useState(false);

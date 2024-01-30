@@ -78,6 +78,7 @@ const JarItem = ({ jar, isSelected, onClick }: JarItemProps) => {
 export const JarsList = () => {
   const { selectedJars, toggleJarSelection, jars, addJar, resetJarSelection } =
     useContext(AppContext);
+
   const [isAllVisible, setIsAllVisible] = useState(jars.length < 10);
   const [selectedCurator, setSelectedCurator] = useState('');
 

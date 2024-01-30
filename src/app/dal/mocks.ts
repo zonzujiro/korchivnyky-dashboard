@@ -1,5 +1,5 @@
 import randomColor from 'randomcolor';
-import type { ExpenseType } from '../types';
+import type { ExpenseRecord, ExpenseType } from '../types';
 
 export const jars = [
   {
@@ -417,4 +417,55 @@ export const expenseTypes: Array<ExpenseType> = [
   { id: 1, fundraisingCampaignId: 1, title: 'Дизель' },
   { id: 2, fundraisingCampaignId: 2, title: 'Пікапи' },
   { id: 3, fundraisingCampaignId: 3, title: 'Хімарси' },
+];
+
+export const expenses: Array<ExpenseRecord> = [
+  {
+    id: 1,
+    sum: 1000,
+    jarId: 28,
+    createdAt: '2024-01-08T03:00:24.370Z',
+    expenseTypeId: expenseTypes[0].id,
+    receipt: '',
+  },
+  {
+    id: 2,
+    sum: 2000,
+    jarId: 28,
+    createdAt: '2024-01-09T03:00:24.370Z',
+    expenseTypeId: expenseTypes[0].id,
+    receipt: '',
+  },
+  {
+    id: 3,
+    sum: 1000,
+    jarId: 28,
+    createdAt: '2024-01-10T03:00:24.370Z',
+    expenseTypeId: expenseTypes[0].id,
+    receipt: '',
+  },
+  {
+    id: 1,
+    sum: 100,
+    jarId: 12,
+    createdAt: '2024-01-08T03:00:24.370Z',
+    expenseTypeId: expenseTypes[1].id,
+    receipt: '',
+  },
+  {
+    id: 2,
+    sum: 5000,
+    jarId: 12,
+    createdAt: '2024-01-09T03:00:24.370Z',
+    expenseTypeId: expenseTypes[1].id,
+    receipt: '',
+  },
+  {
+    id: 34,
+    sum: 4000,
+    jarId: 28,
+    createdAt: '2024-01-10T03:00:24.370Z',
+    expenseTypeId: expenseTypes[2].id,
+    receipt: '',
+  },
 ];
