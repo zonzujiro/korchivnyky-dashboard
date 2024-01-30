@@ -60,6 +60,12 @@ export const postJar = async (payload: FormData) => {
 export const getExpensesTypes = () => Promise.resolve(expenseTypes);
 export const getExpenses = () => Promise.resolve(expenses);
 
+export const signIn = async (
+  formData: FormData
+): Promise<{ token: string }> => {
+  return postData('https://jars.fly.dev/sign-in', formData);
+};
+
 export const getInitialData = async () => {
   const [jars, expenses, expenseTypes, statistics] = await Promise.all([
     getJars(),

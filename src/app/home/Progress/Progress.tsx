@@ -1,7 +1,7 @@
 import randomColor from 'randomcolor';
-import { toCurrency } from '../utils';
+import { toCurrency } from '../../utils';
 import styles from './Progress.module.css';
-import type { Jar } from '../types';
+import type { Jar } from '../../types';
 
 type ProgressProps = {
   goal: number;
