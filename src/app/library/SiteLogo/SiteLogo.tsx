@@ -7,7 +7,7 @@ export const SiteLogo = () => {
     <div className={styles['site-logo']}>
       <Image
         className={styles['site-logo']}
-        src='/images/site-logo.png'
+        src='/site-logo.svg'
         width={100}
         height={100}
         alt='site logo'

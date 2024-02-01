@@ -21,7 +21,7 @@ export const HomePage = async () => {
       <header className={styles.header}>
         <Image
           className={styles['site-logo']}
-          src='/images/site-logo.png'
+          src='/site-logo.svg'
           width={100}
           height={100}
           alt='site logo'
