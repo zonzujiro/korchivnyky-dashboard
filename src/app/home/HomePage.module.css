@@ -1,20 +1,34 @@
 .main {
-    font-family: var(--eUkraine);
-  }
-  
-  .header {
-    display: flex;
-    align-items: center;
-    margin-bottom: 70px;
-  }
-  
-  .general-info {
-    display: flex;
-    flex-wrap: wrap;
-    margin-bottom: 30px;
-  }
-  
-  .general-info > * {
-    margin-top: 10px;
-  }
-  
+  font-family: var(--eUkraine);
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 70px;
+}
+
+.general-info {
+  display: flex;
+  flex-wrap: wrap;
+  margin-bottom: 30px;
+}
+
+.general-info > * {
+  margin-top: 10px;
+}
+
+.site-logo {
+  display: flex;
+  align-items: center;
+  margin: 0 20px;
+}
+
+.site-name {
+  font-family: var(--eUkraineHeadLogo);
+}
+
+.name-and-slogan {
+  display: flex;
+  flex-direction: column;
+}
