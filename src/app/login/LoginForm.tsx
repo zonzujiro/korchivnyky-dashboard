@@ -4,11 +4,10 @@ import { useEffect } from 'react';
 import { useFormState, useFormStatus } from 'react-dom';
 import { useRouter } from 'next/navigation';
 
-import { Button } from '../library';
+import { Button, SiteLogo } from '../library';
 
 import styles from './LoginForm.module.css';
-import { authenticate, getToken } from './action';
-import { SiteLogo } from '../library/SiteLogo/SiteLogo';
+import { authenticate, getAuthToken } from '@/app/actions/auth';
 
 const LoginButton = () => {
   const { pending } = useFormStatus();
@@ -26,10 +25,9 @@ export const LoginFormPage = () => {
 
   useEffect(() => {
     const navigate = async () => {
-      const token = await getToken();
+      const token = await getAuthToken();
 
       if (token) {
-        localStorage.setItem('authToken', token);
         router.push('/home');
       }
     };

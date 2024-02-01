@@ -2,7 +2,7 @@
 
 import React from 'react';
 import type { ExpenseRecord, ExpenseType, Jar } from '../types';
-import { addColorToJar } from '../utils';
+import { addColorToJar } from '../toolbox/utils';
 
 type StateProviderProps = {
   jars: Array<Jar>;

@@ -1,4 +1,4 @@
-import { CURATORS_IDS, CURATORS_NAMES } from '../constants';
+import { CURATORS_IDS, CURATORS_NAMES } from '@/app/constants';
 
 export const CuratorsDropdown = ({
   onChange,

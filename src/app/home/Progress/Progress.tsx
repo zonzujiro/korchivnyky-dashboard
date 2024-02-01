@@ -1,5 +1,5 @@
 import randomColor from 'randomcolor';
-import { toCurrency } from '../../utils';
+import { toCurrency } from '../../toolbox/utils';
 import styles from './Progress.module.css';
 import type { Jar } from '../../types';
 

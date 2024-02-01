@@ -3,11 +3,11 @@
 import React, { useState, useContext } from 'react';
 import classNames from 'classnames';
 
-import { Image, Button } from '../library';
-import type { Jar } from '../types';
-import { AppContext } from '../dal';
-import { CURATORS } from '../constants';
-import { toCurrency } from '../utils';
+import { Image, Button } from '@/app/library';
+import type { Jar } from '@/app/types';
+import { CURATORS } from '@/app/constants';
+import { AppContext } from '@/app/dal';
+import { toCurrency } from '@/app/toolbox';
 
 import styles from './JarsList.module.css';
 import { CuratorsDropdown } from './CuratorsDropdown';

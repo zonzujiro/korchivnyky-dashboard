@@ -1,6 +1,7 @@
 import type { Jar, JarStatisticRecord } from '../types';
-import { addColorToJar } from '../utils';
+import { addColorToJar } from '../toolbox/utils';
 import { expenseTypes, expenses } from './mocks';
+import { cookies } from 'next/headers';
 
 const getData = async (url: string) => {
   const response = await fetch(url);
@@ -16,6 +17,7 @@ const postData = async (url: string, payload?: FormData) => {
           Accept: 'application/json',
           'Content-Type': 'application/json',
         },
+
         body: JSON.stringify(Object.fromEntries(payload.entries())),
       }
     : {};
@@ -48,7 +50,7 @@ export const getStatistics = async (): Promise<Array<JarStatisticRecord>> => {
   return statistics.map((item) => {
     return {
       ...item,
-      created_at: item.created_at.slice(0, 10),
+      created_at: item.createdAt.slice(0, 10),
     };
   });
 };
@@ -63,7 +65,18 @@ export const getExpenses = () => Promise.resolve(expenses);
 export const signIn = async (
   formData: FormData
 ): Promise<{ token: string }> => {
-  return postData('https://jars.fly.dev/sign-in', formData);
+  const response = await postData('https://jars.fly.dev/sign-in', formData);
+
+  if (response.token) {
+    const payload = new FormData();
+    payload.append('token', response.token);
+
+    const { href } = new URL('/save-token', 'http://localhost:3000');
+
+    postData(href, payload);
+  }
+
+  return response;
 };
 
 export const getInitialData = async () => {
