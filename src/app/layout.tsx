@@ -4,6 +4,10 @@ import localFont from 'next/font/local';
 
 import classNames from 'classnames';
 import './globals.css';
+import styles from './layout.module.css';
+
+import { SiteLogo } from './library';
+import { getInitialData, StateProvider } from './dal';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -39,11 +43,13 @@ export const metadata: Metadata = {
   description: 'Ми і є Корчівники, довбойоб',
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const { jars, expenseTypes, expenses, statistics } = await getInitialData();
+
   return (
     <html lang='en'>
       <body
@@ -53,7 +59,19 @@ export default function RootLayout({
           eUkraineFont.variable
         )}
       >
-        {children}
+        <header className={styles.header}>
+          <SiteLogo />
+        </header>
+        <main className={styles.main}>
+          <StateProvider
+            jars={jars}
+            expenses={expenses}
+            expenseTypes={expenseTypes}
+            statistics={statistics}
+          >
+            {children}
+          </StateProvider>
+        </main>
       </body>
     </html>
   );

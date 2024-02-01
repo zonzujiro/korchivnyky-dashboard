@@ -3,7 +3,7 @@
 import React, { useState, useContext } from 'react';
 import classNames from 'classnames';
 
-import { Jar, JarStatisticRecord } from '@/app/types';
+import { Jar } from '@/app/types';
 import { toCurrency } from '@/app/toolbox';
 import { AppContext } from '@/app/dal';
 
@@ -74,12 +74,9 @@ const SpeedRow = ({
   );
 };
 
-export const Statistics = ({
-  statistics,
-}: {
-  statistics: Array<JarStatisticRecord>;
-}) => {
-  const { selectedJars, jars, expenses, expenseTypes } = useContext(AppContext);
+export const Statistics = () => {
+  const { selectedJars, jars, expenses, expenseTypes, statistics } =
+    useContext(AppContext);
 
   const [activeTab, setActiveTab] = useState<'statistics' | 'expenses'>(
     'statistics'

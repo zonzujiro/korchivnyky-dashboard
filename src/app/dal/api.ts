@@ -18,6 +18,7 @@ const postData = async (url: string, payload?: FormData) => {
         headers: {
           Accept: 'application/json',
           'Content-Type': 'application/json',
+          Authorization: cookies().get('authorization')?.value || '',
         },
 
         body: JSON.stringify(Object.fromEntries(payload.entries())),
