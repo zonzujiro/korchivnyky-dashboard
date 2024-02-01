@@ -1,5 +1,5 @@
-import { Jar, JarStatisticRecord } from '../types';
-import { groupBy } from '../utils';
+import type { Jar, JarStatisticRecord } from '@/app/types';
+import { groupBy } from '@/app/toolbox';
 
 const isSameDate = (startDate: Date, endDate: Date) => {
   const isSameDay = startDate.getDate() === endDate.getDate();
@@ -27,7 +27,7 @@ const getCurrentRecords = (
   endDate: Date
 ) => {
   return records.filter((record) => {
-    const recordDate = new Date(record.created_at);
+    const recordDate = new Date(record.createdAt);
     const isInTimeWindow =
       isSameDate(recordDate, startDate) || isSameDate(recordDate, endDate);
     const forSelectedJar = Boolean(

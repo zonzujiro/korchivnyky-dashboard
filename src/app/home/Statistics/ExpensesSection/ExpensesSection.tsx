@@ -8,6 +8,7 @@ type StatisticsProps = {
   expensesTypes: Array<ExpenseType>;
 };
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const ExpensesSection = (props: StatisticsProps) => {
   return <div className={styles['expenses-section']}></div>;
 };

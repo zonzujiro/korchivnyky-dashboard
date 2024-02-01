@@ -1,5 +1,5 @@
 import randomColor from 'randomcolor';
-import type { Jar } from './types';
+import type { Jar } from '../types';
 
 export const toCurrency = (value: number) => {
   return `${value.toLocaleString('ua-UA').replaceAll(',', ' ')} ₴`;

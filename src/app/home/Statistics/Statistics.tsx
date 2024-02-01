@@ -3,17 +3,15 @@
 import React, { useState, useContext } from 'react';
 import classNames from 'classnames';
 
-import type { Jar, JarStatisticRecord } from '../types';
-
-import { toCurrency } from '../utils';
-import { AppContext } from '../dal';
+import { Jar, JarStatisticRecord } from '@/app/types';
+import { toCurrency } from '@/app/toolbox';
+import { AppContext } from '@/app/dal';
 
 import styles from './Statistics.module.css';
 import { StatisticsSection } from './StatisticsSection/StatisticsSection';
 import { getAccountsMovements, getGatheringSpeed } from './analytics';
 import { ExportStatisticsDialog } from './ExportStatisticsDialog/ExportStatisticsDialog';
 import { ExpensesSection } from './ExpensesSection/ExpensesSection';
-import { Button } from '../library';
 
 const FIVE_DAYS_AGO = new Date();
 FIVE_DAYS_AGO.setDate(FIVE_DAYS_AGO.getDate() - 5);
@@ -151,7 +149,7 @@ export const Statistics = ({
             <div className={styles.chart}>
               <ExpensesSection
                 expenses={expenses}
-                expenseTypes={expenseTypes}
+                expensesTypes={expenseTypes}
                 jars={selectedJars}
               />
             </div>

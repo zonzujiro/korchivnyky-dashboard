@@ -16,7 +16,7 @@ export type JarStatisticRecord = {
   id: number;
   jar_id: number;
   accumulated: number;
-  created_at: string;
+  createdAt: string;
 };
 
 export type ExpenseType = {
@@ -30,7 +30,7 @@ export type ExpenseRecord = {
   sum: number;
   jarId: number;
   createdAt: string;
-  date: string;
+  date?: string;
   expenseTypeId: ExpenseType['id'];
   receipt: string;
 };

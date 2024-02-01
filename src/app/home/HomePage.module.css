@@ -1,0 +1,20 @@
+.main {
+    font-family: var(--eUkraine);
+  }
+  
+  .header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 70px;
+  }
+  
+  .general-info {
+    display: flex;
+    flex-wrap: wrap;
+    margin-bottom: 30px;
+  }
+  
+  .general-info > * {
+    margin-top: 10px;
+  }
+  
