@@ -32,7 +32,7 @@ export const LoginFormPage = () => {
       console.log({ token });
 
       if (token) {
-        // router.push('/home');
+        router.push('/home');
       }
     };
 

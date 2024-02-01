@@ -23,7 +23,7 @@ export async function POST(request: Request) {
   cookies().set({
     name: 'authorization',
     value: body.token,
-    // httpOnly: true,
+    httpOnly: true,
   });
 
   response.cookies.set('authorization', body.token);
