@@ -1,5 +1,7 @@
 'use client';
 
+//TODO: replace with server component
+
 import { useEffect } from 'react';
 import { useFormState, useFormStatus } from 'react-dom';
 import { useRouter } from 'next/navigation';

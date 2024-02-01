@@ -5,12 +5,6 @@ export const middleware = async (request: NextRequest) => {
   const requestUrl = new URL(request.url);
   const token = cookies().get('authorization');
 
-  console.log({
-    middleware: token,
-    pathname: requestUrl.pathname,
-    cookies: cookies().getAll(),
-  });
-
   if (requestUrl.pathname === '/home') {
     if (!token?.value) {
       return NextResponse.redirect(new URL('/login', request.url));

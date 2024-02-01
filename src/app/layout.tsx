@@ -6,7 +6,7 @@ import classNames from 'classnames';
 import './globals.css';
 import styles from './layout.module.css';
 
-import { SiteLogo } from './library';
+import { NavigationMenu, SiteLogo } from './library';
 import { getInitialData, StateProvider } from './dal';
 
 const inter = Inter({ subsets: ['latin'] });
@@ -61,6 +61,7 @@ export default async function RootLayout({
       >
         <header className={styles.header}>
           <SiteLogo />
+          <NavigationMenu />
         </header>
         <main className={styles.main}>
           <StateProvider
