@@ -1,12 +1,17 @@
 'use server';
 
-import type { Jar, JarStatisticRecord } from '../types';
+import type { ExpenseType, Invoice, Jar, JarStatisticRecord } from '../types';
 import { addColorToJar } from '../toolbox/utils';
-import { expenseTypes, expenses } from './mocks';
+import { expenses } from './mocks';
 import { cookies } from 'next/headers';
 
 const getData = async (url: string) => {
-  const response = await fetch(url);
+  const response = await fetch(url, {
+    headers: {
+      Authorization: cookies().get('authorization')?.value || '',
+    },
+  });
+
   const json = await response.json();
 
   return json;
@@ -62,7 +67,14 @@ export const postJar = async (payload: FormData) => {
   return postData('https://jars.fly.dev/jars', payload);
 };
 
-export const getExpensesTypes = () => Promise.resolve(expenseTypes);
+export const getExpensesTypes = (): Promise<Array<ExpenseType>> => {
+  return getData('https://jars.fly.dev/expensive-types');
+};
+
+export const getInvoices = (): Promise<Array<Invoice>> => {
+  return getData('https://jars.fly.dev/invoices');
+};
+
 export const getExpenses = () => Promise.resolve(expenses);
 
 export const signIn = async (
@@ -81,7 +93,7 @@ export const signIn = async (
   return response;
 };
 
-export const getInitialData = async () => {
+export const getHomePageData = async () => {
   const [jars, expenses, expenseTypes, statistics] = await Promise.all([
     getJars(),
     getExpenses(),
@@ -90,4 +102,13 @@ export const getInitialData = async () => {
   ]);
 
   return { jars, expenses, expenseTypes, statistics };
+};
+
+export const getInvoicesPageData = async () => {
+  const [expensesTypes, invoices] = await Promise.all([
+    getExpensesTypes(),
+    getInvoices(),
+  ]);
+
+  return { expensesTypes, invoices };
 };

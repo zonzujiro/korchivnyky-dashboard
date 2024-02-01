@@ -7,7 +7,7 @@ import './globals.css';
 import styles from './layout.module.css';
 
 import { NavigationMenu, SiteLogo } from './library';
-import { getInitialData, StateProvider } from './dal';
+import { getHomePageData, StateProvider } from './dal';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -48,7 +48,7 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const { jars, expenseTypes, expenses, statistics } = await getInitialData();
+  const { jars, expenseTypes, expenses, statistics } = await getHomePageData();
 
   return (
     <html lang='en'>

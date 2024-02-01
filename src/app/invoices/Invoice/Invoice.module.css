@@ -1,0 +1,10 @@
+.invoice {
+  width: 250px;
+  height: 270px;
+  border: 1px solid;
+  border-radius: 10px;
+  margin: 15px;
+  display: flex;
+  flex-flow: column;
+  padding: 10px;
+}
