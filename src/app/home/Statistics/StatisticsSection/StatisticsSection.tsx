@@ -48,7 +48,7 @@ export const StatisticsSection = ({
                 />
                 <span>{percentageOfGoal}</span>
               </div>
-              <div className={styles['jar-owner']}>{jar.owner_name}</div>
+              <div className={styles['jar-owner']}>{jar.ownerName}</div>
               <Tooltip anchorSelect={`#statistics-bar-${jar.id}`}>
                 <p>
                   <strong>Зібрано:</strong> {toCurrency(jar.accumulated)}

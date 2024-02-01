@@ -13,9 +13,9 @@ import { Button } from '@/app/library';
 const StatisticsRow = ({ jar }: { jar: Jar }) => (
   <>
     <td>
-      <a href={jar.url}>{jar.owner_name}</a>
+      <a href={jar.url}>{jar.ownerName}</a>
     </td>
-    <td>{jar.is_finished ? 'Так' : 'Ні'}</td>
+    <td>{jar.isFinished ? 'Так' : 'Ні'}</td>
     <td>{jar.goal || DEFAULT_JAR_GOAL}</td>
     <td>{jar.accumulated}</td>
   </>
@@ -38,7 +38,7 @@ export const ExportStatisticsDialog = ({ jars }: { jars: Array<Jar> }) => {
                   {Object.values(CURATORS_IDS).map((curatorId) => {
                     const curator = jars.find((jar) => jar.id === curatorId)!;
                     const curated = jars.filter(
-                      (jar) => jar.parent_jar_id === curatorId
+                      (jar) => jar.parentJarId === curatorId
                     );
 
                     if (!curated.length) {
@@ -49,7 +49,7 @@ export const ExportStatisticsDialog = ({ jars }: { jars: Array<Jar> }) => {
                             backgroundColor: CURATORS_COLORS[curator.id],
                           }}
                         >
-                          <td>{curator.owner_name}</td>
+                          <td>{curator.ownerName}</td>
                           <StatisticsRow jar={curator} />
                         </tr>
                       );
@@ -64,7 +64,7 @@ export const ExportStatisticsDialog = ({ jars }: { jars: Array<Jar> }) => {
                             backgroundColor: CURATORS_COLORS[curator.id],
                           }}
                         >
-                          <td rowSpan={curated.length}>{curator.owner_name}</td>
+                          <td rowSpan={curated.length}>{curator.ownerName}</td>
                           <StatisticsRow jar={first} />
                         </tr>
                         {rest.map((jar) => {

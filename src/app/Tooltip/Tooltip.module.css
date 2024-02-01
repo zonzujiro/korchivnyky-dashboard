@@ -1,0 +1,35 @@
+.tooltip {
+  margin-left: -54px;
+  margin-top: -100px;
+  padding: 10px;
+  position: absolute;
+  width: 120px;
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
+  z-index: 1;
+	background-color: lightgreen;
+	border-radius: 5px;
+}
+
+.tooltip:after {
+	content: '';
+	position: absolute;
+	bottom: 0;
+	left: 50%;
+	width: 0;
+	height: 0;
+	border: 11px solid transparent;
+	border-top-color: lightgreen;
+	border-bottom: 0;
+	margin-left: -10px;
+	margin-bottom: -10px;
+  }
+
+.tooltip.visible {
+  opacity: 1;
+  color: black;
+}
+
+.tooltip.hidden {
+  display: none;
+}

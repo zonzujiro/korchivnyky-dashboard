@@ -39,7 +39,7 @@ const GrowthRow = ({
 
   return (
     <div className={classNames(styles['grid-row'], styles['three-cells'])}>
-      <span className={styles.cell}>{jar?.owner_name}</span>
+      <span className={styles.cell}>{jar?.ownerName}</span>
       <span
         className={classNames(styles.cell, {
           [styles['positive-dynamic']]: difference > 0,
@@ -68,7 +68,7 @@ const SpeedRow = ({
       key={jarId}
       className={classNames(styles['grid-row'], styles['two-cells'])}
     >
-      <span className={styles.cell}>{jar?.owner_name}</span>
+      <span className={styles.cell}>{jar?.ownerName}</span>
       <span className={styles.cell}>{speed}</span>
     </div>
   );
@@ -92,7 +92,7 @@ export const Statistics = ({
   const filteredStatistics = selectedJars.length
     ? statistics.filter((record) => {
         return selectedJars.find(
-          (selectedJar) => selectedJar.id === record.jar_id
+          (selectedJar) => selectedJar.id === record.jarId
         );
       })
     : statistics;

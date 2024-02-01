@@ -91,37 +91,24 @@
   padding-right: 10px;
 }
 
-.copyIconClicked {
-  width: 16px;
-  height: 16px;
-  background-color: rgba(0, 128, 0, 0.273);
-  transform: scale(1.2);
-  transition: transform 0.3s ease-in-out;
-  animation: zoomInAndOut 0.3s linear infinite;
+.copy-icon-clicked {
+  animation: wave 0.3s infinite;
   pointer-events: none;
   user-select: none;
-  border-radius: 10%;
 }
 
-.copyIcon {
-  width: 16px;
-  height: 16px;
+.copy-icon {
   cursor: pointer;
-  transform: scale(1);
   user-select: none;
 }
 
-.copyIcon:hover {
-  background-color: rgba(128, 128, 128, 0.162);
-  border-radius: 10%;
+.copy-icon:hover {
+  transform: translateY(-1px);
+  transition: 0.2s;
 }
 
-@keyframes zoomInAndOut {
-  0%,
-  100% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.2);
+@keyframes wave {
+   50% {
+    transform: translateY(-4px);
   }
 }
