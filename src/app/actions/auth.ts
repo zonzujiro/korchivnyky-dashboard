@@ -2,13 +2,11 @@
 
 import { serialize } from 'cookie';
 import { NextApiResponse } from 'next';
-// import { cookies } from 'next/headers';
 
 import { signIn } from '../dal';
 
 // useFormState adds some shit into FormData
 const handleSignIn = async (reactFormData: FormData) => {
-  // return 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7ImlkIjo3fSwiaWF0IjoxNzA2NzA3MjY0LCJleHAiOjE3MDY3MTA4NjR9.fLGihNUAbniE44RTmVNe_2w8SbGBh5W-uOT6paEblEk';
   const password = reactFormData.get('password') as string;
   const email = reactFormData.get('email') as string;
 
@@ -31,6 +29,8 @@ export const authenticate = async (
 ) => {
   try {
     const authToken = await handleSignIn(formData);
+
+    console.log({ authToken });
 
     token = authToken;
 

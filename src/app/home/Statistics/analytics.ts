@@ -27,7 +27,7 @@ const getCurrentRecords = (
   endDate: Date
 ) => {
   return records.filter((record) => {
-    const recordDate = new Date(record.created_at);
+    const recordDate = new Date(record.createdAt);
     const isInTimeWindow =
       isSameDate(recordDate, startDate) || isSameDate(recordDate, endDate);
     const forSelectedJar = Boolean(

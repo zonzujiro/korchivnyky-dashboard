@@ -1,3 +1,5 @@
+'use server';
+
 import type { Jar, JarStatisticRecord } from '../types';
 import { addColorToJar } from '../toolbox/utils';
 import { expenseTypes, expenses } from './mocks';
@@ -65,15 +67,18 @@ export const getExpenses = () => Promise.resolve(expenses);
 export const signIn = async (
   formData: FormData
 ): Promise<{ token: string }> => {
-  const response = await postData('https://jars.fly.dev/sign-in', formData);
+  // const response = await postData('https://jars.fly.dev/sign-in', formData);
+  const response = {
+    token:
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7ImlkIjo3fSwiaWF0IjoxNzA2NzkxNzM5LCJleHAiOjE3MDY3OTUzMzl9.1eGap-AqE3KleVnHNGaJ1hr9AQfr3t3XuIIq9LdOEkk',
+  };
 
   if (response.token) {
-    const payload = new FormData();
-    payload.append('token', response.token);
-
-    const { href } = new URL('/save-token', 'http://localhost:3000');
-
-    postData(href, payload);
+    cookies().set({
+      name: 'authorization',
+      value: response.token,
+      httpOnly: true,
+    });
   }
 
   return response;

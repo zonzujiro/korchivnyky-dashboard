@@ -15,11 +15,18 @@ export async function POST(request: Request) {
   const body = await request.json();
   const response = NextResponse.json({ status: 200 });
 
+  console.log({ saveToken: body.token });
+
+  // cookies().delete('authorization');
+  // response.cookies.delete('authorization');
+
   cookies().set({
     name: 'authorization',
     value: body.token,
-    httpOnly: true,
+    // httpOnly: true,
   });
+
+  response.cookies.set('authorization', body.token);
 
   return response;
 }

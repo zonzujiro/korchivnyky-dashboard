@@ -27,8 +27,12 @@ export const LoginFormPage = () => {
     const navigate = async () => {
       const token = await getAuthToken();
 
+      console.log(document.cookie);
+
+      console.log({ token });
+
       if (token) {
-        router.push('/home');
+        // router.push('/home');
       }
     };
 
