@@ -68,10 +68,6 @@ export const signIn = async (
   formData: FormData
 ): Promise<{ token: string }> => {
   const response = await postData('https://jars.fly.dev/sign-in', formData);
-  // const response = {
-  //   token:
-  //     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7ImlkIjo3fSwiaWF0IjoxNzA2NzkxNzM5LCJleHAiOjE3MDY3OTUzMzl9.1eGap-AqE3KleVnHNGaJ1hr9AQfr3t3XuIIq9LdOEkk',
-  // };
 
   if (response.token) {
     cookies().set({

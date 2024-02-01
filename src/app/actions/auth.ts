@@ -30,8 +30,6 @@ export const authenticate = async (
   try {
     const authToken = await handleSignIn(formData);
 
-    console.log({ authToken });
-
     token = authToken;
 
     return 'Success';
