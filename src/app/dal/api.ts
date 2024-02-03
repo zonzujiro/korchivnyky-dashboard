@@ -52,7 +52,7 @@ export const getStatistics = async (): Promise<Array<JarStatisticRecord>> => {
   return statistics.map((item) => {
     return {
       ...item,
-      created_at: item.createdAt.slice(0, 10),
+      createdAt: item.createdAt.slice(0, 10),
     };
   });
 };

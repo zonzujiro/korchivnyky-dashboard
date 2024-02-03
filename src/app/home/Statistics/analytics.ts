@@ -31,7 +31,7 @@ const getCurrentRecords = (
     const isInTimeWindow =
       isSameDate(recordDate, startDate) || isSameDate(recordDate, endDate);
     const forSelectedJar = Boolean(
-      jars.find((jar) => jar.id === record.jar_id)
+      jars.find((jar) => jar.id === record.jarId)
     );
 
     return isInTimeWindow && forSelectedJar;
@@ -45,7 +45,7 @@ export const getAccountsMovements = (
   endDate: Date
 ) => {
   const currentRecords = getCurrentRecords(jars, records, startDate, endDate);
-  const groupedByJar = groupBy(currentRecords, (record) => record.jar_id);
+  const groupedByJar = groupBy(currentRecords, (record) => record.jarId);
 
   const growth = Object.keys(groupedByJar)
     .filter((jarId) => groupedByJar[jarId].length > 1)
@@ -76,7 +76,7 @@ export const getGatheringSpeed = (
   endDate: Date
 ) => {
   const currentRecords = getCurrentRecords(jars, records, startDate, endDate);
-  const groupedByJar = groupBy(currentRecords, (record) => record.jar_id);
+  const groupedByJar = groupBy(currentRecords, (record) => record.jarId);
 
   const speed = Object.keys(groupedByJar)
     .filter((jarId) => groupedByJar[jarId].length > 1)

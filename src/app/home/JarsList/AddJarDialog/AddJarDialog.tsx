@@ -39,11 +39,11 @@ export const AddJarDialog = ({
     const owner = formData.get('ownerName');
 
     const existingJar = jars.find((jar) => {
-      return jar.url === url || jar.owner_name === owner;
+      return jar.url === url || jar.ownerName === owner;
     });
 
     if (existingJar) {
-      setErrorText(`Така банка вже є у ${existingJar.owner_name}`);
+      setErrorText(`Така банка вже є у ${existingJar.ownerName}`);
       setIsLoading(false);
       return;
     }

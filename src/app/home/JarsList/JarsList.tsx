@@ -13,6 +13,8 @@ import styles from './JarsList.module.css';
 import { CuratorsDropdown } from './CuratorsDropdown';
 import { AddJarDialog } from './AddJarDialog/AddJarDialog';
 import { AddExpenseDialog } from './AddExpenseDialog/AddExpenseDialog';
+import  TooltipComponent from '../TooltipComponent/TooltipComponent';
+
 
 type JarItemProps = {
   jar: Jar;
@@ -21,19 +23,18 @@ type JarItemProps = {
 };
 
 const JarItem = ({ jar, isSelected, onClick }: JarItemProps) => {
-  const {
-    url,
-    goal,
-    accumulated,
-    owner_name,
-    parent_jar_id,
-    is_finished,
-    logo,
-  } = jar;
+  const { url, goal, accumulated, ownerName, parentJarId, isFinished, logo } =
+    jar;
 
-  const copyJarLink = (ev: React.MouseEvent<HTMLSpanElement>) => {
+  const [copyClicked, setCopyClicked] = useState(false);
+  const handleClickCopy = (ev: React.MouseEvent<HTMLSpanElement>) => {
     ev.stopPropagation();
-    navigator.clipboard.writeText(url);
+    const timeout = setTimeout(() => {
+      navigator.clipboard.writeText(url);
+      setCopyClicked((current) => !current);
+    }, 300);
+    setCopyClicked((current) => !current);
+    return () => clearTimeout(timeout);
   };
 
   return (
@@ -53,19 +54,22 @@ const JarItem = ({ jar, isSelected, onClick }: JarItemProps) => {
           height={50}
         />
         <div className={styles['jar-settings']}>
-          <span className={styles.icon} onClick={copyJarLink}>
-            🔗
+          <span
+            className={
+              copyClicked ? styles['copy-icon-clicked'] : styles['copy-icon']
+            }
+            onClick={handleClickCopy}
+          >
+            <TooltipComponent/>
           </span>
           <AddExpenseDialog jarId={jar.id} />
         </div>
       </div>
       <div className={classNames(styles['item-column'], styles['jar-info'])}>
         <h3>
-          {owner_name} {is_finished ? <span>🔒</span> : null}
+          {ownerName} {isFinished ? <span>🔒</span> : null}
         </h3>
-        <span>
-          Куратор: {parent_jar_id ? CURATORS[parent_jar_id] : 'Немає'}
-        </span>
+        <span>Куратор: {parentJarId ? CURATORS[parentJarId] : 'Немає'}</span>
         <div className={styles['item-column']}>
           <span>Зібрано: {toCurrency(accumulated)}</span>
           <span>Мета: {goal ? toCurrency(goal) : 'Немає'}</span>
@@ -83,7 +87,7 @@ export const JarsList = () => {
   const [selectedCurator, setSelectedCurator] = useState('');
 
   const byCurator = selectedCurator
-    ? jars.filter((jar) => `${jar.parent_jar_id}` === selectedCurator)
+    ? jars.filter((jar) => `${jar.parentJarId}` === selectedCurator)
     : jars;
 
   const toRender =
@@ -94,7 +98,7 @@ export const JarsList = () => {
       <div className={styles.controls}>
         <span>
           Загалом банок: {jars.length} | Закрили збір:{' '}
-          {jars.filter((jar) => jar.is_finished).length} | Обрано:{' '}
+          {jars.filter((jar) => jar.isFinished).length} | Обрано:{' '}
           {selectedJars.length}
         </span>
         <div className={styles['curators-filter']}>

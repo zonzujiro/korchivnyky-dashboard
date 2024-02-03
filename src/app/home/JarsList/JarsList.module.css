@@ -54,6 +54,7 @@
 
 .jar-settings {
   display: flex;
+  align-items: center;
 }
 
 .icon {
@@ -88,4 +89,26 @@
 
 .curators-filter > span {
   padding-right: 10px;
+}
+
+.copy-icon-clicked {
+  animation: wave 0.3s infinite;
+  pointer-events: none;
+  user-select: none;
+}
+
+.copy-icon {
+  cursor: pointer;
+  user-select: none;
+}
+
+.copy-icon:hover {
+  transform: translateY(-1px);
+  transition: 0.2s;
+}
+
+@keyframes wave {
+   50% {
+    transform: translateY(-4px);
+  }
 }
