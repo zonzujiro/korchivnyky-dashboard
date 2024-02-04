@@ -2,9 +2,15 @@
   font-family: var(--eUkraine);
 }
 
+.image-frame {
+  width: 230px;
+  height: 300px;
+  overflow: hidden;
+}
+
 .header {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: 35% 50%;
   align-items: center;
   margin-bottom: 70px;
 }

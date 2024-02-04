@@ -105,10 +105,11 @@ export const getHomePageData = async () => {
 };
 
 export const getInvoicesPageData = async () => {
-  const [expensesTypes, invoices] = await Promise.all([
+  const [expensesTypes, expenses, invoices] = await Promise.all([
     getExpensesTypes(),
+    getExpenses(),
     getInvoices(),
   ]);
 
-  return { expensesTypes, invoices };
+  return { expensesTypes, expenses, invoices };
 };

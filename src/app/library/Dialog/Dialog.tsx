@@ -51,7 +51,6 @@ export const Dialog = ({
    */
   const catchEvent = (ev: React.MouseEvent<HTMLDialogElement>) => {
     ev.stopPropagation();
-    // ev.preventDefault();
   };
 
   return (
@@ -69,7 +68,7 @@ export const Dialog = ({
               <Button onClick={closeDialog}>X</Button>
             </div>
             <div className={styles['dialog-content']}>
-              {renderContent({ closeDialog })}
+              {renderContent?.({ closeDialog })}
             </div>
           </dialog>,
           document.body

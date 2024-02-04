@@ -14,10 +14,10 @@ export const NavigationMenu = () => {
       <ol className={styles['main-menu']}>
         <li
           className={classNames(styles['menu-item'], {
-            [styles.active]: pathname === '/home',
+            [styles.active]: pathname === '/jars',
           })}
         >
-          <Link href='/home'>Home</Link>
+          <Link href='/jars'>Банки</Link>
         </li>
         <span className={styles['menu-separator']}>|</span>
         <li
@@ -25,7 +25,7 @@ export const NavigationMenu = () => {
             [styles.active]: pathname === '/invoices',
           })}
         >
-          <Link href='/invoices'>Invoices</Link>
+          <Link href='/invoices'>Рахунки</Link>
         </li>
       </ol>
     </nav>

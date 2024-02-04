@@ -1,0 +1,38 @@
+.dialog-content {
+  max-width: 900px;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.fieldsets-wrapper {
+  display: flex;
+  margin-bottom: 20px;
+}
+
+.form-inputs {
+  display: flex;
+  flex-direction: column;
+  margin-right: 10px;
+  height: 100%;
+  padding: 20px;
+}
+
+.form-inputs:first-child {
+  margin-right: 10px;
+}
+
+.form-inputs input {
+  margin-bottom: 20px;
+}
+
+.receipt-preview-frame {
+  max-height: 500px;
+  overflow: hidden;
+}
+
+.receipt-preview-frame > div {
+  position: unset !important;
+}

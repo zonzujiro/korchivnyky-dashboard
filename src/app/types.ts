@@ -33,9 +33,10 @@ export type ExpenseRecord = {
   sum: number;
   jarId: number;
   createdAt: string;
-  date?: string;
+  date: string;
   expenseTypeId: ExpenseType['id'];
   receipt: string;
+  invoiceId: number;
 };
 
 // {

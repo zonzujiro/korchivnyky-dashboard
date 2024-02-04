@@ -12,9 +12,13 @@ import { toCurrency } from '@/app/toolbox';
 import styles from './JarsList.module.css';
 import { CuratorsDropdown } from './CuratorsDropdown';
 import { AddJarDialog } from './AddJarDialog/AddJarDialog';
+<<<<<<< HEAD:src/app/home/JarsList/JarsList.tsx
 import { AddExpenseDialog } from './AddExpenseDialog/AddExpenseDialog';
 import TooltipComponent from '@/app/TooltipComponent/TooltipComponent';
 
+=======
+import { AddExpenseDialog } from '../../invoices/Invoice/AddExpenseDialog/AddExpenseDialog';
+>>>>>>> a396902 (moving AddExpenseDialog):src/app/jars/JarsList/JarsList.tsx
 
 type JarItemProps = {
   jar: Jar;
@@ -63,7 +67,6 @@ const JarItem = ({ jar, isSelected, onClick }: JarItemProps) => {
           >
             <TooltipComponent/>
           </span>
-          <AddExpenseDialog jarId={jar.id} />
         </div>
       </div>
       <div className={classNames(styles['item-column'], styles['jar-info'])}>

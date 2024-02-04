@@ -11,11 +11,11 @@ export const middleware = async (request: NextRequest) => {
 
   if (requestUrl.pathname === '/login') {
     if (token) {
-      // return NextResponse.redirect(new URL('/home', request.url));
+      // return NextResponse.redirect(new URL('/jars', request.url));
     }
   }
 };
 
 export const config = {
-  matcher: [{ source: '/home' }, { source: '/login' }],
+  matcher: [{ source: '/jars' }, { source: '/login' }],
 };

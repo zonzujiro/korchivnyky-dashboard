@@ -1,0 +1,38 @@
+.invoice-information {
+  display: flex;
+}
+
+.expenses-header {
+  display: flex;
+  justify-content: space-between;
+  margin: 10px 0;
+}
+
+.expenses-list-wrapper {
+  max-height: 500px;
+  overflow-x: scroll;
+}
+
+.expenses-list {
+  list-style: none;
+  padding-right: 10px;
+}
+
+.expense-item {
+  display: flex;
+  width: 100%;
+  border: 1px solid black;
+  margin-bottom: 15px;
+  border-radius: 10px;
+  padding: 10px;
+}
+
+.expense-info,
+.expense-actions {
+  width: 50%;
+}
+
+.expense-actions {
+  display: flex;
+  justify-content: flex-end;
+}
