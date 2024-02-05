@@ -13,7 +13,7 @@ import styles from './JarsList.module.css';
 import { CuratorsDropdown } from './CuratorsDropdown';
 import { AddJarDialog } from './AddJarDialog/AddJarDialog';
 import { AddExpenseDialog } from './AddExpenseDialog/AddExpenseDialog';
-import  TooltipComponent from '../TooltipComponent/TooltipComponent';
+import TooltipComponent from '@/app/TooltipComponent/TooltipComponent';
 
 
 type JarItemProps = {
