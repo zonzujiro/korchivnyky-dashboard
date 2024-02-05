@@ -19,10 +19,10 @@ const fileToBase64 = (file: File): Promise<string> =>
 const isValidReceipt = (file: File) =>
   fileTypes.some((type) => type === file.type);
 
-const isValidForPreview = (file: File) =>
-  fileTypes
-    .filter((type) => type !== 'application/pdf')
-    .some((type) => type === file.type);
+// const isValidForPreview = (file: File) =>
+//   fileTypes
+//     .filter((type) => type !== 'application/pdf')
+//     .some((type) => type === file.type);
 
 const createExpense = async () => {};
 
@@ -42,6 +42,7 @@ const RECEIPT_PREVIEW_DEFAULT_STATE = {
 };
 
 export const AddExpenseDialog = () => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [status, dispatch] = useFormState(createExpense, undefined);
   const [receiptPreview, setReceiptPreview] = useState(
     RECEIPT_PREVIEW_DEFAULT_STATE

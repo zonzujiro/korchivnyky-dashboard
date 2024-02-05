@@ -4,7 +4,7 @@ import styles from './SiteLogo.module.css';
 
 export const SiteLogo = () => {
   return (
-    <div className={styles['site-logo']}>
+    <div className={styles['site-logo-wrapper']}>
       <Image
         className={styles['site-logo']}
         src='/site-logo.svg'

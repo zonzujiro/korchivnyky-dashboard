@@ -1,12 +1,13 @@
+'use client';
+
 import randomColor from 'randomcolor';
 import { toCurrency } from '../../toolbox/utils';
 import styles from './Progress.module.css';
 import type { Jar } from '../../types';
-import { useContext } from 'react';
-import { AppContext } from '@/app/dal';
 
 type ProgressProps = {
   goal: number;
+  jars: Array<Jar>;
 };
 
 const progressColor = randomColor();
@@ -17,9 +18,7 @@ const getGatheredMoney = (jars: Array<Jar>) => {
   }, 0);
 };
 
-export const Progress = ({ goal }: ProgressProps) => {
-  const { jars } = useContext(AppContext);
-
+export const Progress = ({ goal, jars }: ProgressProps) => {
   const currentSum = getGatheredMoney(jars);
   const percentage = `${Math.round((100 * currentSum) / goal)}%`;
 

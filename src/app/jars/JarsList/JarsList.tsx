@@ -8,17 +8,11 @@ import type { Jar } from '@/app/types';
 import { CURATORS } from '@/app/constants';
 import { AppContext } from '@/app/dal';
 import { toCurrency } from '@/app/toolbox';
+import TooltipComponent from '@/app/TooltipComponent/TooltipComponent';
 
 import styles from './JarsList.module.css';
 import { CuratorsDropdown } from './CuratorsDropdown';
 import { AddJarDialog } from './AddJarDialog/AddJarDialog';
-<<<<<<< HEAD:src/app/home/JarsList/JarsList.tsx
-import { AddExpenseDialog } from './AddExpenseDialog/AddExpenseDialog';
-import TooltipComponent from '@/app/TooltipComponent/TooltipComponent';
-
-=======
-import { AddExpenseDialog } from '../../invoices/Invoice/AddExpenseDialog/AddExpenseDialog';
->>>>>>> a396902 (moving AddExpenseDialog):src/app/jars/JarsList/JarsList.tsx
 
 type JarItemProps = {
   jar: Jar;
@@ -63,9 +57,9 @@ const JarItem = ({ jar, isSelected, onClick }: JarItemProps) => {
               copyClicked ? styles['copy-icon-clicked'] : styles['copy-icon']
             }
             onClick={handleClickCopy}
-            title="Скопіювати посилання на банку"
+            title='Скопіювати посилання на банку'
           >
-            <TooltipComponent/>
+            <TooltipComponent />
           </span>
         </div>
       </div>

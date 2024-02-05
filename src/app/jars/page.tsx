@@ -1,3 +1,3 @@
-import { HomePage } from './HomePage';
+import { JarsPage } from './JarsPage';
 
-export default HomePage;
+export default JarsPage;

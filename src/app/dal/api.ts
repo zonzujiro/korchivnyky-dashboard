@@ -93,7 +93,7 @@ export const signIn = async (
   return response;
 };
 
-export const getHomePageData = async () => {
+export const getJarsPageData = async () => {
   const [jars, expenses, expenseTypes, statistics] = await Promise.all([
     getJars(),
     getExpenses(),

@@ -414,9 +414,30 @@ export const statistics = [
 });
 
 export const expenseTypes: Array<ExpenseType> = [
-  { id: 1, fundraisingCampaignId: 1, title: 'Дизель' },
-  { id: 2, fundraisingCampaignId: 2, title: 'Пікапи' },
-  { id: 3, fundraisingCampaignId: 3, title: 'Хімарси' },
+  {
+    id: 1,
+    fundraisingCampaignId: 1,
+    name: 'Дизель',
+    isActive: true,
+    targetSum: 1000000,
+    createdAt: '',
+  },
+  {
+    id: 2,
+    fundraisingCampaignId: 2,
+    name: 'Пікапи',
+    isActive: true,
+    targetSum: 1000000,
+    createdAt: '',
+  },
+  {
+    id: 3,
+    fundraisingCampaignId: 3,
+    name: 'Хімарси',
+    isActive: true,
+    targetSum: 1000000,
+    createdAt: '',
+  },
 ];
 
 export const expenses: Array<ExpenseRecord> = [
