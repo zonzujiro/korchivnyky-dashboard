@@ -59,6 +59,7 @@ const JarItem = ({ jar, isSelected, onClick }: JarItemProps) => {
               copyClicked ? styles['copy-icon-clicked'] : styles['copy-icon']
             }
             onClick={handleClickCopy}
+            title="Скопіювати посилання на банку"
           >
             <TooltipComponent/>
           </span>
