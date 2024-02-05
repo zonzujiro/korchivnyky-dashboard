@@ -36,15 +36,26 @@ const SubmitButton = () => {
   );
 };
 
+const RECEIPT_PREVIEW_DEFAULT_STATE = {
+  base64: '',
+  isPDF: false,
+};
+
 export const AddExpenseDialog = () => {
   const [status, dispatch] = useFormState(createExpense, undefined);
-  const [fileContent, setFileContent] = useState('');
+  const [receiptPreview, setReceiptPreview] = useState(
+    RECEIPT_PREVIEW_DEFAULT_STATE
+  );
 
   const formRef = useRef<HTMLFormElement>(null);
 
   const resetForm = () => {
     formRef.current?.reset();
-    setFileContent('');
+    resetReceiptPreview();
+  };
+
+  const resetReceiptPreview = () => {
+    setReceiptPreview(RECEIPT_PREVIEW_DEFAULT_STATE);
   };
 
   const renderFilePreview = async (ev: React.FormEvent<HTMLInputElement>) => {
@@ -56,13 +67,14 @@ export const AddExpenseDialog = () => {
 
     const [file] = files;
 
-    if (!isValidForPreview(file)) {
+    if (!isValidReceipt(file)) {
+      resetReceiptPreview();
       return;
     }
 
     const base64 = await fileToBase64(file);
 
-    setFileContent(base64);
+    setReceiptPreview({ base64, isPDF: file.type.includes('pdf') });
   };
 
   return (
@@ -93,9 +105,21 @@ export const AddExpenseDialog = () => {
                         onChange={renderFilePreview}
                         accept={fileTypes.join(', ')}
                       />
-                      {fileContent && (
+                      {receiptPreview.base64 ? (
                         <div className={styles['receipt-preview-frame']}>
-                          <ImagePreview src={fileContent} />
+                          {receiptPreview.isPDF ? (
+                            <object
+                              className={styles['pdf-preview']}
+                              type='application/pdf'
+                              data={receiptPreview.base64}
+                            />
+                          ) : (
+                            <ImagePreview src={receiptPreview.base64} />
+                          )}
+                        </div>
+                      ) : (
+                        <div className={styles['receipt-preview-skeleton']}>
+                          <span>🖼️</span>
                         </div>
                       )}
                     </div>

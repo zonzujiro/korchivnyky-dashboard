@@ -36,3 +36,12 @@
   display: flex;
   justify-content: flex-end;
 }
+
+.invoice-image-frame {
+  width: 400px;
+  border: 1px solid black;
+}
+
+.invoice-description {
+  margin-left: 10px;
+}

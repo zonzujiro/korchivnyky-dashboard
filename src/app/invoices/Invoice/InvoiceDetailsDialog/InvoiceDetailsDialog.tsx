@@ -30,27 +30,31 @@ export const InvoiceDetailsDialog = (props: InvoiceDetailsDialogProps) => {
         <div className={styles['invoice-dialog-content']}>
           <div className={styles['invoice-information']}>
             <div className={styles['invoice-image-frame']}>
-              <ImagePreview src={fileUrl} />
+              {fileUrl.includes('pdf') ? (
+                <iframe src={fileUrl} />
+              ) : (
+                <ImagePreview src={fileUrl} />
+              )}
             </div>
             <div className={styles['invoice-description']}>
-              <p className={styles['invoice-description']}>
+              <p>
                 <strong>Сума:</strong> {toCurrency(amount)}
               </p>
-              <p className={styles['invoice-description']}>
+              <p>
                 <strong>До сплати:</strong> {toCurrency(amount - payedSum)}
               </p>
               {description && (
-                <p className={styles['invoice-description']}>
+                <p>
                   <strong>Опис:</strong> {description}
                 </p>
               )}
-              <p className={styles['invoice-description']}>
+              <p>
                 <strong> Категорія:</strong> {expenseType.name}
               </p>
-              <p className={styles['invoice-description']}>
+              <p>
                 <strong>Створений:</strong> {creationDate}
               </p>
-              <p className={styles['invoice-description']}>
+              <p>
                 <strong>Створив:</strong> Вася Пупкін
               </p>
               <Link className={styles['invoice-link']} href={fileUrl}>
