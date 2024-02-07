@@ -2,14 +2,14 @@
 
 //TODO: replace with server component
 
-import { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
 import { useFormState, useFormStatus } from 'react-dom';
 
 import { Button, SiteLogo } from '../library';
 
 import styles from './LoginForm.module.css';
 import { authenticate, getAuthToken } from '@/app/actions/auth';
+import Link from 'next/link';
 
 const LoginButton = () => {
   const { pending } = useFormStatus();
@@ -22,16 +22,15 @@ const LoginButton = () => {
 };
 
 export const LoginFormPage = () => {
-  const router = useRouter();
-
   const [status, dispatch] = useFormState(authenticate, undefined);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
     const navigate = async () => {
       const token = await getAuthToken();
 
       if (token) {
-        router.push('/');
+        setIsLoggedIn(true);
       }
     };
 
@@ -44,24 +43,27 @@ export const LoginFormPage = () => {
   return (
     <div className={styles['login-form-wrapper']}>
       <SiteLogo />
-      <form action={dispatch} className={styles['login-form']}>
-        <input type='email' name='email' placeholder='Email' required />
-        <input
-          type='password'
-          name='password'
-          placeholder='Password'
-          required
-        />
-        <div>
-          {status === 'Invalid credentials.' && (
-            <p>
-              В ГУРі тебе не знають. Висилаємо безліч бобіків та
-              бронетранспортер. Тікай в жито
-            </p>
-          )}
-        </div>
-        <LoginButton />
-      </form>
+      {isLoggedIn && <Link href='/'>🔓 Увірватися</Link>}
+      {!isLoggedIn && (
+        <form action={dispatch} className={styles['login-form']}>
+          <input type='email' name='email' placeholder='Email' required />
+          <input
+            type='password'
+            name='password'
+            placeholder='Password'
+            required
+          />
+          <div>
+            {status === 'Invalid credentials.' && (
+              <p>
+                В ГУРі тебе не знають. Висилаємо безліч бобіків та
+                бронетранспортер. Тікай в жито
+              </p>
+            )}
+          </div>
+          <LoginButton />
+        </form>
+      )}
     </div>
   );
 };
