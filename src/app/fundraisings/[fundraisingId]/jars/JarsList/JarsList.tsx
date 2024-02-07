@@ -5,7 +5,6 @@ import classNames from 'classnames';
 
 import { Image, Button, TooltipComponent } from '@/app/library';
 import type { Jar } from '@/app/types';
-import { CURATORS } from '@/app/constants';
 import { AppContext } from '@/app/dal';
 import { toCurrency } from '@/app/toolbox';
 
@@ -20,10 +19,10 @@ type JarItemProps = {
 };
 
 const JarItem = ({ jar, isSelected, onClick }: JarItemProps) => {
-  const { url, goal, accumulated, ownerName, parentJarId, isFinished, logo } =
-    jar;
+  const { url, goal, accumulated, ownerName, isFinished, logo } = jar;
 
   const [copyClicked, setCopyClicked] = useState(false);
+
   const handleClickCopy = (ev: React.MouseEvent<HTMLSpanElement>) => {
     ev.stopPropagation();
     const timeout = setTimeout(() => {
@@ -66,7 +65,6 @@ const JarItem = ({ jar, isSelected, onClick }: JarItemProps) => {
         <h3>
           {ownerName} {isFinished ? <span>🔒</span> : null}
         </h3>
-        <span>Куратор: {parentJarId ? CURATORS[parentJarId] : 'Немає'}</span>
         <div className={styles['item-column']}>
           <span>Зібрано: {toCurrency(accumulated)}</span>
           <span>Мета: {goal ? toCurrency(goal) : 'Немає'}</span>
@@ -84,7 +82,7 @@ export const JarsList = () => {
   const [selectedCurator, setSelectedCurator] = useState('');
 
   const byCurator = selectedCurator
-    ? jars.filter((jar) => `${jar.parentJarId}` === selectedCurator)
+    ? jars.filter((jar) => `${jar.userId}` === selectedCurator)
     : jars;
 
   const toRender =
