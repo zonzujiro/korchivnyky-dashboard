@@ -1,5 +1,6 @@
 import { Suspense } from 'react';
-import { getInvoicesPageData } from '../dal';
+
+import { getInvoicesPageData } from '@/app/dal';
 
 import { InvoiceItem } from './Invoice/Invoice';
 import styles from './Invoices.module.css';

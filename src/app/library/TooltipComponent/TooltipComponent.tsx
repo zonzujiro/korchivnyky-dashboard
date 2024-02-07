@@ -1,7 +1,9 @@
-import { useState } from 'react';
-import Tooltip from '../Tooltip/Tooltip';
+'use client';
 
-const TooltipComponent = () => {
+import { useState } from 'react';
+import Tooltip from './Tooltip/Tooltip';
+
+export const TooltipComponent = () => {
   const [isTooltipVisible, setIsTooltipVisible] = useState(false);
 
   const handleCopyToClipboard = () => {
@@ -25,5 +27,3 @@ const TooltipComponent = () => {
     </div>
   );
 };
-
-export default TooltipComponent;

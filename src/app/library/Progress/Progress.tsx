@@ -1,9 +1,11 @@
 'use client';
 
 import randomColor from 'randomcolor';
-import { toCurrency } from '../../toolbox/utils';
+
+import { toCurrency } from '@/app/toolbox';
+import { Jar } from '@/app/types';
+
 import styles from './Progress.module.css';
-import type { Jar } from '../../types';
 
 type ProgressProps = {
   goal: number;
