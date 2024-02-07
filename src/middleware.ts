@@ -5,25 +5,17 @@ export const middleware = async (request: NextRequest) => {
   const requestUrl = new URL(request.url);
   const token = cookies().get('authorization');
 
-  console.log({
-    middleware: token,
-    pathname: requestUrl.pathname,
-    cookies: cookies().getAll(),
-  });
-
-  if (requestUrl.pathname === '/home') {
-    if (!token?.value) {
-      return NextResponse.redirect(new URL('/login', request.url));
-    }
+  if (!token?.value) {
+    return NextResponse.redirect(new URL('/login', request.url));
   }
 
   if (requestUrl.pathname === '/login') {
     if (token) {
-      return NextResponse.redirect(new URL('/home', request.url));
+      // return NextResponse.redirect(new URL('/jars', request.url));
     }
   }
 };
 
 export const config = {
-  matcher: [{ source: '/home' }, { source: '/login' }],
+  matcher: [{ source: '/jars' }, { source: '/login' }],
 };

@@ -1,12 +1,17 @@
 'use server';
 
-import type { Jar, JarStatisticRecord } from '../types';
+import type { ExpenseType, Invoice, Jar, JarStatisticRecord } from '../types';
 import { addColorToJar } from '../toolbox/utils';
-import { expenseTypes, expenses } from './mocks';
+import { expenses } from './mocks';
 import { cookies } from 'next/headers';
 
 const getData = async (url: string) => {
-  const response = await fetch(url);
+  const response = await fetch(url, {
+    headers: {
+      Authorization: cookies().get('authorization')?.value || '',
+    },
+  });
+
   const json = await response.json();
 
   return json;
@@ -18,6 +23,7 @@ const postData = async (url: string, payload?: FormData) => {
         headers: {
           Accept: 'application/json',
           'Content-Type': 'application/json',
+          Authorization: cookies().get('authorization')?.value || '',
         },
 
         body: JSON.stringify(Object.fromEntries(payload.entries())),
@@ -61,7 +67,14 @@ export const postJar = async (payload: FormData) => {
   return postData('https://jars.fly.dev/jars', payload);
 };
 
-export const getExpensesTypes = () => Promise.resolve(expenseTypes);
+export const getExpensesTypes = (): Promise<Array<ExpenseType>> => {
+  return getData('https://jars.fly.dev/expensive-types');
+};
+
+export const getInvoices = (): Promise<Array<Invoice>> => {
+  return getData('https://jars.fly.dev/invoices');
+};
+
 export const getExpenses = () => Promise.resolve(expenses);
 
 export const signIn = async (
@@ -80,7 +93,7 @@ export const signIn = async (
   return response;
 };
 
-export const getInitialData = async () => {
+export const getJarsPageData = async () => {
   const [jars, expenses, expenseTypes, statistics] = await Promise.all([
     getJars(),
     getExpenses(),
@@ -89,4 +102,14 @@ export const getInitialData = async () => {
   ]);
 
   return { jars, expenses, expenseTypes, statistics };
+};
+
+export const getInvoicesPageData = async () => {
+  const [expensesTypes, expenses, invoices] = await Promise.all([
+    getExpensesTypes(),
+    getExpenses(),
+    getInvoices(),
+  ]);
+
+  return { expensesTypes, expenses, invoices };
 };

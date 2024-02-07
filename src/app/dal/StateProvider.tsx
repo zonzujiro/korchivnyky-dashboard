@@ -1,13 +1,19 @@
 'use client';
 
 import React from 'react';
-import type { ExpenseRecord, ExpenseType, Jar } from '../types';
+import type {
+  ExpenseRecord,
+  ExpenseType,
+  Jar,
+  JarStatisticRecord,
+} from '../types';
 import { addColorToJar } from '../toolbox/utils';
 
 type StateProviderProps = {
   jars: Array<Jar>;
   expenses: Array<ExpenseRecord>;
   expenseTypes: Array<ExpenseType>;
+  statistics: Array<JarStatisticRecord>;
 };
 
 export type AppState = StateProviderProps & {
@@ -19,6 +25,7 @@ export type AppState = StateProviderProps & {
 };
 
 export const AppContext = React.createContext<AppState>({
+  statistics: [],
   selectedJars: [],
   expenses: [],
   expenseTypes: [],
@@ -34,8 +41,9 @@ export const StateProvider = ({
   expenses: serverExpenses,
   expenseTypes,
   children,
+  statistics,
 }: StateProviderProps & {
-  children: Array<React.ReactElement>;
+  children: React.ReactNode;
 }) => {
   const [selectedJars, setSelectedJars] = React.useState<Array<Jar>>([]);
   const [expenses, setExpenses] = React.useState(serverExpenses);
@@ -73,6 +81,7 @@ export const StateProvider = ({
     expenses,
     expenseTypes,
     addExpense,
+    statistics,
   };
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;

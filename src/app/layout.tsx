@@ -4,6 +4,9 @@ import localFont from 'next/font/local';
 
 import classNames from 'classnames';
 import './globals.css';
+import styles from './layout.module.css';
+
+import { NavigationMenu, SiteLogo } from './library';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -39,7 +42,7 @@ export const metadata: Metadata = {
   description: 'Ми і є Корчівники, довбойоб',
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
@@ -53,7 +56,11 @@ export default function RootLayout({
           eUkraineFont.variable
         )}
       >
-        {children}
+        <header className={styles.header}>
+          <SiteLogo />
+          <NavigationMenu />
+        </header>
+        <main className={styles.main}>{children}</main>
       </body>
     </html>
   );

@@ -1,0 +1,40 @@
+.invoice {
+  width: 250px;
+  height: 270px;
+  border: 1px solid;
+  border-radius: 10px;
+  margin: 15px;
+  display: flex;
+  flex-flow: column;
+  padding: 10px;
+}
+
+.invoice-image-preview-frame {
+  height: 100px;
+  overflow: hidden;
+}
+
+.invoice-image-preview-frame > div {
+  position: unset !important;
+}
+
+.invoice-name {
+  margin: 10px 0;
+}
+
+.invoice-preview-description {
+  font-size: 0.9em;
+}
+
+.invoice-description {
+  line-height: 1.5em;
+}
+
+.invoice-popups {
+  display: flex;
+  margin-top: 20px;
+}
+
+.invoice-popups > button {
+  margin-right: 10px;
+}

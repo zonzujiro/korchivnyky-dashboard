@@ -1,0 +1,18 @@
+.main-menu {
+  list-style: none;
+  display: flex;
+}
+
+.menu-item {
+  padding: 8px;
+}
+
+.menu-item.active {
+  background-color: black;
+  color: white;
+}
+
+.menu-separator {
+  margin: 0 15px;
+  padding: 8px;
+}

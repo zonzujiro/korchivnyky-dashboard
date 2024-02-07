@@ -1,5 +1,5 @@
 import { Fragment } from 'react';
-import { Dialog } from '@/app/library/Dialog/Dialog';
+import { Dialog, Button } from '@/app/library';
 import {
   CURATORS_COLORS,
   CURATORS_IDS,
@@ -8,7 +8,6 @@ import {
 import { Jar } from '@/app/types';
 
 import styles from './ExportStatisticsDialog.module.css';
-import { Button } from '@/app/library';
 
 const StatisticsRow = ({ jar }: { jar: Jar }) => (
   <>

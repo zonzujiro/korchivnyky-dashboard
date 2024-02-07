@@ -1,8 +1,5 @@
 'use server';
 
-import { serialize } from 'cookie';
-import { NextApiResponse } from 'next';
-
 import { signIn } from '../dal';
 
 // useFormState adds some shit into FormData
@@ -46,20 +43,4 @@ export const authenticate = async (
     }
     throw error;
   }
-};
-
-export const setTokenCookie = (res: NextApiResponse) => {
-  if (!token) {
-    return;
-  }
-
-  const cookie = serialize('authorization', token, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV !== 'development', // use secure cookie in production
-    sameSite: 'strict',
-    maxAge: 60 * 60 * 24 * 7, // 1 week
-    path: '/',
-  });
-
-  res.setHeader('Set-Cookie', cookie);
 };

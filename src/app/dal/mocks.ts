@@ -414,9 +414,30 @@ export const statistics = [
 });
 
 export const expenseTypes: Array<ExpenseType> = [
-  { id: 1, fundraisingCampaignId: 1, title: 'Дизель' },
-  { id: 2, fundraisingCampaignId: 2, title: 'Пікапи' },
-  { id: 3, fundraisingCampaignId: 3, title: 'Хімарси' },
+  {
+    id: 1,
+    fundraisingCampaignId: 1,
+    name: 'Дизель',
+    isActive: true,
+    targetSum: 1000000,
+    createdAt: '',
+  },
+  {
+    id: 2,
+    fundraisingCampaignId: 2,
+    name: 'Пікапи',
+    isActive: true,
+    targetSum: 1000000,
+    createdAt: '',
+  },
+  {
+    id: 3,
+    fundraisingCampaignId: 3,
+    name: 'Хімарси',
+    isActive: true,
+    targetSum: 1000000,
+    createdAt: '',
+  },
 ];
 
 export const expenses: Array<ExpenseRecord> = [
@@ -424,7 +445,9 @@ export const expenses: Array<ExpenseRecord> = [
     id: 1,
     sum: 1000,
     jarId: 28,
+    invoiceId: 7,
     createdAt: '2024-01-08T03:00:24.370Z',
+    date: '2024-01-08T03:00:24.370Z',
     expenseTypeId: expenseTypes[0].id,
     receipt: '',
   },
@@ -433,7 +456,9 @@ export const expenses: Array<ExpenseRecord> = [
     sum: 2000,
     jarId: 28,
     createdAt: '2024-01-09T03:00:24.370Z',
+    date: '2024-01-09T03:00:24.370Z',
     expenseTypeId: expenseTypes[0].id,
+    invoiceId: 7,
     receipt: '',
   },
   {
@@ -441,7 +466,9 @@ export const expenses: Array<ExpenseRecord> = [
     sum: 1000,
     jarId: 28,
     createdAt: '2024-01-10T03:00:24.370Z',
+    date: '2024-01-10T03:00:24.370Z',
     expenseTypeId: expenseTypes[0].id,
+    invoiceId: 7,
     receipt: '',
   },
   {
@@ -449,23 +476,29 @@ export const expenses: Array<ExpenseRecord> = [
     sum: 100,
     jarId: 12,
     createdAt: '2024-01-08T03:00:24.370Z',
+    date: '2024-01-08T03:00:24.370Z',
     expenseTypeId: expenseTypes[1].id,
     receipt: '',
+    invoiceId: 5,
   },
   {
     id: 2,
     sum: 5000,
     jarId: 12,
     createdAt: '2024-01-09T03:00:24.370Z',
+    date: '2024-01-09T03:00:24.370Z',
     expenseTypeId: expenseTypes[1].id,
     receipt: '',
+    invoiceId: 5,
   },
   {
     id: 34,
     sum: 4000,
     jarId: 28,
     createdAt: '2024-01-10T03:00:24.370Z',
+    date: '2024-01-10T03:00:24.370Z',
     expenseTypeId: expenseTypes[2].id,
     receipt: '',
+    invoiceId: 6,
   },
 ];

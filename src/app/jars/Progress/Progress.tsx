@@ -1,3 +1,5 @@
+'use client';
+
 import randomColor from 'randomcolor';
 import { toCurrency } from '../../toolbox/utils';
 import styles from './Progress.module.css';

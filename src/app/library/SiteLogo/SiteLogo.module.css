@@ -1,4 +1,4 @@
-.site-logo {
+.site-logo-wrapper {
   display: flex;
   align-items: center;
   margin: 0 20px;
@@ -11,4 +11,5 @@
 .name-and-slogan {
   display: flex;
   flex-direction: column;
+  margin-left: 20px;
 }
