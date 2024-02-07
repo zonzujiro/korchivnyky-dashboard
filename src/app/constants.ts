@@ -1,11 +1,11 @@
 // Order matters
 export const CURATORS_IDS = {
-  babenko: 17,
-  voloshenko: 26,
-  petrynyak: 12,
-  tytarenko: 28,
-  makogon: 32,
-  gryshenko: 34,
+  babenko: 8,
+  voloshenko: 9,
+  petrynyak: 4,
+  tytarenko: 7,
+  makogon: 6,
+  gryshenko: 10,
 };
 
 export const CURATORS_NAMES = {

@@ -12,7 +12,7 @@ import { CampaignDescription } from './CampaignDescription/CampaignDescription';
 export const JarsPage = async ({ params }: PageParams) => {
   const { fundraisingId } = params;
 
-  const { jars, expenseTypes, expenses, statistics, fundraisings } =
+  const { jars, expenseTypes, expenses, statistics, fundraisings, users } =
     await getJarsPageData();
 
   const fundraising = fundraisings.find(
@@ -30,6 +30,7 @@ export const JarsPage = async ({ params }: PageParams) => {
         expenses={expenses}
         expenseTypes={expenseTypes}
         statistics={statistics}
+        users={users}
       >
         <div className={styles['general-info']}>
           <Progress goal={fundraising.goal} jars={scopedJars} />

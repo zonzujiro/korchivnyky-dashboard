@@ -6,6 +6,7 @@ import type {
   Invoice,
   Jar,
   JarStatisticRecord,
+  User,
 } from '../types';
 import { addColorToJar } from '../toolbox/utils';
 import { expenses } from './mocks';
@@ -113,17 +114,22 @@ export const getFundraisingCampaigns = async (): Promise<
   return response.toReversed();
 };
 
+export const getUsers = async (): Promise<Array<User>> => {
+  return get('https://jars.fly.dev/users');
+};
+
 export const getJarsPageData = async () => {
-  const [jars, expenses, expenseTypes, statistics, fundraisings] =
+  const [jars, expenses, expenseTypes, statistics, fundraisings, users] =
     await Promise.all([
       getJars(),
       getExpenses(),
       getExpensesTypes(),
       getStatistics(),
       getFundraisingCampaigns(),
+      getUsers(),
     ]);
 
-  return { jars, expenses, expenseTypes, statistics, fundraisings };
+  return { jars, expenses, expenseTypes, statistics, fundraisings, users };
 };
 
 export const getInvoicesPageData = async () => {

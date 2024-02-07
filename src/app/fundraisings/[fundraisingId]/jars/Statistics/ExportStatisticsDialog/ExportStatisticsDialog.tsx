@@ -1,26 +1,31 @@
 import { Fragment } from 'react';
 import { Dialog, Button } from '@/app/library';
-import {
-  CURATORS_COLORS,
-  CURATORS_IDS,
-  DEFAULT_JAR_GOAL,
-} from '@/app/constants';
-import { Jar } from '@/app/types';
+import { CURATORS_COLORS, DEFAULT_JAR_GOAL } from '@/app/constants';
+import { Jar, User } from '@/app/types';
 
 import styles from './ExportStatisticsDialog.module.css';
 
-const StatisticsRow = ({ jar }: { jar: Jar }) => (
-  <>
-    <td>
-      <a href={jar.url}>{jar.ownerName}</a>
-    </td>
-    <td>{jar.isFinished ? 'Так' : 'Ні'}</td>
-    <td>{jar.goal || DEFAULT_JAR_GOAL}</td>
-    <td>{jar.accumulated}</td>
-  </>
-);
+const StatisticsRow = ({ jar }: { jar: Jar }) => {
+  console.log({ jar });
+  return (
+    <>
+      <td>
+        <a href={jar.url}>{jar.ownerName}</a>
+      </td>
+      <td>{jar.isFinished ? 'Так' : 'Ні'}</td>
+      <td>{jar.goal || DEFAULT_JAR_GOAL}</td>
+      <td>{jar.accumulated}</td>
+    </>
+  );
+};
 
-export const ExportStatisticsDialog = ({ jars }: { jars: Array<Jar> }) => {
+export const ExportStatisticsDialog = ({
+  jars,
+  users,
+}: {
+  jars: Array<Jar>;
+  users: Array<User>;
+}) => {
   return (
     <Dialog
       title='Експорт даних'
@@ -34,36 +39,25 @@ export const ExportStatisticsDialog = ({ jars }: { jars: Array<Jar> }) => {
             <div className={styles['export-table']}>
               <table>
                 <tbody>
-                  {Object.values(CURATORS_IDS).map((curatorId) => {
-                    const curator = jars.find((jar) => jar.id === curatorId)!;
+                  {users.map(({ id: curatorId, name }) => {
                     const curated = jars.filter(
-                      (jar) => jar.parentJarId === curatorId
+                      (jar) => jar.userId === curatorId
                     );
 
                     if (!curated.length) {
-                      return (
-                        <tr
-                          key={curator.id}
-                          style={{
-                            backgroundColor: CURATORS_COLORS[curator.id],
-                          }}
-                        >
-                          <td>{curator.ownerName}</td>
-                          <StatisticsRow jar={curator} />
-                        </tr>
-                      );
+                      return null;
                     }
 
                     const [first, ...rest] = curated;
 
                     return (
-                      <Fragment key={curator.id}>
+                      <Fragment key={curatorId}>
                         <tr
                           style={{
-                            backgroundColor: CURATORS_COLORS[curator.id],
+                            backgroundColor: CURATORS_COLORS[curatorId],
                           }}
                         >
-                          <td rowSpan={curated.length}>{curator.ownerName}</td>
+                          <td rowSpan={curated.length}>{name}</td>
                           <StatisticsRow jar={first} />
                         </tr>
                         {rest.map((jar) => {
@@ -71,7 +65,7 @@ export const ExportStatisticsDialog = ({ jars }: { jars: Array<Jar> }) => {
                             <tr
                               key={jar.id}
                               style={{
-                                backgroundColor: CURATORS_COLORS[curator.id],
+                                backgroundColor: CURATORS_COLORS[curatorId],
                               }}
                             >
                               <StatisticsRow jar={jar} />

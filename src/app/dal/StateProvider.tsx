@@ -6,6 +6,7 @@ import type {
   ExpenseType,
   Jar,
   JarStatisticRecord,
+  User,
 } from '../types';
 import { addColorToJar } from '../toolbox/utils';
 
@@ -14,6 +15,7 @@ type StateProviderProps = {
   expenses: Array<ExpenseRecord>;
   expenseTypes: Array<ExpenseType>;
   statistics: Array<JarStatisticRecord>;
+  users: Array<User>;
 };
 
 export type AppState = StateProviderProps & {
@@ -30,6 +32,7 @@ export const AppContext = React.createContext<AppState>({
   expenses: [],
   expenseTypes: [],
   jars: [],
+  users: [],
   toggleJarSelection: () => {},
   addJar: () => {},
   resetJarSelection: () => {},
@@ -42,6 +45,7 @@ export const StateProvider = ({
   expenseTypes,
   children,
   statistics,
+  users,
 }: StateProviderProps & {
   children: React.ReactNode;
 }) => {
@@ -82,6 +86,7 @@ export const StateProvider = ({
     expenseTypes,
     addExpense,
     statistics,
+    users,
   };
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;

@@ -18,14 +18,15 @@ FIVE_DAYS_AGO.setDate(FIVE_DAYS_AGO.getDate() - 5);
 
 const NO_DATA_TEXT = 'Немає даних 🤷‍♂️';
 
-// const TODAY = new Date();
-// const getDateInputInitialValue = (date: Date) => {
-//   const day = date.getDate();
-//   const month = `${date.getMonth() + 1}`;
-//   const year = date.getFullYear();
+const TODAY = new Date();
 
-//   return `${year}-${month}-${day}`;
-// };
+const getDateInputInitialValue = (date: Date) => {
+  const day = `${date.getDate()}`.padStart(2, '0');
+  const month = `${date.getMonth() + 1}`.padStart(2, '0');
+  const year = date.getFullYear();
+
+  return `${year}-${month}-${day}`;
+};
 
 const GrowthRow = ({
   jarId,
@@ -75,14 +76,16 @@ const SpeedRow = ({
 };
 
 export const Statistics = () => {
-  const { selectedJars, jars, expenses, expenseTypes, statistics } =
+  const { selectedJars, jars, expenses, expenseTypes, statistics, users } =
     useContext(AppContext);
 
   const [activeTab, setActiveTab] = useState<'statistics' | 'expenses'>(
     'statistics'
   );
-  const [startDate, setStartDate] = useState('2024-01-05');
-  const [endDate, setEndDate] = useState('2024-01-12');
+  const [startDate, setStartDate] = useState(
+    getDateInputInitialValue(FIVE_DAYS_AGO)
+  );
+  const [endDate, setEndDate] = useState(getDateInputInitialValue(TODAY));
 
   const usedJars = selectedJars.length ? selectedJars : jars;
 
@@ -99,8 +102,6 @@ export const Statistics = () => {
     filteredStatistics,
     new Date(startDate),
     new Date(endDate)
-    // FIVE_DAYS_AGO,
-    // TODAY
   );
 
   const speed = getGatheringSpeed(
@@ -134,7 +135,7 @@ export const Statistics = () => {
         {activeTab === 'statistics' ? (
           <div className={classNames(styles.column, styles.statistics)}>
             <div className={styles['column-header']}>
-              <ExportStatisticsDialog jars={jars} />
+              <ExportStatisticsDialog jars={jars} users={users} />
             </div>
             <div className={styles.chart}>
               <StatisticsSection jars={usedJars} />

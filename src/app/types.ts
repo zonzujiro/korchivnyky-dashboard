@@ -1,7 +1,7 @@
 export type Jar = {
   id: number;
   url: string;
-  parentJarId: null | number;
+  userId: null | number;
   ownerName: string;
   jarName: string;
   description: null | string;
@@ -73,4 +73,10 @@ export type Invoice = {
 
 export type PageParams = {
   params: Record<'fundraisingId', string>;
+};
+
+export type User = {
+  id: number;
+  name: string;
+  email: string;
 };
