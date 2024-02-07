@@ -113,18 +113,6 @@ export const getFundraisingCampaigns = async (): Promise<
   return response.toReversed();
 };
 
-export const getHomePageData = async (): Promise<{
-  jars: Array<Jar>;
-  fundraisings: Array<FundraisingCampaign>;
-}> => {
-  const [jars, fundraisings] = await Promise.all([
-    getJars(),
-    getFundraisingCampaigns(),
-  ]);
-
-  return { jars, fundraisings: fundraisings.toReversed() };
-};
-
 export const getJarsPageData = async () => {
   const [jars, expenses, expenseTypes, statistics, fundraisings] =
     await Promise.all([

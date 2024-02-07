@@ -3,8 +3,8 @@
 //TODO: replace with server component
 
 import { useEffect } from 'react';
-import { useFormState, useFormStatus } from 'react-dom';
 import { useRouter } from 'next/navigation';
+import { useFormState, useFormStatus } from 'react-dom';
 
 import { Button, SiteLogo } from '../library';
 
@@ -22,15 +22,16 @@ const LoginButton = () => {
 };
 
 export const LoginFormPage = () => {
-  const [status, dispatch] = useFormState(authenticate, undefined);
   const router = useRouter();
+
+  const [status, dispatch] = useFormState(authenticate, undefined);
 
   useEffect(() => {
     const navigate = async () => {
       const token = await getAuthToken();
 
       if (token) {
-        router.push('/home');
+        router.push('/');
       }
     };
 

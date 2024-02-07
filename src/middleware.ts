@@ -5,17 +5,15 @@ export const middleware = async (request: NextRequest) => {
   const requestUrl = new URL(request.url);
   const token = cookies().get('authorization');
 
-  if (!token?.value) {
+  if (requestUrl.pathname !== '/login' && !token?.value) {
     return NextResponse.redirect(new URL('/login', request.url));
   }
 
-  if (requestUrl.pathname === '/login') {
-    if (token) {
-      return NextResponse.redirect(new URL('/', request.url));
-    }
+  if (requestUrl.pathname === '/login' && token?.value) {
+    return NextResponse.redirect(new URL('/', request.url));
   }
 };
 
 export const config = {
-  matcher: [{ source: '/jars' }, { source: '/login' }],
+  matcher: ['/((?!api|_next/static|_next/image|favicon.ico|site-logo.svg).*)'],
 };

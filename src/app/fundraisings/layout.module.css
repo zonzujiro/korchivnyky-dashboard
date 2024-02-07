@@ -1,0 +1,10 @@
+.main {
+  font-family: var(--eUkraine);
+}
+
+.header {
+  display: grid;
+  grid-template-columns: 35% 50%;
+  align-items: center;
+  margin-bottom: 30px;
+}
