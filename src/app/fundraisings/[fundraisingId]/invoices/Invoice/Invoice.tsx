@@ -5,7 +5,7 @@ import type {
   ExpenseType,
   Invoice as InvoiceType,
 } from '@/app/types';
-import { toCurrency } from '@/app/toolbox';
+import { getDateString, toCurrency } from '@/app/toolbox';
 
 import styles from './Invoice.module.css';
 import { InvoiceDetailsDialog } from './InvoiceDetailsDialog/InvoiceDetailsDialog';
@@ -16,16 +16,6 @@ type InvoiceProps = {
   invoice: InvoiceType;
   invoiceExpenses: Array<ExpenseRecord>;
   expenseType: ExpenseType;
-};
-
-const getDate = (value: string) => {
-  const date = new Date(value);
-
-  const day = `${date.getDate()}`.padStart(2, '0');
-  const month = `${date.getMonth() + 1}`.padStart(2, '0');
-  const year = date.getFullYear();
-
-  return `${day}/${month}/${year}`;
 };
 
 const getSum = (expenses: Array<ExpenseRecord>) => {
@@ -40,7 +30,7 @@ export const InvoiceItem = ({
   const { name, amount, fileUrl, isActive, createdAt } = invoice;
 
   const payedSum = getSum(invoiceExpenses);
-  const creationDate = getDate(createdAt);
+  const creationDate = getDateString(createdAt);
 
   return (
     <div className={styles.invoice}>

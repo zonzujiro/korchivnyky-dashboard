@@ -1,6 +1,16 @@
 import randomColor from 'randomcolor';
 import type { Jar } from '../types';
 
+export const getDateString = (value: string) => {
+  const date = new Date(value);
+
+  const day = `${date.getDate()}`.padStart(2, '0');
+  const month = `${date.getMonth() + 1}`.padStart(2, '0');
+  const year = date.getFullYear();
+
+  return `${day}/${month}/${year}`;
+};
+
 export const toCurrency = (value: number) => {
   return `${value.toLocaleString('ua-UA').replaceAll(',', ' ')} ₴`;
 };

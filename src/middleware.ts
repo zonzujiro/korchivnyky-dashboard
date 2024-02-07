@@ -11,7 +11,7 @@ export const middleware = async (request: NextRequest) => {
 
   if (requestUrl.pathname === '/login') {
     if (token) {
-      // return NextResponse.redirect(new URL('/jars', request.url));
+      return NextResponse.redirect(new URL('/', request.url));
     }
   }
 };

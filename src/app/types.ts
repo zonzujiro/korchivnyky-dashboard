@@ -10,6 +10,7 @@ export type Jar = {
   isFinished: boolean;
   accumulated: number;
   color: string;
+  fundraisingCampaignId: number;
 };
 
 export type JarStatisticRecord = {
@@ -39,15 +40,15 @@ export type ExpenseRecord = {
   invoiceId: number;
 };
 
-// {
-//   id: 3,
-//   fundraisingCampaignId: 2,
-//   name: 'Машини',
-//   isActive: true,
-//   createdAt: '2024-01-31T08:55:41.082Z',
-//   targetSum: 1500000
-// }
-// ] [
+export type FundraisingCampaign = {
+  id: number;
+  name: string;
+  description: string;
+  goal: number;
+  isFinished: boolean;
+  startDate: string;
+  createdAt: string;
+};
 
 export type InvoiceRequest = {
   name: string;
@@ -68,4 +69,8 @@ export type Invoice = {
   fileUrl: string;
   createdAt: string;
   expensiveTypeId: number;
+};
+
+export type PageParams = {
+  params: Record<'fundraisingId', string>;
 };

@@ -7,6 +7,7 @@ import './globals.css';
 import styles from './layout.module.css';
 
 import { NavigationMenu, SiteLogo } from './library';
+import { getFundraisingCampaigns } from './dal';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -47,6 +48,8 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const fundraisings = await getFundraisingCampaigns();
+
   return (
     <html lang='en'>
       <body
@@ -58,8 +61,9 @@ export default async function RootLayout({
       >
         <header className={styles.header}>
           <SiteLogo />
-          <NavigationMenu />
+          <NavigationMenu fundraisings={fundraisings} />
         </header>
+
         <main className={styles.main}>{children}</main>
       </body>
     </html>
