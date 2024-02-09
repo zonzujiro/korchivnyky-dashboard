@@ -4,6 +4,7 @@ import type {
   ExpenseRecord,
   ExpenseType,
   Invoice as InvoiceType,
+  Jar,
 } from '@/app/types';
 import { getDateString, toCurrency } from '@/app/toolbox';
 
@@ -16,6 +17,7 @@ type InvoiceProps = {
   invoice: InvoiceType;
   invoiceExpenses: Array<ExpenseRecord>;
   expenseType: ExpenseType;
+  jars: Array<Jar>;
 };
 
 const getSum = (expenses: Array<ExpenseRecord>) => {
@@ -26,6 +28,7 @@ export const InvoiceItem = ({
   invoice,
   expenseType,
   invoiceExpenses,
+  jars,
 }: InvoiceProps) => {
   const { name, amount, fileUrl, isActive, createdAt } = invoice;
 
@@ -58,7 +61,7 @@ export const InvoiceItem = ({
           invoiceExpenses={invoiceExpenses}
           creationDate={creationDate}
         />
-        <AddExpenseDialog />
+        <AddExpenseDialog invoiceId={invoice.id} jars={jars} />
       </div>
     </div>
   );

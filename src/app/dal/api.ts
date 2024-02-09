@@ -4,31 +4,61 @@ import type {
   ExpenseType,
   FundraisingCampaign,
   Invoice,
+  InvoiceTransactionPayload,
   Jar,
   JarStatisticRecord,
   User,
+  Primitive,
+  CreateJarPayload,
 } from '../types';
 import { addColorToJar } from '../toolbox/utils';
-import { expenses } from './mocks';
 import { cookies } from 'next/headers';
+import { getFundraisingInvoices } from './dataModificators';
 
-const get = async (url: string) => {
-  const response = await fetch(url, {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const throwError = (response: Response, body: Record<string, any>) => {
+  throw new Error(
+    `${response.status} (${response.url}): ${response.statusText} - ${body.error.code}: ${body.error.message}`
+  );
+};
+
+const handleSearchParams = (
+  baseUrl: string,
+  paramsSource?: Partial<Record<string, Primitive>>
+) => {
+  if (!paramsSource) {
+    return baseUrl;
+  }
+
+  const searchParams = new URLSearchParams();
+
+  Object.entries(paramsSource).forEach(([key, value]) => {
+    searchParams.append(key, `${value}`);
+  });
+
+  return `${baseUrl}/?${searchParams.toString()}`;
+};
+
+const get = async (
+  url: string,
+  paramsSource?: Partial<Record<string, Primitive>>
+) => {
+  const response = await fetch(handleSearchParams(url, paramsSource), {
     headers: {
       Authorization: cookies().get('authorization')?.value || '',
     },
   });
 
-  if (response.status > 200) {
-    throw new Error(`${response.status} (${url}): ${response.statusText}`);
-  }
-
   const json = await response.json();
+
+  if (response.status > 200) {
+    throwError(response, json);
+  }
 
   return json;
 };
 
-const post = async (url: string, payload?: FormData) => {
+const post = async (url: string, payload?: Record<string, Primitive>) => {
   const options = payload
     ? {
         headers: {
@@ -37,7 +67,7 @@ const post = async (url: string, payload?: FormData) => {
           Authorization: cookies().get('authorization')?.value || '',
         },
 
-        body: JSON.stringify(Object.fromEntries(payload.entries())),
+        body: JSON.stringify(payload),
       }
     : {};
 
@@ -46,17 +76,21 @@ const post = async (url: string, payload?: FormData) => {
     ...options,
   });
 
-  if (response.status > 200) {
-    throw new Error(response.statusText);
-  }
-
   const json = await response.json();
+
+  if (response.status > 200) {
+    throwError(response, json);
+  }
 
   return json;
 };
 
-export const getJars = async (): Promise<Array<Jar>> => {
-  const jars = await get('https://jars.fly.dev/jars');
+export const getJars = async (
+  fundraisingCampaignId?: string
+): Promise<Array<Jar>> => {
+  const jars = await get('https://jars.fly.dev/jars', {
+    fundraisingCampaignId,
+  });
 
   return jars.map(addColorToJar);
 };
@@ -74,24 +108,31 @@ export const getStatistics = async (): Promise<Array<JarStatisticRecord>> => {
   });
 };
 
-export const postJar = async (payload: FormData) => {
+export const postJar = async (payload: CreateJarPayload) => {
   return post('https://jars.fly.dev/jars', payload);
 };
 
-export const getExpensesTypes = (): Promise<Array<ExpenseType>> => {
-  return get('https://jars.fly.dev/expensive-types');
+export const getExpensesTypes = (
+  fundraisingCampaignId: string
+): Promise<Array<ExpenseType>> => {
+  return get('https://jars.fly.dev/expensive-types', {
+    fundraisingCampaignId,
+  });
 };
 
 export const getInvoices = (): Promise<Array<Invoice>> => {
   return get('https://jars.fly.dev/invoices');
 };
 
-export const getExpenses = () => Promise.resolve(expenses);
+export const getExpenses = (fundraisingCampaignId: string) => {
+  return get('https://jars.fly.dev/transactions', { fundraisingCampaignId });
+};
 
-export const signIn = async (
-  formData: FormData
-): Promise<{ token: string }> => {
-  const response = await post('https://jars.fly.dev/sign-in', formData);
+export const signIn = async (payload: {
+  email: string;
+  password: string;
+}): Promise<{ token: string }> => {
+  const response = await post('https://jars.fly.dev/sign-in', payload);
 
   if (response.token) {
     cookies().set({
@@ -111,19 +152,30 @@ export const getFundraisingCampaigns = async (): Promise<
     'https://jars.fly.dev/fundraising-campaigns'
   )) as Array<FundraisingCampaign>;
 
-  return response.toReversed();
+  // Newest - first one
+  return response.sort((first, second) => second.id - first.id);
+};
+
+export const createInvoiceTransaction = (
+  formData: InvoiceTransactionPayload
+) => {
+  return post('https://jars.fly.dev/transactions/invoice', formData);
 };
 
 export const getUsers = async (): Promise<Array<User>> => {
   return get('https://jars.fly.dev/users');
 };
 
-export const getJarsPageData = async () => {
+export const getJarsPageData = async ({
+  fundraisingId,
+}: {
+  fundraisingId: string;
+}) => {
   const [jars, expenses, expenseTypes, statistics, fundraisings, users] =
     await Promise.all([
-      getJars(),
-      getExpenses(),
-      getExpensesTypes(),
+      getJars(fundraisingId),
+      getExpenses(fundraisingId),
+      getExpensesTypes(fundraisingId),
       getStatistics(),
       getFundraisingCampaigns(),
       getUsers(),
@@ -132,12 +184,33 @@ export const getJarsPageData = async () => {
   return { jars, expenses, expenseTypes, statistics, fundraisings, users };
 };
 
-export const getInvoicesPageData = async () => {
-  const [expensesTypes, expenses, invoices] = await Promise.all([
-    getExpensesTypes(),
-    getExpenses(),
-    getInvoices(),
-  ]);
+export const getCurrentUser = async (): Promise<User> => {
+  return get('https://jars.fly.dev/users/current');
+};
 
-  return { expensesTypes, expenses, invoices };
+export const getInvoicesPageData = async ({
+  fundraisingId,
+}: {
+  fundraisingId: string;
+}) => {
+  const [expensesTypes, expenses, invoices, jars, currentUser] =
+    await Promise.all([
+      getExpensesTypes(fundraisingId),
+      getExpenses(fundraisingId),
+      getInvoices(),
+      getJars(fundraisingId),
+      getCurrentUser(),
+    ]);
+
+  const fundraisingInvoices = getFundraisingInvoices(invoices, expensesTypes);
+
+  console.log({ expenses });
+
+  return {
+    expensesTypes,
+    expenses,
+    invoices: fundraisingInvoices,
+    jars,
+    currentUser,
+  };
 };

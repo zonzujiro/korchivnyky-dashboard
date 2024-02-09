@@ -2,7 +2,7 @@ import { useRef, useState } from 'react';
 import classNames from 'classnames';
 
 import { postJar, type AppState } from '@/app/dal';
-import type { Jar } from '@/app/types';
+import type { CreateJarPayload, Jar } from '@/app/types';
 import { Button, Dialog } from '@/app/library';
 
 import styles from './AddJarDialog.module.css';
@@ -35,8 +35,8 @@ export const AddJarDialog = ({
 
     const formData = new FormData(formRef.current!);
 
-    const url = formData.get('url');
-    const owner = formData.get('ownerName');
+    const url = formData.get('url') as string;
+    const owner = formData.get('ownerName') as string;
 
     const existingJar = jars.find((jar) => {
       return jar.url === url || jar.ownerName === owner;
@@ -48,9 +48,15 @@ export const AddJarDialog = ({
       return;
     }
 
+    const createJarPayload: CreateJarPayload = {
+      url,
+      ownerName: owner,
+      parentJarId: Number(formData.get('parentJarId')),
+    };
+
     setIsLoading(true);
 
-    const response = await postJar(formData);
+    const response = await postJar(createJarPayload);
 
     setIsLoading(false);
     addJar(response);

@@ -25,7 +25,8 @@
   margin-right: 10px;
 }
 
-.form-inputs input {
+.form-inputs input,
+.form-inputs select {
   margin-bottom: 20px;
 }
 

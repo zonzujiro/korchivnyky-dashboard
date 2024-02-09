@@ -1,3 +1,5 @@
+export type Primitive = string | number | boolean;
+
 export type Jar = {
   id: number;
   url: string;
@@ -50,15 +52,6 @@ export type FundraisingCampaign = {
   createdAt: string;
 };
 
-export type InvoiceRequest = {
-  name: string;
-  amount: number;
-  description: string;
-  expensiveTypeId: number;
-  fileName: string;
-  file: string;
-};
-
 export type Invoice = {
   id: number;
   userId: number;
@@ -79,4 +72,19 @@ export type User = {
   id: number;
   name: string;
   email: string;
+};
+
+export type InvoiceTransactionPayload = {
+  receiptName: string;
+  receipt: string;
+  fromJarId: number;
+  invoiceId: number;
+  jarSourceAmount: number;
+  otherSourcesAmount: number;
+};
+
+export type CreateJarPayload = {
+  url: string;
+  ownerName?: string;
+  parentJarId: number;
 };

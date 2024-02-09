@@ -1,6 +1,10 @@
 import { Suspense } from 'react';
 
-import { StateProvider, getJarsPageData } from '@/app/dal';
+import {
+  StateProvider,
+  getJarsPageData,
+  getCurrentFundraising,
+} from '@/app/dal';
 import { Progress } from '@/app/library';
 import { PageParams } from '@/app/types';
 
@@ -13,27 +17,21 @@ export const JarsPage = async ({ params }: PageParams) => {
   const { fundraisingId } = params;
 
   const { jars, expenseTypes, expenses, statistics, fundraisings, users } =
-    await getJarsPageData();
+    await getJarsPageData({ fundraisingId });
 
-  const fundraising = fundraisings.find(
-    (item) => `${item.id}` === fundraisingId
-  )!;
-
-  const scopedJars = jars.filter(
-    (item) => `${item.fundraisingCampaignId}` === fundraisingId
-  );
+  const fundraising = getCurrentFundraising(fundraisings, fundraisingId);
 
   return (
     <Suspense fallback={<p>🚙 Loading...</p>}>
       <StateProvider
-        jars={scopedJars}
+        jars={jars}
         expenses={expenses}
         expenseTypes={expenseTypes}
         statistics={statistics}
         users={users}
       >
         <div className={styles['general-info']}>
-          <Progress goal={fundraising.goal} jars={scopedJars} />
+          <Progress goal={fundraising.goal} jars={jars} />
           <CampaignDescription
             description={fundraising.description}
             startDate={fundraising.startDate}

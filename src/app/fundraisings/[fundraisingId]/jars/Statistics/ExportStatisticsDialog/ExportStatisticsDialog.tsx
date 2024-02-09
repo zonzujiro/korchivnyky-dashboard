@@ -6,7 +6,6 @@ import { Jar, User } from '@/app/types';
 import styles from './ExportStatisticsDialog.module.css';
 
 const StatisticsRow = ({ jar }: { jar: Jar }) => {
-  console.log({ jar });
   return (
     <>
       <td>

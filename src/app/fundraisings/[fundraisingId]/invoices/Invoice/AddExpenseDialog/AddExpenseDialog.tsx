@@ -1,30 +1,18 @@
+import { useRef, useState } from 'react';
 import { useFormState, useFormStatus } from 'react-dom';
 
 import { Button, Dialog } from '@/app/library';
+import { createExpense } from '@/app/actions';
+import { fileToBase64, removeDataPart } from '@/app/toolbox';
 
-import styles from './AddExpenseDialog.module.css';
-import { useRef, useState } from 'react';
 import { ImagePreview } from '../ImagePreview/ImagePreview';
+import styles from './AddExpenseDialog.module.css';
+import { InvoiceTransactionPayload, Jar } from '@/app/types';
 
 const fileTypes = ['image/png', 'image/jpeg', 'image/jpg', 'application/pdf'];
 
-const fileToBase64 = (file: File): Promise<string> =>
-  new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = () => resolve(reader.result as string);
-    reader.onerror = (error) => reject(error);
-  });
-
 const isValidReceipt = (file: File) =>
   fileTypes.some((type) => type === file.type);
-
-// const isValidForPreview = (file: File) =>
-//   fileTypes
-//     .filter((type) => type !== 'application/pdf')
-//     .some((type) => type === file.type);
-
-const createExpense = async () => {};
 
 const SubmitButton = () => {
   const { pending } = useFormStatus();
@@ -41,9 +29,16 @@ const RECEIPT_PREVIEW_DEFAULT_STATE = {
   isPDF: false,
 };
 
-export const AddExpenseDialog = () => {
+type AddExpenseDialogProps = {
+  invoiceId: number;
+  jars: Array<Jar>;
+};
+
+export const AddExpenseDialog = ({
+  invoiceId,
+  jars,
+}: AddExpenseDialogProps) => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [status, dispatch] = useFormState(createExpense, undefined);
   const [receiptPreview, setReceiptPreview] = useState(
     RECEIPT_PREVIEW_DEFAULT_STATE
   );
@@ -54,6 +49,34 @@ export const AddExpenseDialog = () => {
     formRef.current?.reset();
     resetReceiptPreview();
   };
+
+  const handleSubmit = async (
+    currentState: string | undefined,
+    formData: FormData
+  ) => {
+    const file = formData.get('file')! as File;
+    const base64 = await fileToBase64(file);
+
+    const requestPayload: InvoiceTransactionPayload = {
+      invoiceId,
+      fromJarId: Number(formData.get('jar')),
+      jarSourceAmount: Number(formData.get('sum')),
+      otherSourcesAmount: 0,
+      receipt: removeDataPart(base64),
+      receiptName: file.name,
+    };
+
+    const status = await createExpense(requestPayload);
+
+    if (status === 'Success') {
+      resetForm();
+    }
+
+    return status;
+  };
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [status, dispatch] = useFormState(handleSubmit, undefined);
 
   const resetReceiptPreview = () => {
     setReceiptPreview(RECEIPT_PREVIEW_DEFAULT_STATE);
@@ -88,6 +111,7 @@ export const AddExpenseDialog = () => {
       renderContent={() => {
         return (
           <div className={styles['dialog-content']}>
+            invoiceId: {invoiceId}
             <div className={styles['login-form-wrapper']}>
               <form
                 ref={formRef}
@@ -138,6 +162,14 @@ export const AddExpenseDialog = () => {
                     />
                     <label htmlFor='sum'>Дата оплати</label>
                     <input id='date' type='date' name='date' required />
+                    <label htmlFor='jar'>З якої банки оплата</label>
+                    <select id='jar' name='jar'>
+                      {jars.map((jar) => (
+                        <option key={jar.id} value={jar.id}>
+                          {jar.ownerName}: {jar.jarName}
+                        </option>
+                      ))}
+                    </select>
                     <SubmitButton />
                   </fieldset>
                 </div>

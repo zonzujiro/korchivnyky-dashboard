@@ -2,20 +2,6 @@
 
 import { signIn } from '../dal';
 
-// useFormState adds some shit into FormData
-const handleSignIn = async (reactFormData: FormData) => {
-  const password = reactFormData.get('password') as string;
-  const email = reactFormData.get('email') as string;
-
-  const cleanedFormData = new FormData();
-  cleanedFormData.append('password', password);
-  cleanedFormData.append('email', email);
-
-  const response = await signIn(cleanedFormData);
-
-  return response.token;
-};
-
 let token: null | string = null;
 
 export const getAuthToken = async () => token;
@@ -25,9 +11,14 @@ export const authenticate = async (
   formData: FormData
 ) => {
   try {
-    const authToken = await handleSignIn(formData);
+    const requestPayload: { email: string; password: string } = {
+      email: formData.get('email') as string,
+      password: formData.get('password') as string,
+    };
 
-    token = authToken;
+    const response = await signIn(requestPayload);
+
+    token = response.token;
 
     return 'Success';
     // eslint-disable-next-line @typescript-eslint/no-explicit-any

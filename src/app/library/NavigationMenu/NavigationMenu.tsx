@@ -12,8 +12,8 @@ type NavigationMenuProps = {
   fundraisings: Array<FundraisingCampaign>;
 };
 
-const getNextPath = (oldPath: string, id: number) => {
-  const path = oldPath.split('/').slice(1) as Array<number | string>;
+const getNextPath = (oldPath: string, id: string) => {
+  const path = oldPath.split('/').slice(1) as Array<string>;
   path[1] = id;
 
   if (!path.length) {
@@ -32,13 +32,16 @@ export const NavigationMenu = ({ fundraisings }: NavigationMenuProps) => {
       <ol className={styles['main-menu']}>
         <span className={styles['menu-separator']}>|</span>
         <li className={styles['menu-item']}>
-          <select className={styles['fundraising-select']}>
+          <select
+            className={styles['fundraising-select']}
+            onChange={(ev) =>
+              router.push(getNextPath(pathname, ev.target.value))
+            }
+            defaultValue={fundraisings[0].id}
+          >
             {fundraisings.map((item) => {
               return (
-                <option
-                  onClick={() => router.push(getNextPath(pathname, item.id))}
-                  key={item.id}
-                >
+                <option value={item.id} key={item.id}>
                   {item.name}
                 </option>
               );

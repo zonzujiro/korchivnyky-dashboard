@@ -72,11 +72,7 @@ export const InvoiceDetailsDialog = (props: InvoiceDetailsDialogProps) => {
             </div>
             <div className={styles['expenses-list-wrapper']}>
               <ul className={styles['expenses-list']}>
-                {[
-                  ...invoiceExpenses,
-                  ...invoiceExpenses,
-                  ...invoiceExpenses,
-                ].map((expense, index) => (
+                {invoiceExpenses.map((expense, index) => (
                   <li className={styles['expense-item']} key={index}>
                     <div className={styles['expense-info']}>
                       <p>Сума: {toCurrency(expense.sum)}</p>
