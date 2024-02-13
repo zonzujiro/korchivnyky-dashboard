@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react';
+import { Suspense, type ReactNode } from 'react';
 
 import { getFundraisingCampaigns } from '@/app/dal';
 
@@ -15,7 +15,9 @@ const FundraisingsLayout = async ({ children }: { children: ReactNode }) => {
         <NavigationMenu fundraisings={fundraisings} />
       </header>
 
-      <main className={styles.main}>{children}</main>
+      <main className={styles.main}>
+        <Suspense fallback={<p>🚙 Loading...</p>}>{children}</Suspense>
+      </main>
     </>
   );
 };

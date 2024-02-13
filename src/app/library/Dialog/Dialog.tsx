@@ -8,31 +8,41 @@ import classNames from 'classnames';
 import { Button } from '../Button/Button';
 
 type DialogProps = {
-  renderButton({ openDialog }: { openDialog: () => void }): ReactElement;
-  renderContent({ closeDialog }: { closeDialog: () => void }): ReactElement;
-  prepareClosing?: () => void | Promise<void>;
+  renderButton(): ReactElement;
+  renderContent(): ReactElement;
   title: string;
   className?: string;
+  dialogState: { isOpen: boolean; closeDialog: () => void };
 };
 
-export const Dialog = ({
-  renderButton,
-  renderContent,
-  className,
-  title,
-  prepareClosing,
-}: DialogProps) => {
+type UseDialogConfig = {
+  prepareClosing?: () => void | Promise<void>;
+};
+
+export const useDialog = (config?: UseDialogConfig) => {
   const [isOpen, setIsOpen] = useState(false);
-  const dialogRef = useRef<HTMLDialogElement>(null);
 
   const openDialog = () => {
     setIsOpen(true);
   };
 
   const closeDialog = async () => {
-    await prepareClosing?.();
+    await config?.prepareClosing?.();
     setIsOpen(false);
   };
+
+  const dialogState = {
+    isOpen,
+    closeDialog,
+  };
+
+  return { openDialog, closeDialog, dialogState };
+};
+
+export const Dialog = (props: DialogProps) => {
+  const { renderButton, renderContent, className, title, dialogState } = props;
+  const { isOpen, closeDialog } = dialogState;
+  const dialogRef = useRef<HTMLDialogElement>(null);
 
   /**
    * Because we don't want to render all dialogs at once
@@ -55,7 +65,7 @@ export const Dialog = ({
 
   return (
     <>
-      {renderButton({ openDialog })}
+      {renderButton()}
       {isOpen &&
         createPortal(
           <dialog
@@ -67,9 +77,7 @@ export const Dialog = ({
               <h4>{title}</h4>
               <Button onClick={closeDialog}>X</Button>
             </div>
-            <div className={styles['dialog-content']}>
-              {renderContent?.({ closeDialog })}
-            </div>
+            <div className={styles['dialog-content']}>{renderContent?.()}</div>
           </dialog>,
           document.body
         )}

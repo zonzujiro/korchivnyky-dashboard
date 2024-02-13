@@ -11,7 +11,7 @@ import { getDateString, toCurrency } from '@/app/toolbox';
 import styles from './Invoice.module.css';
 import { InvoiceDetailsDialog } from './InvoiceDetailsDialog/InvoiceDetailsDialog';
 import { AddExpenseDialog } from './AddExpenseDialog/AddExpenseDialog';
-import { ImagePreview } from './ImagePreview/ImagePreview';
+import { FilePreviewer } from '@/app/library';
 
 type InvoiceProps = {
   invoice: InvoiceType;
@@ -32,13 +32,18 @@ export const InvoiceItem = ({
 }: InvoiceProps) => {
   const { name, amount, fileUrl, isActive, createdAt } = invoice;
 
+  const previewerState = {
+    src: fileUrl,
+    isPDF: fileUrl.endsWith('pdf'),
+  };
+
   const payedSum = getSum(invoiceExpenses);
   const creationDate = getDateString(createdAt);
 
   return (
     <div className={styles.invoice}>
       <div className={styles['invoice-image-preview-frame']}>
-        <ImagePreview src={fileUrl} />
+        <FilePreviewer previewerState={previewerState} />
       </div>
       <h4 className={styles['invoice-name']}>
         {isActive ? null : <span>✅</span>}
@@ -48,11 +53,16 @@ export const InvoiceItem = ({
         Сума: {toCurrency(amount)}
       </p>
       <p className={styles['invoice-preview-description']}>
-        Категорія: {expenseType.name}
+        До сплати: {toCurrency(amount - payedSum)}
       </p>
-      <p className={styles['invoice-preview-description']}>
-        Створений: {creationDate}
-      </p>
+      <div className={styles['invoice-additional-info']}>
+        <p className={styles['invoice-preview-description']}>
+          Категорія: {expenseType.name}
+        </p>
+        <p className={styles['invoice-preview-description']}>
+          Створений: {creationDate}
+        </p>
+      </div>
       <div className={styles['invoice-popups']}>
         <InvoiceDetailsDialog
           invoice={invoice}

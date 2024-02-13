@@ -38,7 +38,7 @@ export type ExpenseRecord = {
   createdAt: string;
   date: string;
   expenseTypeId: ExpenseType['id'];
-  receipt: string;
+  receiptUrl: string;
   invoiceId: number;
 };
 
@@ -62,6 +62,15 @@ export type Invoice = {
   fileUrl: string;
   createdAt: string;
   expensiveTypeId: number;
+};
+
+export type InvoicePayload = {
+  name: string;
+  amount: number;
+  description?: string;
+  expensiveTypeId: number;
+  fileName: string;
+  file: string;
 };
 
 export type PageParams = {

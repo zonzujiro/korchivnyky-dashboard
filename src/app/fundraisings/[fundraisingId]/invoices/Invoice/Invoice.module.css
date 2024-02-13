@@ -38,3 +38,8 @@
 .invoice-popups > button {
   margin-right: 10px;
 }
+
+.invoice-additional-info {
+  font-size: 0.8em;
+  margin-top: 10px;
+}

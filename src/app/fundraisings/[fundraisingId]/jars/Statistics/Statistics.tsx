@@ -5,7 +5,7 @@ import classNames from 'classnames';
 
 import { Jar } from '@/app/types';
 import { toCurrency } from '@/app/toolbox';
-import { AppContext } from '@/app/dal';
+import { JarsPageContext } from '@/app/dal';
 
 import styles from './Statistics.module.css';
 import { StatisticsSection } from './StatisticsSection/StatisticsSection';
@@ -77,7 +77,7 @@ const SpeedRow = ({
 
 export const Statistics = () => {
   const { selectedJars, jars, expenses, expenseTypes, statistics, users } =
-    useContext(AppContext);
+    useContext(JarsPageContext);
 
   const [activeTab, setActiveTab] = useState<'statistics' | 'expenses'>(
     'statistics'
