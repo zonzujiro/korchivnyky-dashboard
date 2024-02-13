@@ -10,7 +10,11 @@ import {
   useDialog,
 } from '@/app/library';
 import { createExpense } from '@/app/actions';
-import { fileToBase64, removeBase64DataPrefix } from '@/app/toolbox';
+import {
+  fileToBase64,
+  removeBase64DataPrefix,
+  toCurrency,
+} from '@/app/toolbox';
 
 import styles from './AddExpenseDialog.module.css';
 import { InvoiceTransactionPayload, Jar } from '@/app/types';
@@ -37,7 +41,7 @@ export const AddExpenseDialog = ({
   const { previewerState, handleInputChange, resetPreviewer } =
     useFilePreviewer();
 
-  const [selectedJar, setSelectedJar] = useState<Jar | null>(null);
+  const [selectedJar, setSelectedJar] = useState(jars[0]);
 
   const formRef = useRef<HTMLFormElement>(null);
 
@@ -76,7 +80,6 @@ export const AddExpenseDialog = ({
       renderContent={() => {
         return (
           <div className={styles['dialog-content']}>
-            invoiceId: {invoiceId}
             <div className={styles['form-wrapper']}>
               <form
                 ref={formRef}
@@ -115,6 +118,7 @@ export const AddExpenseDialog = ({
                     <select
                       id='jar'
                       name='jar'
+                      defaultValue={jars[0].id}
                       onChange={(ev) =>
                         setSelectedJar(
                           jars.find(
@@ -130,7 +134,9 @@ export const AddExpenseDialog = ({
                       ))}
                     </select>
                     {selectedJar && (
-                      <p>Залишок на банці: {selectedJar.accumulated}</p>
+                      <p className={styles['jar-info']}>
+                        Залишок на банці: {toCurrency(selectedJar.accumulated)}
+                      </p>
                     )}
                     <SubmitButton />
                   </fieldset>

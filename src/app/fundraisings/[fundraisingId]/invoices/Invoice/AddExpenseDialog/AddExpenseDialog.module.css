@@ -26,31 +26,10 @@
 }
 
 .form-inputs input,
-.form-inputs select {
+.jar-info {
   margin-bottom: 20px;
 }
 
-.receipt-preview-frame {
-  max-height: 500px;
-  overflow: hidden;
-}
-
-.receipt-preview-frame > div {
-  position: unset !important;
-}
-
-.pdf-preview {
-  width: 400px;
-  height: 500px;
-}
-
-.receipt-preview-skeleton {
-  width: 400px;
-  height: 500px;
-  border: 1px solid black;
-  background-color: whitesmoke;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 5em;
+.form-inputs select {
+  margin-bottom: 5px;
 }

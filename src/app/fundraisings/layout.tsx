@@ -5,6 +5,14 @@ import { getFundraisingCampaigns } from '@/app/dal';
 import styles from './layout.module.css';
 import { NavigationMenu, SiteLogo } from '../library';
 
+const Loader = () => {
+  return (
+    <div className={styles.loader}>
+      <p>🚙 Машинка виїхала. Очікуйте...</p>
+    </div>
+  );
+};
+
 const FundraisingsLayout = async ({ children }: { children: ReactNode }) => {
   const fundraisings = await getFundraisingCampaigns();
 
@@ -16,7 +24,7 @@ const FundraisingsLayout = async ({ children }: { children: ReactNode }) => {
       </header>
 
       <main className={styles.main}>
-        <Suspense fallback={<p>🚙 Loading...</p>}>{children}</Suspense>
+        <Suspense fallback={<Loader />}>{children}</Suspense>
       </main>
     </>
   );
