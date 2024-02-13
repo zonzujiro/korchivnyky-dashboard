@@ -10,6 +10,8 @@ import type {
   User,
   Primitive,
   CreateJarPayload,
+  ExpenseRecord,
+  InvoicePayload,
 } from '../types';
 import { addColorToJar } from '../toolbox/utils';
 import { cookies } from 'next/headers';
@@ -17,8 +19,14 @@ import { getFundraisingInvoices } from './dataModificators';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const throwError = (response: Response, body: Record<string, any>) => {
+  if (body.error.details) {
+    console.error({ errorDetails: body.error.details });
+  }
+
   throw new Error(
-    `${response.status} (${response.url}): ${response.statusText} - ${body.error.code}: ${body.error.message}`
+    `${response.status} (${response.url}): ${response.statusText} - ${
+      body.error.code
+    }: ${body.error.message || ''}`
   );
 };
 
@@ -100,12 +108,7 @@ export const getStatistics = async (): Promise<Array<JarStatisticRecord>> => {
     'https://jars.fly.dev/statistics'
   )) as Array<JarStatisticRecord>;
 
-  return statistics.map((item) => {
-    return {
-      ...item,
-      createdAt: item.createdAt.slice(0, 10),
-    };
-  });
+  return statistics;
 };
 
 export const postJar = async (payload: CreateJarPayload) => {
@@ -124,7 +127,9 @@ export const getInvoices = (): Promise<Array<Invoice>> => {
   return get('https://jars.fly.dev/invoices');
 };
 
-export const getExpenses = (fundraisingCampaignId: string) => {
+export const getExpenses = (
+  fundraisingCampaignId: string
+): Promise<Array<ExpenseRecord>> => {
   return get('https://jars.fly.dev/transactions', { fundraisingCampaignId });
 };
 
@@ -157,9 +162,13 @@ export const getFundraisingCampaigns = async (): Promise<
 };
 
 export const createInvoiceTransaction = (
-  formData: InvoiceTransactionPayload
+  payload: InvoiceTransactionPayload
 ) => {
-  return post('https://jars.fly.dev/transactions/invoice', formData);
+  return post('https://jars.fly.dev/transactions/invoice', payload);
+};
+
+export const createInvoice = (payload: InvoicePayload) => {
+  return post('https://jars.fly.dev/invoices', payload);
 };
 
 export const getUsers = async (): Promise<Array<User>> => {
@@ -203,8 +212,6 @@ export const getInvoicesPageData = async ({
     ]);
 
   const fundraisingInvoices = getFundraisingInvoices(invoices, expensesTypes);
-
-  console.log({ expenses });
 
   return {
     expensesTypes,

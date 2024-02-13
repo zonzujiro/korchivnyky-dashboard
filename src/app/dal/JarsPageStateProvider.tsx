@@ -18,7 +18,7 @@ type StateProviderProps = {
   users: Array<User>;
 };
 
-export type AppState = StateProviderProps & {
+export type JarsPageState = StateProviderProps & {
   selectedJars: Array<Jar>;
   toggleJarSelection(jar: Jar): void;
   addJar(jar: Jar): void;
@@ -26,7 +26,7 @@ export type AppState = StateProviderProps & {
   addExpense(expense: ExpenseRecord): void;
 };
 
-export const AppContext = React.createContext<AppState>({
+export const JarsPageContext = React.createContext<JarsPageState>({
   statistics: [],
   selectedJars: [],
   expenses: [],
@@ -39,7 +39,7 @@ export const AppContext = React.createContext<AppState>({
   addExpense: () => {},
 });
 
-export const StateProvider = ({
+export const JarsPageStateProvider = ({
   jars: serverJars,
   expenses: serverExpenses,
   expenseTypes,
@@ -89,5 +89,9 @@ export const StateProvider = ({
     users,
   };
 
-  return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
+  return (
+    <JarsPageContext.Provider value={value}>
+      {children}
+    </JarsPageContext.Provider>
+  );
 };

@@ -12,13 +12,18 @@ type NavigationMenuProps = {
   fundraisings: Array<FundraisingCampaign>;
 };
 
+const parsePathname = (path: string) => {
+  return path.split('/').slice(1) as Array<string>;
+};
+
 const getNextPath = (oldPath: string, id: string) => {
-  const path = oldPath.split('/').slice(1) as Array<string>;
-  path[1] = id;
+  const path = parsePathname(oldPath);
 
   if (!path.length) {
     return `/fundraisings/${id}/jars`;
   }
+
+  path[1] = id;
 
   return `/${path.join('/')}`;
 };
@@ -26,6 +31,9 @@ const getNextPath = (oldPath: string, id: string) => {
 export const NavigationMenu = ({ fundraisings }: NavigationMenuProps) => {
   const pathname = usePathname();
   const router = useRouter();
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [_, fundraisingsId] = parsePathname(pathname);
 
   return (
     <nav>
@@ -37,7 +45,7 @@ export const NavigationMenu = ({ fundraisings }: NavigationMenuProps) => {
             onChange={(ev) =>
               router.push(getNextPath(pathname, ev.target.value))
             }
-            defaultValue={fundraisings[0].id}
+            defaultValue={fundraisingsId}
           >
             {fundraisings.map((item) => {
               return (

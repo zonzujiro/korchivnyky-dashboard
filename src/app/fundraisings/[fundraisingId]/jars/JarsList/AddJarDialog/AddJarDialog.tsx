@@ -1,25 +1,35 @@
 import { useRef, useState } from 'react';
 import classNames from 'classnames';
 
-import { postJar, type AppState } from '@/app/dal';
+import { postJar, type JarsPageState } from '@/app/dal';
 import type { CreateJarPayload, Jar } from '@/app/types';
-import { Button, Dialog } from '@/app/library';
+import { Button, Dialog, useDialog } from '@/app/library';
 
 import styles from './AddJarDialog.module.css';
 import { CuratorsDropdown } from '../CuratorsDropdown';
+import { useFormStatus } from 'react-dom';
+
+const SubmitButton = () => {
+  const { pending } = useFormStatus();
+
+  return (
+    <Button disabled={pending} type='submit' className={styles['save-expense']}>
+      {pending ? 'Зберігаємо...' : '💾 Зберегти'}
+    </Button>
+  );
+};
 
 export const AddJarDialog = ({
   addJar,
   jars,
   buttonClassName,
 }: {
-  addJar: AppState['addJar'];
+  addJar: JarsPageState['addJar'];
   jars: Array<Jar>;
   buttonClassName: string;
 }) => {
   const formRef = useRef<HTMLFormElement>(null);
 
-  const [isLoading, setIsLoading] = useState(false);
   const [errorText, setErrorText] = useState('');
 
   const resetForm = () => {
@@ -27,14 +37,11 @@ export const AddJarDialog = ({
     setErrorText('');
   };
 
-  const handleSubmit = async (
-    ev: React.FormEvent<HTMLFormElement>,
-    closeDialog: () => void
-  ) => {
-    ev.preventDefault();
+  const { openDialog, dialogState, closeDialog } = useDialog({
+    prepareClosing: resetForm,
+  });
 
-    const formData = new FormData(formRef.current!);
-
+  const handleSubmit = async (formData: FormData) => {
     const url = formData.get('url') as string;
     const owner = formData.get('ownerName') as string;
 
@@ -44,7 +51,6 @@ export const AddJarDialog = ({
 
     if (existingJar) {
       setErrorText(`Така банка вже є у ${existingJar.ownerName}`);
-      setIsLoading(false);
       return;
     }
 
@@ -54,11 +60,8 @@ export const AddJarDialog = ({
       parentJarId: Number(formData.get('parentJarId')),
     };
 
-    setIsLoading(true);
-
     const response = await postJar(createJarPayload);
 
-    setIsLoading(false);
     addJar(response);
     resetForm();
     closeDialog();
@@ -67,8 +70,8 @@ export const AddJarDialog = ({
   return (
     <Dialog
       title='Давай додамо баночку!'
-      prepareClosing={resetForm}
-      renderButton={({ openDialog }) => (
+      dialogState={dialogState}
+      renderButton={() => (
         <li
           className={classNames(buttonClassName, styles['add-jar'])}
           onClick={openDialog}
@@ -76,17 +79,12 @@ export const AddJarDialog = ({
           ➕ Додати банку
         </li>
       )}
-      renderContent={({ closeDialog }) => (
+      renderContent={() => (
         <div className={styles['add-jar-inputs-wrapper']}>
-          {isLoading && (
-            <div className={styles['loader']}>
-              <h4>Праця робиться...</h4>
-            </div>
-          )}
           <form
             ref={formRef}
             className={styles['add-jar-inputs']}
-            onSubmit={(ev) => handleSubmit(ev, closeDialog)}
+            action={handleSubmit}
           >
             <label htmlFor='owner-input'>Як звуть власника банки?</label>
             <input
@@ -108,7 +106,7 @@ export const AddJarDialog = ({
             />
             <label htmlFor='curator-input'>Обери куратора</label>
             <CuratorsDropdown name='parentJarId' />
-            <Button type='submit'>💾 Створити банку</Button>
+            <SubmitButton />
 
             {errorText && (
               <span className={styles['form-error']}>⚠️ {errorText}</span>

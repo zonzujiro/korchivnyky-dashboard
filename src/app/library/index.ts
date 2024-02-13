@@ -5,3 +5,4 @@ export * from './SiteLogo/SiteLogo';
 export * from './NavigationMenu/NavigationMenu';
 export * from './Progress/Progress';
 export * from './TooltipComponent/TooltipComponent';
+export * from './FilePreviewer/FilePreviewer';

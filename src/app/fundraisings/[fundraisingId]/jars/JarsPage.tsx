@@ -1,7 +1,7 @@
 import { Suspense } from 'react';
 
 import {
-  StateProvider,
+  JarsPageStateProvider,
   getJarsPageData,
   getCurrentFundraising,
 } from '@/app/dal';
@@ -23,24 +23,24 @@ export const JarsPage = async ({ params }: PageParams) => {
 
   return (
     <Suspense fallback={<p>🚙 Loading...</p>}>
-      <StateProvider
+      <div className={styles['general-info']}>
+        <Progress goal={fundraising.goal} jars={jars} />
+        <CampaignDescription
+          description={fundraising.description}
+          startDate={fundraising.startDate}
+          name={fundraising.name}
+        />
+      </div>
+      <JarsPageStateProvider
         jars={jars}
         expenses={expenses}
         expenseTypes={expenseTypes}
         statistics={statistics}
         users={users}
       >
-        <div className={styles['general-info']}>
-          <Progress goal={fundraising.goal} jars={jars} />
-          <CampaignDescription
-            description={fundraising.description}
-            startDate={fundraising.startDate}
-            name={fundraising.name}
-          />
-        </div>
         <JarsList />
         <Statistics />
-      </StateProvider>
+      </JarsPageStateProvider>
     </Suspense>
   );
 };

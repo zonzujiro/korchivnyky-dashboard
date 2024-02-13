@@ -13,3 +13,8 @@
   flex-direction: column;
   margin-left: 20px;
 }
+
+.name-and-slogan > span {
+  font-family: var(--eUkraine);
+  font-size: 0.87em;
+}

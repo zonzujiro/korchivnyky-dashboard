@@ -1,11 +1,10 @@
 import Link from 'next/link';
 
-import { Dialog, Button } from '@/app/library';
+import { Dialog, Button, FilePreviewer, useDialog } from '@/app/library';
 import { toCurrency } from '@/app/toolbox';
 import type { ExpenseRecord, ExpenseType, Invoice } from '@/app/types';
 
 import styles from './InvoiceDetails.module.css';
-import { ImagePreview } from '../ImagePreview/ImagePreview';
 
 type InvoiceDetailsDialogProps = {
   invoice: Invoice;
@@ -20,21 +19,23 @@ export const InvoiceDetailsDialog = (props: InvoiceDetailsDialogProps) => {
     props;
   const { amount, fileUrl, description, name } = invoice;
 
+  const { openDialog, dialogState } = useDialog();
+
   return (
     <Dialog
+      dialogState={dialogState}
       title={`Рахунок: ${name}`}
-      renderButton={({ openDialog }) => (
-        <Button onClick={openDialog}>🧾</Button>
-      )}
+      renderButton={() => <Button onClick={openDialog}>🧾</Button>}
       renderContent={() => (
         <div className={styles['invoice-dialog-content']}>
           <div className={styles['invoice-information']}>
             <div className={styles['invoice-image-frame']}>
-              {fileUrl.includes('pdf') ? (
-                <iframe src={fileUrl} />
-              ) : (
-                <ImagePreview src={fileUrl} />
-              )}
+              <FilePreviewer
+                previewerState={{
+                  src: fileUrl,
+                  isPDF: fileUrl.includes('pdf'),
+                }}
+              />
             </div>
             <div className={styles['invoice-description']}>
               <p>
@@ -80,7 +81,7 @@ export const InvoiceDetailsDialog = (props: InvoiceDetailsDialogProps) => {
                       <p>Платник: Вася Пупкін</p>
                     </div>
                     <div className={styles['expense-actions']}>
-                      <Link href={expense.receipt}>
+                      <Link href={expense.receiptUrl}>
                         💾 Завантажити квитанцію
                       </Link>
                     </div>

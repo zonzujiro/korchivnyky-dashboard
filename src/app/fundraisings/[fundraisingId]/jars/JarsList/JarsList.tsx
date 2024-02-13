@@ -5,7 +5,7 @@ import classNames from 'classnames';
 
 import { Image, Button, TooltipComponent } from '@/app/library';
 import type { Jar } from '@/app/types';
-import { AppContext } from '@/app/dal';
+import { JarsPageContext } from '@/app/dal';
 import { toCurrency } from '@/app/toolbox';
 
 import styles from './JarsList.module.css';
@@ -76,7 +76,7 @@ const JarItem = ({ jar, isSelected, onClick }: JarItemProps) => {
 
 export const JarsList = () => {
   const { selectedJars, toggleJarSelection, jars, addJar, resetJarSelection } =
-    useContext(AppContext);
+    useContext(JarsPageContext);
 
   const [isAllVisible, setIsAllVisible] = useState(jars.length < 10);
   const [selectedCurator, setSelectedCurator] = useState('');

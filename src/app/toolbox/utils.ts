@@ -33,10 +33,10 @@ export const addColorToJar = (jar: Jar) => ({
   color: randomColor(),
 });
 
-export const removeDataPart = (base64: string) =>
+export const removeBase64DataPrefix = (base64: string) =>
   base64.replace('data:', '').replace(/^.+,/, '');
 
-export const fileToBase64 = (file: File): Promise<string> =>
+export const fileToBase64 = (file: File | Blob): Promise<string> =>
   new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.readAsDataURL(file as Blob);

@@ -1,5 +1,5 @@
 import { Fragment } from 'react';
-import { Dialog, Button } from '@/app/library';
+import { Dialog, Button, useDialog } from '@/app/library';
 import { CURATORS_COLORS, DEFAULT_JAR_GOAL } from '@/app/constants';
 import { Jar, User } from '@/app/types';
 
@@ -25,12 +25,13 @@ export const ExportStatisticsDialog = ({
   jars: Array<Jar>;
   users: Array<User>;
 }) => {
+  const { openDialog, dialogState } = useDialog();
+
   return (
     <Dialog
       title='Експорт даних'
-      renderButton={({ openDialog }) => (
-        <Button onClick={openDialog}>📑 Експорт</Button>
-      )}
+      dialogState={dialogState}
+      renderButton={() => <Button onClick={openDialog}>📑 Експорт</Button>}
       renderContent={() => {
         return (
           <div className={styles['export-dialog-content']}>
