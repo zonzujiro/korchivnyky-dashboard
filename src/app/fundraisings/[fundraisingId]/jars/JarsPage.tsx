@@ -31,14 +31,23 @@ export const JarsPage = async ({ params }: PageParams) => {
           name={fundraising.name}
         />
       </div>
-      <JarsPageStateProvider
+
+        <div className={styles['general-info']}>
+          <Progress goal={fundraising.goal} jars={jars} />
+          <CampaignDescription
+            description={fundraising.description}
+            startDate={fundraising.startDate}
+            name={fundraising.name}
+          />
+        </div>
+        <JarsPageStateProvider
         jars={jars}
         expenses={expenses}
         expenseTypes={expenseTypes}
         statistics={statistics}
         users={users}
       >
-        <JarsList />
+        <JarsList fundraisingId={fundraisingId} />
         <Statistics />
       </JarsPageStateProvider>
     </Suspense>

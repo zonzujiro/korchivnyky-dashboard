@@ -1,9 +1,9 @@
-import { Suspense } from 'react';
+import { Suspense } from "react";
 
-import type { PageParams } from '@/app/types';
-import { InvoicesStateProvider, getInvoicesPageData } from '@/app/dal';
+import type { PageParams } from "@/app/types";
+import { InvoicesStateProvider, getInvoicesPageData } from "@/app/dal";
 
-import { InvoicesList } from './InvoicesList';
+import { InvoicesList } from "./InvoicesList";
 
 export const Invoices = async ({ params }: PageParams) => {
   const { fundraisingId } = params;
