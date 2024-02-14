@@ -19,7 +19,7 @@ type JarItemProps = {
 };
 
 const JarItem = ({ jar, isSelected, onClick }: JarItemProps) => {
-  const { url, goal, accumulated, ownerName, isFinished, logo, color } = jar;
+  const { url, goal, accumulated, ownerName, isFinished, logo } = jar;
 
   const [copyClicked, setCopyClicked] = useState(false);
 
@@ -62,7 +62,7 @@ const JarItem = ({ jar, isSelected, onClick }: JarItemProps) => {
         </div>
       </div>
       <div className={classNames(styles['item-column'], styles['jar-info'])}>
-        <h3 style={{ color: color }}> 
+        <h3>
           {ownerName} {isFinished ? <span>🔒</span> : null}
         </h3>
         <div className={styles['item-column']}>
@@ -74,7 +74,7 @@ const JarItem = ({ jar, isSelected, onClick }: JarItemProps) => {
   );
 };
 
-export const JarsList = ({ fundraisingId }: { fundraisingId: string }) => {
+export const JarsList = () => {
   const { selectedJars, toggleJarSelection, jars, addJar, resetJarSelection } =
     useContext(JarsPageContext);
 
@@ -105,7 +105,7 @@ export const JarsList = ({ fundraisingId }: { fundraisingId: string }) => {
         </Button>
         {jars.length > 10 && (
           <Button onClick={() => setIsAllVisible(!isAllVisible)}>
-            {!isAllVisible ? 'Показати всі банки 👀' : 'Приховати частину банок 🫣'}
+            {!isAllVisible ? 'Є приховані' : '👀 Всі банки відображено'}
           </Button>
         )}
       </div>
@@ -114,8 +114,7 @@ export const JarsList = ({ fundraisingId }: { fundraisingId: string }) => {
           buttonClassName={styles.item}
           addJar={addJar}
           jars={jars}
-          fundraisingId={fundraisingId}
-          />
+        />
         {toRender.map((item) => {
           return (
             <JarItem

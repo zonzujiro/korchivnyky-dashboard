@@ -38,7 +38,7 @@ export const JarsPage = async ({ params }: PageParams) => {
         statistics={statistics}
         users={users}
       >
-        <JarsList fundraisingId={fundraisingId} />
+        <JarsList />
         <Statistics />
       </JarsPageStateProvider>
     </Suspense>

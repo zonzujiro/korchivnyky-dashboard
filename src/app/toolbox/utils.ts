@@ -30,7 +30,7 @@ export const groupBy = <TItem>(
 
 export const addColorToJar = (jar: Jar) => ({
   ...jar,
-  color: jar.color || randomColor(),
+  color: randomColor(),
 });
 
 export const removeBase64DataPrefix = (base64: string) =>

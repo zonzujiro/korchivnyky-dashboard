@@ -95,6 +95,5 @@ export type InvoiceTransactionPayload = {
 export type CreateJarPayload = {
   url: string;
   ownerName?: string;
-  fundraisingCampaignId: number;
-  color: string;
+  parentJarId: number;
 };
