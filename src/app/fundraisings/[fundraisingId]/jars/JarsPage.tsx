@@ -1,17 +1,17 @@
-import { Suspense } from 'react';
+import { Suspense } from "react";
 
 import {
   JarsPageStateProvider,
   getJarsPageData,
   getCurrentFundraising,
-} from '@/app/dal';
-import { Progress } from '@/app/library';
-import { PageParams } from '@/app/types';
+} from "@/app/dal";
+import { Progress } from "@/app/library";
+import { PageParams } from "@/app/types";
 
-import styles from './JarsPage.module.css';
-import { JarsList } from './JarsList/JarsList';
-import { Statistics } from './Statistics/Statistics';
-import { CampaignDescription } from './CampaignDescription/CampaignDescription';
+import styles from "./JarsPage.module.css";
+import { JarsList } from "./JarsList/JarsList";
+import { Statistics } from "./Statistics/Statistics";
+import { CampaignDescription } from "./CampaignDescription/CampaignDescription";
 
 export const JarsPage = async ({ params }: PageParams) => {
   const { fundraisingId } = params;
@@ -23,7 +23,7 @@ export const JarsPage = async ({ params }: PageParams) => {
 
   return (
     <Suspense fallback={<p>🚙 Loading...</p>}>
-      <div className={styles['general-info']}>
+      <div className={styles["general-info"]}>
         <Progress goal={fundraising.goal} jars={jars} />
         <CampaignDescription
           description={fundraising.description}
@@ -31,16 +31,7 @@ export const JarsPage = async ({ params }: PageParams) => {
           name={fundraising.name}
         />
       </div>
-
-        <div className={styles['general-info']}>
-          <Progress goal={fundraising.goal} jars={jars} />
-          <CampaignDescription
-            description={fundraising.description}
-            startDate={fundraising.startDate}
-            name={fundraising.name}
-          />
-        </div>
-        <JarsPageStateProvider
+      <JarsPageStateProvider
         jars={jars}
         expenses={expenses}
         expenseTypes={expenseTypes}
