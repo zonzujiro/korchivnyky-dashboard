@@ -57,7 +57,7 @@ export const AddJarDialog = ({
       return;
     }
 
-    const existingColor = jars.find((jar) => {
+    const existingColor = jars.some((jar) => {
       return jar.color === color;
     });
 
