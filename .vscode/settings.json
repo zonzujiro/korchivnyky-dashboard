@@ -1,3 +1,5 @@
 {
-  "cSpell.words": ["fieldsets", "fundraisings"]
+  "cSpell.words": ["fieldsets", "fundraisings"],
+  "prettier.jsxSingleQuote": true,
+  "prettier.singleQuote": true
 }

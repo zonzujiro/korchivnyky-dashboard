@@ -62,7 +62,7 @@ const JarItem = ({ jar, isSelected, onClick }: JarItemProps) => {
         </div>
       </div>
       <div className={classNames(styles['item-column'], styles['jar-info'])}>
-        <h3 style={{ color: color }}> 
+        <h3 style={{ color: color }}>
           {ownerName} {isFinished ? <span>🔒</span> : null}
         </h3>
         <div className={styles['item-column']}>
@@ -105,7 +105,9 @@ export const JarsList = ({ fundraisingId }: { fundraisingId: string }) => {
         </Button>
         {jars.length > 10 && (
           <Button onClick={() => setIsAllVisible(!isAllVisible)}>
-            {!isAllVisible ? 'Показати всі банки 👀' : 'Приховати частину банок 🫣'}
+            {!isAllVisible
+              ? 'Показати всі банки 👀'
+              : 'Приховати частину банок 🫣'}
           </Button>
         )}
       </div>
@@ -115,7 +117,7 @@ export const JarsList = ({ fundraisingId }: { fundraisingId: string }) => {
           addJar={addJar}
           jars={jars}
           fundraisingId={fundraisingId}
-          />
+        />
         {toRender.map((item) => {
           return (
             <JarItem
