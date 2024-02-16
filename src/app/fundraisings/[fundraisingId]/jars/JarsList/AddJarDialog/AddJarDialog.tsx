@@ -23,10 +23,12 @@ export const AddJarDialog = ({
   addJar,
   jars,
   buttonClassName,
+  fundraisingId,
 }: {
   addJar: JarsPageState['addJar'];
   jars: Array<Jar>;
   buttonClassName: string;
+  fundraisingId: string;
 }) => {
   const formRef = useRef<HTMLFormElement>(null);
 
@@ -44,6 +46,7 @@ export const AddJarDialog = ({
   const handleSubmit = async (formData: FormData) => {
     const url = formData.get('url') as string;
     const owner = formData.get('ownerName') as string;
+    const color = formData.get('jarColor') as string;
 
     const existingJar = jars.find((jar) => {
       return jar.url === url || jar.ownerName === owner;
@@ -54,10 +57,20 @@ export const AddJarDialog = ({
       return;
     }
 
+    const existingColor = jars.some((jar) => {
+      return jar.color === color;
+    });
+
+    if (existingColor) {
+      setErrorText('Цей колір вже зайнятий 😔 Спробуй обрати інший 😉');
+      return;
+    }
+
     const createJarPayload: CreateJarPayload = {
       url,
       ownerName: owner,
-      parentJarId: Number(formData.get('parentJarId')),
+      fundraisingCampaignId: Number(fundraisingId),
+      color: color,
     };
 
     const response = await postJar(createJarPayload);
@@ -103,6 +116,14 @@ export const AddJarDialog = ({
               type='url'
               required
               pattern='https://send.monobank.ua/jar/.*'
+            />
+            <label htmlFor='color-input'>Який колір хочеш обрати?</label>
+            <input
+              name='jarColor'
+              id='color-input'
+              type='color'
+              required
+              maxLength={30}
             />
             <label htmlFor='curator-input'>Обери куратора</label>
             <CuratorsDropdown name='parentJarId' />
