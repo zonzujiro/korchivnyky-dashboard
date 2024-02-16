@@ -1,5 +1,3 @@
-import { Suspense } from 'react';
-
 import {
   JarsPageStateProvider,
   getJarsPageData,
@@ -22,7 +20,7 @@ export const JarsPage = async ({ params }: PageParams) => {
   const fundraising = getCurrentFundraising(fundraisings, fundraisingId);
 
   return (
-    <Suspense fallback={<p>🚙 Loading...</p>}>
+    <>
       <div className={styles['general-info']}>
         <Progress goal={fundraising.goal} jars={jars} />
         <CampaignDescription
@@ -41,6 +39,6 @@ export const JarsPage = async ({ params }: PageParams) => {
         <JarsList fundraisingId={fundraisingId} />
         <Statistics />
       </JarsPageStateProvider>
-    </Suspense>
+    </>
   );
 };
