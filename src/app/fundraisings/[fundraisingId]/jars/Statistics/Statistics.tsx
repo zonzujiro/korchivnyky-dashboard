@@ -89,24 +89,18 @@ export const Statistics = () => {
 
   const usedJars = selectedJars.length ? selectedJars : jars;
 
-  const filteredStatistics = selectedJars.length
-    ? statistics.filter((record) => {
-        return selectedJars.find(
-          (selectedJar) => selectedJar.id === record.jarId
-        );
-      })
-    : statistics;
+  const jarsRecords = statistics.filter((record) =>
+    usedJars.some((jar) => jar.id === record.jarId)
+  );
 
   const growth = getAccountsMovements(
-    usedJars,
-    filteredStatistics,
+    jarsRecords,
     new Date(startDate),
     new Date(endDate)
   );
 
   const speed = getGatheringSpeed(
-    usedJars,
-    filteredStatistics,
+    jarsRecords,
     new Date(startDate),
     new Date(endDate)
   );
@@ -187,7 +181,7 @@ export const Statistics = () => {
                 ? growth.map((dataEntry) => (
                     <GrowthRow
                       key={dataEntry.jarId}
-                      jars={jars}
+                      jars={usedJars}
                       {...dataEntry}
                     />
                   ))
@@ -201,7 +195,7 @@ export const Statistics = () => {
                 ? speed.map((dataEntry) => (
                     <SpeedRow
                       key={dataEntry.jarId}
-                      jars={jars}
+                      jars={usedJars}
                       {...dataEntry}
                     />
                   ))

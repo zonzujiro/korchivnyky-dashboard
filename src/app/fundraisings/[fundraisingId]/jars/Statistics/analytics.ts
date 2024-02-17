@@ -1,4 +1,4 @@
-import type { Jar, JarStatisticRecord } from '@/app/types';
+import type { JarStatisticRecord } from '@/app/types';
 import { groupBy } from '@/app/toolbox';
 
 const isSameDate = (startDate: Date, endDate: Date) => {
@@ -7,13 +7,6 @@ const isSameDate = (startDate: Date, endDate: Date) => {
   const isSameYear = startDate.getFullYear() === endDate.getFullYear();
 
   return isSameDay && isSameMonth && isSameYear;
-};
-
-const getDateDifference = (startDate: Date, endDate: Date) => {
-  const diffTime = Math.abs(endDate.valueOf() - startDate.valueOf());
-  const diffHours = Math.ceil(diffTime / (1000 * 60 * 60));
-
-  return diffHours;
 };
 
 const withSign = (value: number) => {
@@ -81,25 +74,6 @@ const getLastRecord = (
   return result.at(-1);
 };
 
-const filterRecords = (
-  jars: Array<Jar>,
-  records: Array<JarStatisticRecord>,
-  startDate: Date,
-  endDate: Date
-) => {
-  const selectedJarsRecords = records.filter((record) =>
-    Boolean(jars.find((jar) => jar.id === record.jarId))
-  );
-
-  return selectedJarsRecords.filter((record) => {
-    const recordDate = new Date(record.createdAt);
-    const isInTimeWindow =
-      isSameDate(recordDate, startDate) || isSameDate(recordDate, endDate);
-
-    return isInTimeWindow;
-  });
-};
-
 const getAccumulated = (
   jarRecords: Array<JarStatisticRecord>,
   startDate: Date,
@@ -121,15 +95,11 @@ const getAccumulated = (
 };
 
 export const getAccountsMovements = (
-  jars: Array<Jar>,
   records: Array<JarStatisticRecord>,
   startDate: Date,
   endDate: Date
 ) => {
-  const currentRecords = records.filter((record) =>
-    Boolean(jars.find((jar) => jar.id === record.jarId))
-  );
-  const groupedByJar = groupBy(currentRecords, (record) => record.jarId);
+  const groupedByJar = groupBy(records, (record) => record.jarId);
 
   const growth = Object.entries(groupedByJar).map(([jarId, jarRecords]) => {
     const { firstAccumulated, lastAccumulated, difference } = getAccumulated(
@@ -160,14 +130,19 @@ export const getAccountsMovements = (
   return growth;
 };
 
+const getDateDifference = (startDate: Date, endDate: Date) => {
+  const diffTime = Math.abs(endDate.valueOf() - startDate.valueOf());
+  const diffHours = Math.ceil(diffTime / (1000 * 60 * 60));
+
+  return diffHours;
+};
+
 export const getGatheringSpeed = (
-  jars: Array<Jar>,
   records: Array<JarStatisticRecord>,
   startDate: Date,
   endDate: Date
 ) => {
-  const currentRecords = filterRecords(jars, records, startDate, endDate);
-  const groupedByJar = groupBy(currentRecords, (record) => record.jarId);
+  const groupedByJar = groupBy(records, (record) => record.jarId);
 
   const speed = Object.entries(groupedByJar).map(([jarId, jarRecords]) => {
     const { difference } = getAccumulated(jarRecords, startDate, endDate);
