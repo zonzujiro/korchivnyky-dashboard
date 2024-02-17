@@ -23,7 +23,7 @@
   height: inherit;
 }
 
-@media screen and (max-width: 900px) {
+@media screen and (max-width: 1200px) {
   .progress {
     width: 100%;
   }

@@ -41,7 +41,7 @@
   font-size: 0.75em;
 }
 
-@media screen and (max-width: 900px) {
+@media screen and (max-width: 1200px) {
   .statistics-section {
     padding-right: 0;
   }
