@@ -15,17 +15,6 @@
   min-height: 85px;
 }
 
-.loader {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  background: whitesmoke;
-  opacity: 0.95;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
 .selected {
   background-color: lightgrey;
 }
@@ -46,6 +35,21 @@
 
 .item-column > h3 {
   margin-bottom: 5px;
+}
+
+.jars-info {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.jars-info span {
+  font-style: italic;
+  margin-right: 10px;
+  line-height: 1.5em;
+}
+
+.jars-buttons button:not(:last-child) {
+  margin-right: 15px;
 }
 
 .logo {
@@ -108,7 +112,7 @@
 }
 
 @keyframes wave {
-   50% {
+  50% {
     transform: translateY(-4px);
   }
 }

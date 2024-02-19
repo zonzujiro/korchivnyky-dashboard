@@ -19,7 +19,7 @@ const FundraisingsLayout = async ({ children }: { children: ReactNode }) => {
   return (
     <>
       <header className={styles.header}>
-        <SiteLogo />
+        <SiteLogo className={styles.logo} />
         <NavigationMenu fundraisings={fundraisings} />
       </header>
 

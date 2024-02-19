@@ -91,25 +91,36 @@ export const JarsList = ({ fundraisingId }: { fundraisingId: string }) => {
   return (
     <>
       <div className={styles.controls}>
-        <span>
-          Загалом банок: {jars.length} | Закрили збір:{' '}
-          {jars.filter((jar) => jar.isFinished).length} | Обрано:{' '}
-          {selectedJars.length}
-        </span>
+        <div className={styles['jars-info']}>
+          <span>Загалом банок: {jars.length}</span>
+          <span>
+            Закрили збір: {jars.filter((jar) => jar.isFinished).length}
+          </span>
+          <span>
+            Досягнули мети:{' '}
+            {
+              jars.filter(
+                (jar) => jar.goal !== null && jar.goal <= jar.accumulated
+              ).length
+            }
+          </span>
+        </div>
         <div className={styles['curators-filter']}>
-          <span>Фільтр по куратору</span>
+          <span>Куратор</span>
           <CuratorsDropdown onChange={setSelectedCurator} />
         </div>
-        <Button disabled={!selectedJars.length} onClick={resetJarSelection}>
-          Відмінити вибір
-        </Button>
-        {jars.length > 10 && (
-          <Button onClick={() => setIsAllVisible(!isAllVisible)}>
-            {!isAllVisible
-              ? 'Показати всі банки 👀'
-              : 'Приховати частину банок 🫣'}
+        <div className={styles['jars-buttons']}>
+          <Button disabled={!selectedJars.length} onClick={resetJarSelection}>
+            Відмінити вибір
           </Button>
-        )}
+          {jars.length > 10 && (
+            <Button onClick={() => setIsAllVisible(!isAllVisible)}>
+              {!isAllVisible
+                ? 'Показати всі банки 👀'
+                : 'Приховати частину банок 🫣'}
+            </Button>
+          )}
+        </div>
       </div>
       <ol className={styles['jars-list']}>
         <AddJarDialog

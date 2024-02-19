@@ -1,10 +1,11 @@
 import Image from 'next/image';
 
 import styles from './SiteLogo.module.css';
+import classNames from 'classnames';
 
-export const SiteLogo = () => {
+export const SiteLogo = ({ className }: { className?: string }) => {
   return (
-    <div className={styles['site-logo-wrapper']}>
+    <div className={classNames(styles['site-logo-wrapper'], className)}>
       <Image
         className={styles['site-logo']}
         src='/site-logo.svg'
