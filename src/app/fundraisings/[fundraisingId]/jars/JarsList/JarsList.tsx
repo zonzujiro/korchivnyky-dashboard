@@ -46,6 +46,7 @@ const JarItem = ({ jar, isSelected, onClick }: JarItemProps) => {
           fallbackSrc='/images/jar-logo.jpg'
           alt='jar logo'
           className={styles.logo}
+          style={{ border: `2px solid ${color}` }}
           width={50}
           height={50}
         />
@@ -62,7 +63,7 @@ const JarItem = ({ jar, isSelected, onClick }: JarItemProps) => {
         </div>
       </div>
       <div className={classNames(styles['item-column'], styles['jar-info'])}>
-        <h3 style={{ color: color }}>
+        <h3>
           {ownerName} {isFinished ? <span>🔒</span> : null}
         </h3>
         <div className={styles['item-column']}>

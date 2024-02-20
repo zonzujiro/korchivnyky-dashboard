@@ -108,7 +108,7 @@
 }
 
 @keyframes wave {
-   50% {
+  50% {
     transform: translateY(-4px);
   }
 }
