@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, CSSProperties } from 'react';
 import NextImage from 'next/image';
 
 type ImageProps = {
@@ -11,10 +11,12 @@ type ImageProps = {
   width?: number | `${number}`;
   height?: number | `${number}`;
   fill?: boolean;
+  style?: CSSProperties;
 };
 
 export const Image = (props: ImageProps) => {
-  const { src, fallbackSrc, alt, className, width, height, fill } = props;
+  const { src, fallbackSrc, alt, className, width, height, fill, style } =
+    props;
   const [imageSrc, setImageSrc] = useState(src);
 
   return (
@@ -25,6 +27,7 @@ export const Image = (props: ImageProps) => {
       className={className}
       width={width}
       height={height}
+      style={style}
       onError={() => {
         if (fallbackSrc) {
           setImageSrc(fallbackSrc);
