@@ -5,9 +5,7 @@ import { createInvoiceTransaction } from '../dal';
 
 export const createExpense = async (expenseData: InvoiceTransactionPayload) => {
   try {
-    const response = await createInvoiceTransaction(expenseData);
-
-    console.log({ response });
+    await createInvoiceTransaction(expenseData);
 
     return 'Success';
   } catch (e) {

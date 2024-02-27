@@ -2,10 +2,10 @@
 
 import { useContext } from 'react';
 
-import type { ExpenseRecord, ExpenseType, Jar } from '@/app/types';
+import type { ExpenseRecord, ExpenseType, Jar, User } from '@/app/types';
 import { InvoicesPageContext } from '@/app/dal';
 
-import { InvoiceItem } from './Invoice/Invoice';
+import { Invoice } from './Invoice/Invoice';
 
 import styles from './InvoicesList.module.css';
 import { AddInvoiceDialog } from './AddInvoiceDialog/AddInvoiceDialog';
@@ -14,12 +14,14 @@ type InvoicesListProps = {
   expenses: Array<ExpenseRecord>;
   expensesTypes: Array<ExpenseType>;
   jars: Array<Jar>;
+  users: Array<User>;
 };
 
 export const InvoicesList = ({
   expenses,
   expensesTypes,
   jars,
+  users,
 }: InvoicesListProps) => {
   const { invoices, addInvoice } = useContext(InvoicesPageContext);
 
@@ -38,11 +40,12 @@ export const InvoicesList = ({
           );
 
           return (
-            <InvoiceItem
+            <Invoice
               key={invoice.id}
               invoice={invoice}
               invoiceExpenses={invoiceExpenses}
               jars={jars}
+              users={users}
               expenseType={
                 expensesTypes.find(
                   (expense) => expense.id === invoice.expensiveTypeId

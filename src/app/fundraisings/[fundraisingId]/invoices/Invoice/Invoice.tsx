@@ -5,6 +5,7 @@ import type {
   ExpenseType,
   Invoice as InvoiceType,
   Jar,
+  User,
 } from '@/app/types';
 import { getDateString, toCurrency } from '@/app/toolbox';
 
@@ -18,32 +19,35 @@ type InvoiceProps = {
   invoiceExpenses: Array<ExpenseRecord>;
   expenseType: ExpenseType;
   jars: Array<Jar>;
+  users: Array<User>;
 };
 
 const getSum = (expenses: Array<ExpenseRecord>) => {
   return expenses.reduce((acc, item) => acc + item.sum, 0);
 };
 
-export const InvoiceItem = ({
+export const Invoice = ({
   invoice,
   expenseType,
   invoiceExpenses,
   jars,
+  users,
 }: InvoiceProps) => {
   const { name, amount, fileUrl, isActive, createdAt } = invoice;
-
-  const previewerState = {
-    src: fileUrl,
-    isPDF: fileUrl.endsWith('pdf'),
-  };
 
   const payedSum = getSum(invoiceExpenses);
   const creationDate = getDateString(createdAt);
 
+  const invoiceOwner = users.find((user) => user.id === invoice.userId)!;
+
   return (
     <div className={styles.invoice}>
       <div className={styles['invoice-image-preview-frame']}>
-        <FilePreviewer previewerState={previewerState} />
+        <FilePreviewer
+          previewerState={{
+            src: fileUrl,
+          }}
+        />
       </div>
       <h4 className={styles['invoice-name']}>
         {isActive ? null : <span>✅</span>}
@@ -70,6 +74,8 @@ export const InvoiceItem = ({
           payedSum={payedSum}
           invoiceExpenses={invoiceExpenses}
           creationDate={creationDate}
+          owner={invoiceOwner}
+          jars={jars}
         />
         <AddExpenseDialog invoiceId={invoice.id} jars={jars} />
       </div>

@@ -13,7 +13,7 @@ export const CuratorsDropdown = ({
       name={name}
       onChange={(ev) => onChange?.(ev.target.value)}
     >
-      <option value=''>Всі</option>
+      <option value='all'>Всі</option>
       <option value={CURATORS_IDS.gryshenko}>{CURATORS_NAMES.gryshenko}</option>
       <option value={CURATORS_IDS.petrynyak}>{CURATORS_NAMES.petrynyak}</option>
       <option value={CURATORS_IDS.tytarenko}>{CURATORS_NAMES.tytarenko}</option>

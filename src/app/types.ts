@@ -3,7 +3,7 @@ export type Primitive = string | number | boolean;
 export type Jar = {
   id: number;
   url: string;
-  userId: null | number;
+  userId: number;
   ownerName: string;
   jarName: string;
   description: null | string;
@@ -90,6 +90,15 @@ export type InvoiceTransactionPayload = {
   invoiceId: number;
   jarSourceAmount: number;
   otherSourcesAmount: number;
+};
+
+export type JarsTransactionPayload = {
+  fromJarId: number;
+  toJarId: number;
+  jarSourceAmount: number;
+  otherSourcesAmount: number;
+  receiptName: string;
+  receipt: string;
 };
 
 export type CreateJarPayload = {

@@ -1,0 +1,40 @@
+.dialog-content {
+  max-width: 900px;
+}
+
+.form-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.jars-and-previewer-wrapper {
+  display: flex;
+  margin-bottom: 15px;
+}
+
+.jars-selection {
+  display: flex;
+  flex-direction: column;
+  margin-left: 15px;
+}
+
+.jars-selection select {
+  margin-bottom: 15px;
+}
+
+.jars-selection fieldset:first-child {
+  margin-right: 25px;
+}
+
+.file-preview {
+  padding: 15px;
+}
+
+.file-preview input {
+  margin-bottom: 15px;
+}
+
+.sum-input-fieldset {
+  padding: 15px;
+  width: 300px;
+}

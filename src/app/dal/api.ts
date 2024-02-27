@@ -12,6 +12,7 @@ import type {
   CreateJarPayload,
   ExpenseRecord,
   InvoicePayload,
+  JarsTransactionPayload,
 } from '../types';
 import { addColorToJar } from '../toolbox/utils';
 import { cookies } from 'next/headers';
@@ -19,6 +20,7 @@ import { getFundraisingInvoices } from './dataModificators';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const throwError = (response: Response, body: Record<string, any>) => {
+  console.log(body.error);
   if (body.error.details) {
     console.error({ errorDetails: body.error.details });
   }
@@ -167,6 +169,10 @@ export const createInvoiceTransaction = (
   return post('https://jars.fly.dev/transactions/invoice', payload);
 };
 
+export const createJarsTransaction = (payload: JarsTransactionPayload) => {
+  return post('https://jars.fly.dev/transactions/direct', payload);
+};
+
 export const createInvoice = (payload: InvoicePayload) => {
   return post('https://jars.fly.dev/invoices', payload);
 };
@@ -202,13 +208,14 @@ export const getInvoicesPageData = async ({
 }: {
   fundraisingId: string;
 }) => {
-  const [expensesTypes, expenses, invoices, jars, currentUser] =
+  const [expensesTypes, expenses, invoices, jars, currentUser, users] =
     await Promise.all([
       getExpensesTypes(fundraisingId),
       getExpenses(fundraisingId),
       getInvoices(),
       getJars(fundraisingId),
       getCurrentUser(),
+      getUsers(),
     ]);
 
   const fundraisingInvoices = getFundraisingInvoices(invoices, expensesTypes);
@@ -219,5 +226,6 @@ export const getInvoicesPageData = async ({
     invoices: fundraisingInvoices,
     jars,
     currentUser,
+    users,
   };
 };

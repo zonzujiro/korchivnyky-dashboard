@@ -127,7 +127,7 @@ export const getAccountsMovements = (
     };
   });
 
-  return growth;
+  return growth.filter((growth) => growth.difference !== 0);
 };
 
 const getDateDifference = (startDate: Date, endDate: Date) => {
@@ -144,13 +144,21 @@ export const getGatheringSpeed = (
 ) => {
   const groupedByJar = groupBy(records, (record) => record.jarId);
 
-  const speed = Object.entries(groupedByJar).map(([jarId, jarRecords]) => {
-    const { difference } = getAccumulated(jarRecords, startDate, endDate);
+  const differences = Object.entries(groupedByJar).map(
+    ([jarId, jarRecords]) => {
+      const { difference } = getAccumulated(jarRecords, startDate, endDate);
 
-    const hours = getDateDifference(startDate, endDate);
+      return { jarId, difference };
+    }
+  );
 
-    return { jarId, speed: `${Math.round(difference / hours)} грн/год` };
-  });
+  const speed = differences
+    .filter((record) => record.difference !== 0)
+    .map(({ jarId, difference }) => {
+      const hours = getDateDifference(startDate, endDate);
+
+      return { jarId, speed: `${Math.round(difference / hours)} грн/год` };
+    });
 
   return speed;
 };
