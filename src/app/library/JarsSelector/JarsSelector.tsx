@@ -7,6 +7,7 @@ import { toCurrency } from '@/app/toolbox';
 
 import { CuratorsDropdown } from '../CuratorsDropdown/CuratorsDropdown';
 import styles from './JarsSelector.module.css';
+import classNames from 'classnames';
 
 const SelectedJarInfo = ({ jar }: { jar: Jar }) => {
   return (
@@ -24,6 +25,7 @@ type JarSelectorProps = {
   selectJar: (jar: Jar) => void;
   jars: Array<Jar>;
   selectedJar: Jar;
+  className?: string;
 };
 
 export const JarSelector = ({
@@ -32,6 +34,7 @@ export const JarSelector = ({
   jars,
   selectJar,
   selectedJar,
+  className,
 }: JarSelectorProps) => {
   const [selectedCurator, setSelectedCurator] = useState('all');
 
@@ -48,7 +51,7 @@ export const JarSelector = ({
   }, [selectedCurator]);
 
   return (
-    <fieldset className={styles['jars-selector']}>
+    <fieldset className={classNames(styles['jars-selector'], className)}>
       <legend>{title}</legend>
       <label htmlFor='curator-input'>Оберіть куратора</label>
       <CuratorsDropdown onChange={setSelectedCurator} />

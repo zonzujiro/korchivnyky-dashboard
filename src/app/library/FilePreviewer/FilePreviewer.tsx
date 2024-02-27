@@ -14,8 +14,10 @@ export const previewerFileTypes = [
   'application/pdf',
 ];
 
-const isURL = (src: string) =>
-  src.startsWith('http') || src.startsWith('https');
+const isURL = (maybeUrl: string) =>
+  maybeUrl.startsWith('http') || maybeUrl.startsWith('https');
+
+const isBase64 = (maybeBase64: string) => maybeBase64.includes('base64');
 
 const isValidFile = (file: File) =>
   previewerFileTypes.some((type) => type === file.type);
@@ -42,8 +44,14 @@ const usePDFUrlPreviewer = (src: string) => {
       }
     };
 
-    if (src && isURL(src)) {
-      getPDFContent();
+    if (src) {
+      if (isURL(src)) {
+        getPDFContent();
+      }
+
+      if (isBase64(src)) {
+        setPDFContent(src);
+      }
     }
   }, [src]);
 

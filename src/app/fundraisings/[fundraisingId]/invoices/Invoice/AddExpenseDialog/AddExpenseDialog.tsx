@@ -8,13 +8,10 @@ import {
   useFilePreviewer,
   previewerFileTypes,
   useDialog,
+  JarSelector,
 } from '@/app/library';
 import { createExpense } from '@/app/actions';
-import {
-  fileToBase64,
-  removeBase64DataPrefix,
-  toCurrency,
-} from '@/app/toolbox';
+import { fileToBase64, removeBase64DataPrefix } from '@/app/toolbox';
 import { InvoiceTransactionPayload, Jar } from '@/app/types';
 
 import styles from './AddExpenseDialog.module.css';
@@ -50,6 +47,10 @@ export const AddExpenseDialog = ({
     resetPreviewer();
   };
 
+  const { openDialog, dialogState, closeDialog } = useDialog({
+    prepareClosing: resetForm,
+  });
+
   const handleSubmit = async (formData: FormData) => {
     const file = formData.get('file')! as File;
     const base64 = await fileToBase64(file);
@@ -67,10 +68,9 @@ export const AddExpenseDialog = ({
 
     if (status === 'Success') {
       resetForm();
+      closeDialog();
     }
   };
-
-  const { openDialog, dialogState } = useDialog({ prepareClosing: resetForm });
 
   return (
     <Dialog
@@ -105,45 +105,32 @@ export const AddExpenseDialog = ({
                       <FilePreviewer previewerState={previewerState} />
                     </div>
                   </fieldset>
-                  <fieldset className={styles['form-inputs']}>
-                    <legend>Інформація про оплату</legend>
-                    <label htmlFor='sum-input'>Сплачена сума</label>
-                    <input
-                      name='sum'
-                      id='sum-input'
-                      placeholder='20 000'
-                      type='text'
-                      required
-                      pattern='[0-9]+'
-                    />
-                    <label htmlFor='sum'>Дата оплати</label>
-                    <input id='date' type='date' name='date' required />
-                    <label htmlFor='jar'>З якої банки оплата</label>
-                    <select
+                  <div>
+                    <fieldset className={styles['form-inputs']}>
+                      <legend>Інформація про оплату</legend>
+                      <label htmlFor='sum-input'>Сплачена сума</label>
+                      <input
+                        type='number'
+                        min='0.00'
+                        max='10000.00'
+                        step='0.01'
+                        name='sum'
+                        id='sum-input'
+                        placeholder='20 000'
+                      />
+                      <label htmlFor='sum'>Дата оплати</label>
+                      <input id='date' type='date' name='date' required />
+                    </fieldset>
+                    <JarSelector
+                      title='З якої банки оплата'
+                      selectJar={setSelectedJar}
+                      selectedJar={selectedJar}
                       id='jar'
-                      name='jar'
-                      defaultValue={jars[0].id}
-                      onChange={(ev) =>
-                        setSelectedJar(
-                          jars.find(
-                            (jar) => jar.id === Number(ev.target.value)
-                          )!
-                        )
-                      }
-                    >
-                      {jars.map((jar) => (
-                        <option key={jar.id} value={jar.id}>
-                          {jar.ownerName}: {jar.jarName}
-                        </option>
-                      ))}
-                    </select>
-                    {selectedJar && (
-                      <p className={styles['jar-info']}>
-                        Залишок на банці: {toCurrency(selectedJar.accumulated)}
-                      </p>
-                    )}
+                      jars={jars}
+                      className={styles['jar-selector']}
+                    />
                     <SubmitButton />
-                  </fieldset>
+                  </div>
                 </div>
               </form>
             </div>

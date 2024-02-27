@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useFormStatus } from 'react-dom';
 
 import type { Jar, JarsTransactionPayload } from '@/app/types';
@@ -50,6 +50,13 @@ export const TransferBetweenJarsDialog = ({
     selectedJars.length > 1 ? selectedJars[1] : jars[1]
   );
 
+  // We need to sync it with external state
+  useEffect(() => {
+    setCreditJar(selectedJars.length ? selectedJars[0] : jars[0]);
+    setDebitJar(selectedJars.length > 1 ? selectedJars[1] : jars[1]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedJars]);
+
   const prepareClosing = () => {
     formRef?.current?.reset();
     resetPreviewer();
@@ -80,11 +87,7 @@ export const TransferBetweenJarsDialog = ({
       receiptName: file.name,
     };
 
-    console.log({ payload });
-
     const status = await transferMoneyBetweenJars(payload);
-
-    console.log({ status });
 
     if (status === 'Success') {
       prepareClosing();

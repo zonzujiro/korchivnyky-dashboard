@@ -1,7 +1,11 @@
 .jars-selector {
-  padding: 15px;
+  padding: 20px;
   margin-top: 15px;
   display: flex;
   flex-direction: column;
   width: 300px;
+}
+
+.jar-info {
+  margin-top: 15px;
 }

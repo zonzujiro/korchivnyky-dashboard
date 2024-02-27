@@ -7,17 +7,15 @@ import { InvoicesList } from './InvoicesList';
 
 export const Invoices = async ({ params }: PageParams) => {
   const { fundraisingId } = params;
-  const { expensesTypes, invoices, expenses, jars, currentUser, users } =
+  const { expensesTypes, invoices, expenses, jars, users } =
     await getInvoicesPageData({ fundraisingId });
-
-  const userJars = jars.filter((jar) => jar.userId === currentUser.id);
 
   return (
     <Suspense fallback={<p>🚙 Loading...</p>}>
       <InvoicesStateProvider invoices={invoices}>
         <InvoicesList
           expenses={expenses}
-          jars={userJars}
+          jars={jars}
           expensesTypes={expensesTypes}
           users={users}
         />
