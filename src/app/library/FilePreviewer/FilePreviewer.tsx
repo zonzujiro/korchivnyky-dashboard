@@ -25,21 +25,21 @@ const RECEIPT_PREVIEW_DEFAULT_STATE = {
   isPDF: false,
 };
 
-//TODO: finish when Dmytro will make CORS
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const usePDFUrlPreviewer = (src: string) => {
-  const [pdfContent, setPDFContent] = useState(src);
+  const [pdfContent, setPDFContent] = useState<null | string>(null);
 
   useEffect(() => {
     const getPDFContent = async () => {
-      const response = await fetch(src);
-      const blob = await response.blob();
+      try {
+        const response = await fetch(src);
+        const blob = await response.blob();
+        const pdfBlob = new Blob([blob], { type: 'application/pdf' });
+        const base64 = await fileToBase64(pdfBlob);
 
-      const base64 = await fileToBase64(blob);
-
-      console.log({ base64 });
-
-      setPDFContent(base64);
+        setPDFContent(base64);
+      } catch (e) {
+        console.log(e);
+      }
     };
 
     if (src && isURL(src)) {
@@ -81,15 +81,34 @@ export const useFilePreviewer = () => {
   return { previewerState, handleInputChange, resetPreviewer };
 };
 
+const PDFPreviewer = ({ src }: { src: string }) => {
+  const pdfContent = usePDFUrlPreviewer(src);
+
+  return (
+    <div className={styles['file-preview-frame']}>
+      {!pdfContent ? (
+        <div className={styles['file-preview-skeleton']}>
+          <span>🖼️</span>
+        </div>
+      ) : (
+        <object
+          className={styles['pdf-preview']}
+          type='application/pdf'
+          data={pdfContent}
+        />
+      )}
+    </div>
+  );
+};
+
 export const FilePreviewer = ({
   previewerState,
 }: {
-  previewerState: ReturnType<typeof useFilePreviewer>['previewerState'];
+  previewerState: { src: string; isPDF?: boolean };
 }) => {
-  const { isPDF, src } = previewerState;
+  const { src } = previewerState;
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const pdfContent = usePDFUrlPreviewer(src);
+  const isPDF = previewerState.isPDF || src.includes('pdf');
 
   if (!src) {
     return (
@@ -113,13 +132,5 @@ export const FilePreviewer = ({
     </div>;
   }
 
-  return (
-    <div className={styles['file-preview-frame']}>
-      <object
-        className={styles['pdf-preview']}
-        type='application/pdf'
-        data={src}
-      />
-    </div>
-  );
+  return <PDFPreviewer src={src} />;
 };

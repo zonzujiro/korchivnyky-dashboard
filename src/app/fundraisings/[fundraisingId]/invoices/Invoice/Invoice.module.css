@@ -1,6 +1,6 @@
 .invoice {
   width: 250px;
-  height: 270px;
+  height: fit-content;
   border: 1px solid;
   border-radius: 10px;
   margin: 15px;
@@ -10,7 +10,7 @@
 }
 
 .invoice-image-preview-frame {
-  height: 100px;
+  height: 200px;
   overflow: hidden;
 }
 

@@ -2,7 +2,7 @@
 
 import randomColor from 'randomcolor';
 
-import { toCurrency } from '@/app/toolbox';
+import { getGatheredMoney, toCurrency } from '@/app/toolbox';
 import { Jar } from '@/app/types';
 
 import styles from './Progress.module.css';
@@ -13,12 +13,6 @@ type ProgressProps = {
 };
 
 const progressColor = randomColor();
-
-const getGatheredMoney = (jars: Array<Jar>) => {
-  return Object.values(jars).reduce((acc, { accumulated }) => {
-    return acc + accumulated;
-  }, 0);
-};
 
 export const Progress = ({ goal, jars }: ProgressProps) => {
   const currentSum = getGatheredMoney(jars);

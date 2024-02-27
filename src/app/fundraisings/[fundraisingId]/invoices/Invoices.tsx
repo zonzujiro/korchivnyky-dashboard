@@ -7,7 +7,7 @@ import { InvoicesList } from './InvoicesList';
 
 export const Invoices = async ({ params }: PageParams) => {
   const { fundraisingId } = params;
-  const { expensesTypes, invoices, expenses, jars, currentUser } =
+  const { expensesTypes, invoices, expenses, jars, currentUser, users } =
     await getInvoicesPageData({ fundraisingId });
 
   const userJars = jars.filter((jar) => jar.userId === currentUser.id);
@@ -19,6 +19,7 @@ export const Invoices = async ({ params }: PageParams) => {
           expenses={expenses}
           jars={userJars}
           expensesTypes={expensesTypes}
+          users={users}
         />
       </InvoicesStateProvider>
     </Suspense>

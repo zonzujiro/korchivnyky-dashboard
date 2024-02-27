@@ -43,3 +43,9 @@ export const fileToBase64 = (file: File | Blob): Promise<string> =>
     reader.onload = () => resolve(reader.result as string);
     reader.onerror = (error) => reject(error);
   });
+
+export const getGatheredMoney = (jars: Array<Jar>) => {
+  return Object.values(jars).reduce((acc, { accumulated }) => {
+    return acc + accumulated;
+  }, 0);
+};

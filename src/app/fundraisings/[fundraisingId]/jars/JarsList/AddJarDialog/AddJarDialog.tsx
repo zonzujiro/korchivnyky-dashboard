@@ -1,13 +1,12 @@
 import { useRef, useState } from 'react';
+import { useFormStatus } from 'react-dom';
 import classNames from 'classnames';
 
 import { postJar, type JarsPageState } from '@/app/dal';
 import type { CreateJarPayload, Jar } from '@/app/types';
-import { Button, Dialog, useDialog } from '@/app/library';
+import { Button, CuratorsDropdown, Dialog, useDialog } from '@/app/library';
 
 import styles from './AddJarDialog.module.css';
-import { CuratorsDropdown } from '../CuratorsDropdown';
-import { useFormStatus } from 'react-dom';
 
 const SubmitButton = () => {
   const { pending } = useFormStatus();

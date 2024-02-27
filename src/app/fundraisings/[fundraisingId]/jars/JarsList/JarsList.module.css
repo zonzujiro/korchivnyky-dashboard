@@ -1,7 +1,12 @@
+.jars-main-content {
+  display: flex;
+}
+
 .jars-list {
   display: flex;
   flex-wrap: wrap;
   list-style: none;
+  width: 60%;
 }
 
 .item {
@@ -13,6 +18,7 @@
   cursor: pointer;
   font-size: 0.8em;
   min-height: 85px;
+  height: fit-content;
 }
 
 .selected {
@@ -38,14 +44,16 @@
 }
 
 .jars-info {
-  display: flex;
-  flex-wrap: wrap;
+  padding: 20px;
+  border: 1px dotted;
+  border-radius: 10px;
+  height: fit-content;
+  margin-bottom: 10px;
 }
 
-.jars-info span {
-  font-style: italic;
-  margin-right: 10px;
+.jars-info-tag {
   line-height: 1.5em;
+  margin: 3px;
 }
 
 .jars-buttons button:not(:last-child) {

@@ -2,7 +2,13 @@ import Link from 'next/link';
 
 import { Dialog, Button, FilePreviewer, useDialog } from '@/app/library';
 import { toCurrency } from '@/app/toolbox';
-import type { ExpenseRecord, ExpenseType, Invoice } from '@/app/types';
+import type {
+  ExpenseRecord,
+  ExpenseType,
+  Invoice,
+  Jar,
+  User,
+} from '@/app/types';
 
 import styles from './InvoiceDetails.module.css';
 
@@ -12,20 +18,40 @@ type InvoiceDetailsDialogProps = {
   payedSum: number;
   invoiceExpenses: Array<ExpenseRecord>;
   creationDate: string;
+  owner: User;
+  jars: Array<Jar>;
 };
 
 export const InvoiceDetailsDialog = (props: InvoiceDetailsDialogProps) => {
-  const { payedSum, expenseType, invoice, invoiceExpenses, creationDate } =
-    props;
+  const {
+    payedSum,
+    expenseType,
+    invoice,
+    invoiceExpenses,
+    creationDate,
+    owner,
+    jars,
+  } = props;
+
   const { amount, fileUrl, description, name } = invoice;
 
   const { openDialog, dialogState } = useDialog();
+
+  const getJarName = (expense: ExpenseRecord) => {
+    const jar = jars.find((jar) => expense.jarId === jar.id);
+
+    return jar?.jarName;
+  };
 
   return (
     <Dialog
       dialogState={dialogState}
       title={`Рахунок: ${name}`}
-      renderButton={() => <Button onClick={openDialog}>🧾</Button>}
+      renderButton={() => (
+        <Button title='Відкрити рахунок' onClick={openDialog}>
+          🧾
+        </Button>
+      )}
       renderContent={() => (
         <div className={styles['invoice-dialog-content']}>
           <div className={styles['invoice-information']}>
@@ -33,7 +59,6 @@ export const InvoiceDetailsDialog = (props: InvoiceDetailsDialogProps) => {
               <FilePreviewer
                 previewerState={{
                   src: fileUrl,
-                  isPDF: fileUrl.includes('pdf'),
                 }}
               />
             </div>
@@ -56,7 +81,7 @@ export const InvoiceDetailsDialog = (props: InvoiceDetailsDialogProps) => {
                 <strong>Створений:</strong> {creationDate}
               </p>
               <p>
-                <strong>Створив:</strong> Вася Пупкін
+                <strong>Створив:</strong> {owner.name}
               </p>
               <Link className={styles['invoice-link']} href={fileUrl}>
                 💾 Завантажити інвойс
@@ -78,7 +103,7 @@ export const InvoiceDetailsDialog = (props: InvoiceDetailsDialogProps) => {
                     <div className={styles['expense-info']}>
                       <p>Сума: {toCurrency(expense.sum)}</p>
                       <p>Дата: {creationDate}</p>
-                      <p>Платник: Вася Пупкін</p>
+                      <p>З якої банки:{getJarName(expense)}</p>
                     </div>
                     <div className={styles['expense-actions']}>
                       <Link href={expense.receiptUrl}>

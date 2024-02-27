@@ -3,14 +3,19 @@
 import React, { useState, useContext } from 'react';
 import classNames from 'classnames';
 
-import { Image, Button, TooltipComponent } from '@/app/library';
+import {
+  Image,
+  Button,
+  TooltipComponent,
+  CuratorsDropdown,
+} from '@/app/library';
 import type { Jar } from '@/app/types';
 import { JarsPageContext } from '@/app/dal';
-import { toCurrency } from '@/app/toolbox';
+import { getGatheredMoney, toCurrency } from '@/app/toolbox';
 
 import styles from './JarsList.module.css';
-import { CuratorsDropdown } from './CuratorsDropdown';
 import { AddJarDialog } from './AddJarDialog/AddJarDialog';
+import { TransferBetweenJarsDialog } from './TransferBetweenJarsDialog/TransferBetweenJarsDialog';
 
 type JarItemProps = {
   jar: Jar;
@@ -64,7 +69,7 @@ const JarItem = ({ jar, isSelected, onClick }: JarItemProps) => {
       </div>
       <div className={classNames(styles['item-column'], styles['jar-info'])}>
         <h3>
-          {ownerName} {isFinished ? <span>🔒</span> : null}
+          {ownerName} {isFinished ? <span>🔓</span> : null}
         </h3>
         <div className={styles['item-column']}>
           <span>Зібрано: {toCurrency(accumulated)}</span>
@@ -74,6 +79,9 @@ const JarItem = ({ jar, isSelected, onClick }: JarItemProps) => {
     </li>
   );
 };
+
+const getFinishedJars = (jars: Array<Jar>) =>
+  jars.filter((jar) => jar.isFinished);
 
 export const JarsList = ({ fundraisingId }: { fundraisingId: string }) => {
   const { selectedJars, toggleJarSelection, jars, addJar, resetJarSelection } =
@@ -89,23 +97,11 @@ export const JarsList = ({ fundraisingId }: { fundraisingId: string }) => {
   const toRender =
     !selectedCurator && isAllVisible ? byCurator : byCurator.slice(0, 10);
 
+  const finishedJars = getFinishedJars(jars);
+
   return (
     <>
       <div className={styles.controls}>
-        <div className={styles['jars-info']}>
-          <span>Загалом банок: {jars.length}</span>
-          <span>
-            Закрили збір: {jars.filter((jar) => jar.isFinished).length}
-          </span>
-          <span>
-            Досягнули мети:{' '}
-            {
-              jars.filter(
-                (jar) => jar.goal !== null && jar.goal <= jar.accumulated
-              ).length
-            }
-          </span>
-        </div>
         <div className={styles['curators-filter']}>
           <span>Куратор</span>
           <CuratorsDropdown onChange={setSelectedCurator} />
@@ -121,28 +117,60 @@ export const JarsList = ({ fundraisingId }: { fundraisingId: string }) => {
                 : 'Приховати частину банок 🫣'}
             </Button>
           )}
+          <TransferBetweenJarsDialog jars={jars} />
         </div>
       </div>
-      <ol className={styles['jars-list']}>
-        <AddJarDialog
-          buttonClassName={styles.item}
-          addJar={addJar}
-          jars={jars}
-          fundraisingId={fundraisingId}
-        />
-        {toRender.map((item) => {
-          return (
-            <JarItem
-              key={item.id}
-              jar={item}
-              isSelected={Boolean(
-                selectedJars.find((selectedJar) => selectedJar.id === item.id)
-              )}
-              onClick={() => toggleJarSelection(item)}
-            />
-          );
-        })}
-      </ol>
+      <div className={styles['jars-main-content']}>
+        <ul className={styles['jars-list']}>
+          <AddJarDialog
+            buttonClassName={styles.item}
+            addJar={addJar}
+            jars={jars}
+            fundraisingId={fundraisingId}
+          />
+          {toRender.map((item) => {
+            return (
+              <JarItem
+                key={item.id}
+                jar={item}
+                isSelected={Boolean(
+                  selectedJars.find((selectedJar) => selectedJar.id === item.id)
+                )}
+                onClick={() => toggleJarSelection(item)}
+              />
+            );
+          })}
+        </ul>
+        <div className={styles['jars-info-wrapper']}>
+          <div className={styles['jars-info']}>
+            <h4>Загальна інформація</h4>
+            <div className={styles['jars-info-tag']}>
+              Загалом банок: {jars.length}
+            </div>
+            <div className={styles['jars-info-tag']}>
+              Закрили збір: {finishedJars.length}
+            </div>
+            <div className={styles['jars-info-tag']}>
+              Доступно для витрат: {toCurrency(getGatheredMoney(finishedJars))}
+            </div>
+          </div>
+          {selectedJars.length ? (
+            <div className={styles['jars-info']}>
+              <h4>Інформація по обраним</h4>
+              <div className={styles['jars-info-tag']}>
+                Обрано: {selectedJars.length}
+              </div>
+              <div className={styles['jars-info-tag']}>
+                Зібрано: {toCurrency(getGatheredMoney(selectedJars))}
+              </div>
+              <div className={styles['jars-info-tag']}>
+                Доступно для витрат:{' '}
+                {toCurrency(getGatheredMoney(getFinishedJars(selectedJars)))}
+              </div>
+            </div>
+          ) : null}
+        </div>
+      </div>
     </>
   );
 };

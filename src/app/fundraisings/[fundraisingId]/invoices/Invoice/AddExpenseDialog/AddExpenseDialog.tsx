@@ -15,9 +15,9 @@ import {
   removeBase64DataPrefix,
   toCurrency,
 } from '@/app/toolbox';
+import { InvoiceTransactionPayload, Jar } from '@/app/types';
 
 import styles from './AddExpenseDialog.module.css';
-import { InvoiceTransactionPayload, Jar } from '@/app/types';
 
 const SubmitButton = () => {
   const { pending } = useFormStatus();
@@ -76,7 +76,11 @@ export const AddExpenseDialog = ({
     <Dialog
       title='Додати витрати'
       dialogState={dialogState}
-      renderButton={() => <Button onClick={openDialog}>💸</Button>}
+      renderButton={() => (
+        <Button title='Додати витрати' onClick={openDialog}>
+          💸
+        </Button>
+      )}
       renderContent={() => {
         return (
           <div className={styles['dialog-content']}>
