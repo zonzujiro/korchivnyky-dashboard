@@ -117,7 +117,7 @@ export const JarsList = ({ fundraisingId }: { fundraisingId: string }) => {
                 : 'Приховати частину банок 🫣'}
             </Button>
           )}
-          <TransferBetweenJarsDialog jars={jars} />
+          <TransferBetweenJarsDialog jars={jars} selectedJars={selectedJars} />
         </div>
       </div>
       <div className={styles['jars-main-content']}>

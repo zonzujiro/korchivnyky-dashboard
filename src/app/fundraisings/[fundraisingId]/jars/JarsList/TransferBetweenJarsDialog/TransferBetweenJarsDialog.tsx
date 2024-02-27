@@ -27,7 +27,13 @@ const SubmitButton = () => {
   );
 };
 
-export const TransferBetweenJarsDialog = ({ jars }: { jars: Array<Jar> }) => {
+export const TransferBetweenJarsDialog = ({
+  jars,
+  selectedJars,
+}: {
+  jars: Array<Jar>;
+  selectedJars: Array<Jar>;
+}) => {
   const inputRef = useRef<HTMLInputElement>(null);
   const formRef = useRef<HTMLFormElement>(null);
 
@@ -37,8 +43,12 @@ export const TransferBetweenJarsDialog = ({ jars }: { jars: Array<Jar> }) => {
     resetPreviewer,
   } = useFilePreviewer();
 
-  const [creditJar, setCreditJar] = useState(jars[0]);
-  const [debitJar, setDebitJar] = useState(jars[1]);
+  const [creditJar, setCreditJar] = useState(
+    selectedJars.length ? selectedJars[0] : jars[0]
+  );
+  const [debitJar, setDebitJar] = useState(
+    selectedJars.length > 1 ? selectedJars[1] : jars[1]
+  );
 
   const prepareClosing = () => {
     formRef?.current?.reset();
