@@ -2,8 +2,8 @@
 
 import { useState, useEffect } from 'react';
 
-import type { Jar } from '@/app/types';
-import { toCurrency } from '@/app/toolbox';
+import type { Jar } from '@/types';
+import { toCurrency } from '@/toolbox';
 
 import { CuratorsDropdown } from '../CuratorsDropdown/CuratorsDropdown';
 import styles from './JarsSelector.module.css';

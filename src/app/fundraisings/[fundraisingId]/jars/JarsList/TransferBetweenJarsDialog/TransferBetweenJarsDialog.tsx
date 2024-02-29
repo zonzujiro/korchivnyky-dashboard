@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { useFormStatus } from 'react-dom';
 
-import type { Jar, JarsTransactionPayload } from '@/app/types';
+import type { Jar, JarsTransactionPayload } from '@/types';
 
 import {
   Button,
@@ -11,11 +11,11 @@ import {
   previewerFileTypes,
   useDialog,
   useFilePreviewer,
-} from '@/app/library';
+} from '@/library';
 import { transferMoneyBetweenJars } from '@/app/actions';
 
 import styles from './TransferBetweenJarsDialog.module.css';
-import { fileToBase64, removeBase64DataPrefix } from '@/app/toolbox';
+import { fileToBase64, removeBase64DataPrefix } from '@/toolbox';
 
 const SubmitButton = () => {
   const { pending } = useFormStatus();

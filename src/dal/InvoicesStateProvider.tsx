@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import type { Invoice } from '../types';
+import type { Invoice } from '@/types';
 
 type StateProviderProps = {
   invoices: Array<Invoice>;

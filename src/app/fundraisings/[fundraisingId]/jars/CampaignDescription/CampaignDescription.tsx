@@ -1,5 +1,5 @@
-import type { FundraisingCampaign } from '@/app/types';
-import { getDateString } from '@/app/toolbox';
+import type { FundraisingCampaign } from '@/types';
+import { getDateString } from '@/toolbox';
 
 import styles from './CampaignDescription.module.css';
 

@@ -7,7 +7,7 @@ import type {
   Jar,
   JarStatisticRecord,
   User,
-} from '../types';
+} from '@/types';
 import { addColorToJar } from '../toolbox/utils';
 
 type StateProviderProps = {

@@ -3,16 +3,19 @@ export type Primitive = string | number | boolean;
 export type Jar = {
   id: number;
   url: string;
-  userId: number;
   ownerName: string;
   jarName: string;
-  description: null | string;
-  goal: null | number;
-  logo: null | string;
+  description: string | null;
+  goal: number | null;
+  logo: string;
   isFinished: boolean;
   accumulated: number;
   color: string;
   fundraisingCampaignId: number;
+  otherSourcesAccumulated: number;
+  userId: number;
+  spent: number;
+  otherSourcesSpent: number;
 };
 
 export type JarStatisticRecord = {

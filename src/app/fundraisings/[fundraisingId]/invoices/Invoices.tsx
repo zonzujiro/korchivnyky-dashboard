@@ -1,7 +1,7 @@
 import { Suspense } from 'react';
 
-import type { PageParams } from '@/app/types';
-import { InvoicesStateProvider, getInvoicesPageData } from '@/app/dal';
+import type { PageParams } from '@/types';
+import { InvoicesStateProvider, getInvoicesPageData } from '@/dal';
 
 import { InvoicesList } from './InvoicesList';
 

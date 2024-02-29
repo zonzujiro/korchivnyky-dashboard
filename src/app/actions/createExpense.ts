@@ -1,7 +1,7 @@
 'use server';
 
-import type { InvoiceTransactionPayload } from '../types';
-import { createInvoiceTransaction } from '../dal';
+import type { InvoiceTransactionPayload } from '../../types';
+import { createInvoiceTransaction } from '@/dal';
 
 export const createExpense = async (expenseData: InvoiceTransactionPayload) => {
   try {

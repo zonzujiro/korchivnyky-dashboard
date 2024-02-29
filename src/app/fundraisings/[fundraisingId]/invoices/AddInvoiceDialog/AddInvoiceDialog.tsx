@@ -3,7 +3,7 @@
 import { useRef } from 'react';
 import { useFormStatus } from 'react-dom';
 
-import type { ExpenseType, Invoice, InvoicePayload } from '@/app/types';
+import type { ExpenseType, Invoice, InvoicePayload } from '@/types';
 import {
   Button,
   Dialog,
@@ -11,9 +11,9 @@ import {
   useFilePreviewer,
   previewerFileTypes,
   useDialog,
-} from '@/app/library';
+} from '@/library';
 import { createInvoice } from '@/app/actions';
-import { fileToBase64, removeBase64DataPrefix } from '@/app/toolbox';
+import { fileToBase64, removeBase64DataPrefix } from '@/toolbox';
 
 import styles from './AddInvoiceDialog.module.css';
 

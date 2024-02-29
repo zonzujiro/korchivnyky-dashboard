@@ -1,5 +1,5 @@
 // import randomColor from 'randomcolor';
-// import type { ExpenseRecord, ExpenseType } from '../types';
+// import type { ExpenseRecord, ExpenseType } from '@/types';
 
 // export const jars: Jar[] = [
 //   {

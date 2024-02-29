@@ -1,4 +1,4 @@
-import { Image } from '@/app/library';
+import { Image } from '@/library';
 
 import styles from './ImagePreview.module.css';
 

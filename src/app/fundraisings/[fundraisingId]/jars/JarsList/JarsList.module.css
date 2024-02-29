@@ -52,9 +52,21 @@
   margin-bottom: 10px;
 }
 
+.jars-info > h4 {
+  margin-bottom: 10px;
+}
+
 .jars-info-tag {
   line-height: 1.5em;
   margin: 3px;
+}
+
+.jars-info-tag-value {
+  font-weight: 500;
+}
+
+.jars-info-tag.gathered-money {
+  margin-bottom: 10px;
 }
 
 .jars-buttons button:not(:last-child) {

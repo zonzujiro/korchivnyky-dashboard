@@ -1,7 +1,7 @@
 import { Tooltip } from 'react-tooltip';
 
-import type { Jar } from '@/app/types';
-import { toCurrency } from '@/app/toolbox';
+import type { Jar } from '@/types';
+import { toCurrency } from '@/toolbox';
 import { DEFAULT_JAR_GOAL } from '@/app/constants';
 
 import styles from './StatisticsSection.module.css';

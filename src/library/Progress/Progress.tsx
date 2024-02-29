@@ -2,8 +2,8 @@
 
 import randomColor from 'randomcolor';
 
-import { getGatheredMoney, toCurrency } from '@/app/toolbox';
-import { Jar } from '@/app/types';
+import { getGatheredMoney, toCurrency } from '@/toolbox';
+import { Jar } from '@/types';
 
 import styles from './Progress.module.css';
 
@@ -16,7 +16,7 @@ const progressColor = randomColor();
 
 export const Progress = ({ goal, jars }: ProgressProps) => {
   const currentSum = getGatheredMoney(jars);
-  const percentage = `${Math.round((100 * currentSum) / goal)}%`;
+  const percentage = `${Math.floor((100 * currentSum) / goal)}%`;
 
   return (
     <div className={styles.progress}>

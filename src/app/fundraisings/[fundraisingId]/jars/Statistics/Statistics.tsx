@@ -3,9 +3,9 @@
 import React, { useState, useContext } from 'react';
 import classNames from 'classnames';
 
-import { Jar } from '@/app/types';
-import { toCurrency } from '@/app/toolbox';
-import { JarsPageContext } from '@/app/dal';
+import { Jar } from '@/types';
+import { toCurrency } from '@/toolbox';
+import { JarsPageContext } from '@/dal';
 
 import styles from './Statistics.module.css';
 import { StatisticsSection } from './StatisticsSection/StatisticsSection';

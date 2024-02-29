@@ -1,4 +1,4 @@
-import type { ExpenseType, FundraisingCampaign, Invoice, Jar } from '../types';
+import type { ExpenseType, FundraisingCampaign, Invoice, Jar } from '@/types';
 
 export const getCurrentFundraising = (
   fundraisings: Array<FundraisingCampaign>,

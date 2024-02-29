@@ -1,7 +1,7 @@
 'use server';
 
-import type { Invoice, InvoicePayload } from '../types';
-import { createInvoice as sendRequest } from '../dal';
+import type { Invoice, InvoicePayload } from '../../types';
+import { createInvoice as sendRequest } from '@/dal';
 
 export const createInvoice = async (
   invoiceData: InvoicePayload

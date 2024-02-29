@@ -3,15 +3,10 @@
 import React, { useState, useContext } from 'react';
 import classNames from 'classnames';
 
-import {
-  Image,
-  Button,
-  TooltipComponent,
-  CuratorsDropdown,
-} from '@/app/library';
-import type { Jar } from '@/app/types';
-import { JarsPageContext } from '@/app/dal';
-import { getGatheredMoney, toCurrency } from '@/app/toolbox';
+import { Image, Button, TooltipComponent, CuratorsDropdown } from '@/library';
+import type { Jar } from '@/types';
+import { JarsPageContext } from '@/dal';
+import { getGatheredMoney, toCurrency } from '@/toolbox';
 
 import styles from './JarsList.module.css';
 import { AddJarDialog } from './AddJarDialog/AddJarDialog';
@@ -24,7 +19,16 @@ type JarItemProps = {
 };
 
 const JarItem = ({ jar, isSelected, onClick }: JarItemProps) => {
-  const { url, goal, accumulated, ownerName, isFinished, logo, color } = jar;
+  const {
+    url,
+    goal,
+    accumulated,
+    ownerName,
+    isFinished,
+    logo,
+    color,
+    otherSourcesAccumulated,
+  } = jar;
 
   const [copyClicked, setCopyClicked] = useState(false);
 
@@ -72,8 +76,12 @@ const JarItem = ({ jar, isSelected, onClick }: JarItemProps) => {
           {ownerName} {isFinished ? <span>🔓</span> : null}
         </h3>
         <div className={styles['item-column']}>
-          <span>Зібрано: {toCurrency(accumulated)}</span>
-          <span>Мета: {goal ? toCurrency(goal) : 'Немає'}</span>
+          <span>На банці: {toCurrency(accumulated)}</span>
+          {otherSourcesAccumulated ? (
+            <span>Деінде: {toCurrency(otherSourcesAccumulated)}</span>
+          ) : null}
+
+          {goal ? <span>Мета: {toCurrency(goal)}</span> : null}
         </div>
       </div>
     </li>
@@ -82,6 +90,12 @@ const JarItem = ({ jar, isSelected, onClick }: JarItemProps) => {
 
 const getFinishedJars = (jars: Array<Jar>) =>
   jars.filter((jar) => jar.isFinished);
+
+const getAchievedGoalJars = (jars: Array<Jar>) =>
+  jars.filter(
+    (jar) =>
+      jar.goal && jar.accumulated + jar.otherSourcesAccumulated > jar.goal
+  );
 
 export const JarsList = ({ fundraisingId }: { fundraisingId: string }) => {
   const { selectedJars, toggleJarSelection, jars, addJar, resetJarSelection } =
@@ -98,6 +112,7 @@ export const JarsList = ({ fundraisingId }: { fundraisingId: string }) => {
     !selectedCurator && isAllVisible ? byCurator : byCurator.slice(0, 10);
 
   const finishedJars = getFinishedJars(jars);
+  const achievedGoals = getAchievedGoalJars(jars);
 
   return (
     <>
@@ -144,28 +159,63 @@ export const JarsList = ({ fundraisingId }: { fundraisingId: string }) => {
         <div className={styles['jars-info-wrapper']}>
           <div className={styles['jars-info']}>
             <h4>Загальна інформація</h4>
-            <div className={styles['jars-info-tag']}>
-              Загалом банок: {jars.length}
+            <div
+              className={classNames(
+                styles['jars-info-tag'],
+                styles['total-jars']
+              )}
+            >
+              🫙 Загалом банок: {jars.length}
+            </div>
+            <div
+              className={classNames(
+                styles['jars-info-tag'],
+                styles['gathered-money']
+              )}
+            >
+              💸 Доступно для витрат:{' '}
+              <span className={styles['jars-info-tag-value']}>
+                {toCurrency(
+                  getGatheredMoney([...finishedJars, ...achievedGoals])
+                )}
+              </span>
             </div>
             <div className={styles['jars-info-tag']}>
-              Закрили збір: {finishedJars.length}
+              🎯 Досягнули мети: {achievedGoals.length}
             </div>
             <div className={styles['jars-info-tag']}>
-              Доступно для витрат: {toCurrency(getGatheredMoney(finishedJars))}
+              🔒 Закрили збір: {finishedJars.length}
             </div>
           </div>
           {selectedJars.length ? (
             <div className={styles['jars-info']}>
               <h4>Інформація по обраним</h4>
-              <div className={styles['jars-info-tag']}>
-                Обрано: {selectedJars.length}
+              <div
+                className={classNames(
+                  styles['jars-info-tag'],
+                  styles['total-jars']
+                )}
+              >
+                🫙 Обрано: {selectedJars.length}
               </div>
               <div className={styles['jars-info-tag']}>
-                Зібрано: {toCurrency(getGatheredMoney(selectedJars))}
+                🏦 Зібрано: {toCurrency(getGatheredMoney(selectedJars))}
               </div>
-              <div className={styles['jars-info-tag']}>
-                Доступно для витрат:{' '}
-                {toCurrency(getGatheredMoney(getFinishedJars(selectedJars)))}
+              <div
+                className={classNames(
+                  styles['jars-info-tag'],
+                  styles['gathered-money']
+                )}
+              >
+                💸 Доступно для витрат:{' '}
+                <span className={styles['jars-info-tag-value']}>
+                  {toCurrency(
+                    getGatheredMoney([
+                      ...getFinishedJars(selectedJars),
+                      ...getAchievedGoalJars(selectedJars),
+                    ])
+                  )}
+                </span>
               </div>
             </div>
           ) : null}

@@ -1,9 +1,9 @@
 import { Suspense, type ReactNode } from 'react';
 
-import { getFundraisingCampaigns } from '@/app/dal';
+import { getFundraisingCampaigns } from '@/dal';
 
 import styles from './layout.module.css';
-import { NavigationMenu, SiteLogo } from '../library';
+import { NavigationMenu, SiteLogo } from '@/library';
 
 const Loader = () => {
   return (

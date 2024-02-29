@@ -2,8 +2,8 @@
 
 import { useContext } from 'react';
 
-import type { ExpenseRecord, ExpenseType, Jar, User } from '@/app/types';
-import { InvoicesPageContext } from '@/app/dal';
+import type { ExpenseRecord, ExpenseType, Jar, User } from '@/types';
+import { InvoicesPageContext } from '@/dal';
 
 import { Invoice } from './Invoice/Invoice';
 

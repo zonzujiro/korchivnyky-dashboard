@@ -2,9 +2,9 @@ import { useRef, useState } from 'react';
 import { useFormStatus } from 'react-dom';
 import classNames from 'classnames';
 
-import { postJar, type JarsPageState } from '@/app/dal';
-import type { CreateJarPayload, Jar } from '@/app/types';
-import { Button, CuratorsDropdown, Dialog, useDialog } from '@/app/library';
+import { postJar, type JarsPageState } from '@/dal';
+import type { CreateJarPayload, Jar } from '@/types';
+import { Button, CuratorsDropdown, Dialog, useDialog } from '@/library';
 
 import styles from './AddJarDialog.module.css';
 

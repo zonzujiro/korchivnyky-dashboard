@@ -1,7 +1,7 @@
 import { Fragment } from 'react';
-import { Dialog, Button, useDialog } from '@/app/library';
+import { Dialog, Button, useDialog } from '@/library';
 import { CURATORS_COLORS, DEFAULT_JAR_GOAL } from '@/app/constants';
-import { Jar, User } from '@/app/types';
+import { Jar, User } from '@/types';
 
 import styles from './ExportStatisticsDialog.module.css';
 

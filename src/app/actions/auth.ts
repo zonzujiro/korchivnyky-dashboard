@@ -1,6 +1,6 @@
 'use server';
 
-import { signIn } from '../dal';
+import { signIn } from '@/dal';
 
 let token: null | string = null;
 

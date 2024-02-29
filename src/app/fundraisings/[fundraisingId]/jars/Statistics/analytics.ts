@@ -1,5 +1,13 @@
-import type { JarStatisticRecord } from '@/app/types';
-import { groupBy } from '@/app/toolbox';
+import type { JarStatisticRecord } from '@/types';
+import { groupBy } from '@/toolbox';
+
+const getDateWithoutMs = (target: Date) => {
+  const day = target.getDate();
+  const month = target.getMonth();
+  const year = target.getFullYear();
+
+  return new Date(year, month, day);
+};
 
 const isSameDate = (startDate: Date, endDate: Date) => {
   const isSameDay = startDate.getDate() === endDate.getDate();
@@ -9,36 +17,55 @@ const isSameDate = (startDate: Date, endDate: Date) => {
   return isSameDay && isSameMonth && isSameYear;
 };
 
+const isInRange = (target: Date, start: Date, end: Date) => {
+  const cleanedTarget = getDateWithoutMs(target);
+  const cleanedStart = getDateWithoutMs(start);
+  const cleanedEnd = getDateWithoutMs(end);
+
+  return (
+    cleanedTarget.valueOf() <= cleanedEnd.valueOf() &&
+    cleanedTarget.valueOf() >= cleanedStart.valueOf()
+  );
+};
+
 const withSign = (value: number) => {
   return value > 0 ? `+${value}` : `${value}`;
+};
+
+const getOnExactDate = (
+  records: Array<JarStatisticRecord>,
+  targetDate: Date
+) => {
+  const result = records.filter((record) => {
+    const recordDate = new Date(record.createdAt);
+
+    return isSameDate(recordDate, targetDate);
+  });
+
+  return result.at(-1) || null;
 };
 
 const getFirstRecord = (
   records: Array<JarStatisticRecord>,
   startDate: Date
 ): JarStatisticRecord | null => {
-  const result = records.filter((record) => {
-    const recordDate = new Date(record.createdAt);
-    const isInTimeWindow = isSameDate(recordDate, startDate);
+  const exactDate = getOnExactDate(records, startDate);
 
-    return isInTimeWindow;
-  });
-
-  if (!result.length) {
-    const recordsBeforeStartDate = records.filter((record) => {
-      const recordDate = new Date(record.createdAt);
-
-      return recordDate.valueOf() <= startDate.valueOf();
-    });
-
-    if (recordsBeforeStartDate.at(-1) !== undefined) {
-      return recordsBeforeStartDate.at(-1) as JarStatisticRecord;
-    }
-
-    return null;
+  if (exactDate) {
+    return exactDate;
   }
 
-  return result.at(-1) as JarStatisticRecord;
+  const recordsBeforeStartDate = records.filter((record) => {
+    const recordDate = new Date(record.createdAt);
+
+    return recordDate.valueOf() <= startDate.valueOf();
+  });
+
+  if (recordsBeforeStartDate.length) {
+    return recordsBeforeStartDate[0];
+  }
+
+  return null;
 };
 
 const getLastRecord = (
@@ -46,32 +73,24 @@ const getLastRecord = (
   startDate: Date,
   endDate: Date
 ) => {
-  const startMs = startDate.valueOf();
-  const endMs = endDate.valueOf();
+  const exactDate = getOnExactDate(records, endDate);
 
-  const result = records.filter((record) => {
-    const recordDate = new Date(record.createdAt);
-    const isInTimeWindow = isSameDate(recordDate, endDate);
-
-    return isInTimeWindow;
-  });
-
-  if (!result.length) {
-    const recordsBeforeStartDate = records.filter((record) => {
-      const recordDate = new Date(record.createdAt);
-
-      return recordDate.valueOf() <= endMs && recordDate.valueOf() >= startMs;
-    });
-
-    if (recordsBeforeStartDate.length) {
-      return recordsBeforeStartDate.at(-1);
-    }
-
-    // No records since startDate - we will use startDate
-    return null;
+  if (exactDate) {
+    return exactDate;
   }
 
-  return result.at(-1);
+  const recordsBeforeStartDate = records.filter((record) => {
+    const recordDate = new Date(record.createdAt);
+
+    return isInRange(recordDate, startDate, endDate);
+  });
+
+  if (recordsBeforeStartDate.length) {
+    return recordsBeforeStartDate.at(-1);
+  }
+
+  // No records since startDate - we will use startDate
+  return null;
 };
 
 const getAccumulated = (

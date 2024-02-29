@@ -9,10 +9,10 @@ import {
   previewerFileTypes,
   useDialog,
   JarSelector,
-} from '@/app/library';
+} from '@/library';
 import { createExpense } from '@/app/actions';
-import { fileToBase64, removeBase64DataPrefix } from '@/app/toolbox';
-import { InvoiceTransactionPayload, Jar } from '@/app/types';
+import { fileToBase64, removeBase64DataPrefix } from '@/toolbox';
+import { InvoiceTransactionPayload, Jar } from '@/types';
 
 import styles from './AddExpenseDialog.module.css';
 

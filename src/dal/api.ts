@@ -13,7 +13,7 @@ import type {
   ExpenseRecord,
   InvoicePayload,
   JarsTransactionPayload,
-} from '../types';
+} from '@/types';
 import { addColorToJar } from '../toolbox/utils';
 import { cookies } from 'next/headers';
 import { getFundraisingInvoices } from './dataModificators';

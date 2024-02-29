@@ -1,4 +1,4 @@
-import type { Jar, ExpenseRecord, ExpenseType } from '@/app/types';
+import type { Jar, ExpenseRecord, ExpenseType } from '@/types';
 
 import styles from './ExpensesSection.module.css';
 

@@ -1,5 +1,5 @@
 import randomColor from 'randomcolor';
-import type { Jar } from '../types';
+import type { Jar } from '@/types';
 
 export const getDateString = (value: string) => {
   const date = new Date(value);
@@ -45,7 +45,10 @@ export const fileToBase64 = (file: File | Blob): Promise<string> =>
   });
 
 export const getGatheredMoney = (jars: Array<Jar>) => {
-  return Object.values(jars).reduce((acc, { accumulated }) => {
-    return acc + accumulated;
+  const byIds = groupBy(jars, (jar) => jar.id);
+
+  return Object.values(byIds).reduce((acc, jars) => {
+    const { accumulated, otherSourcesAccumulated } = jars[0];
+    return acc + accumulated + otherSourcesAccumulated;
   }, 0);
 };

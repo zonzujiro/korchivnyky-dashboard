@@ -2,9 +2,9 @@ import {
   JarsPageStateProvider,
   getJarsPageData,
   getCurrentFundraising,
-} from '@/app/dal';
-import { Progress } from '@/app/library';
-import { PageParams } from '@/app/types';
+} from '@/dal';
+import { Progress } from '@/library';
+import { PageParams } from '@/types';
 
 import styles from './JarsPage.module.css';
 import { JarsList } from './JarsList/JarsList';
@@ -16,6 +16,8 @@ export const JarsPage = async ({ params }: PageParams) => {
 
   const { jars, expenseTypes, expenses, statistics, fundraisings, users } =
     await getJarsPageData({ fundraisingId });
+
+  console.log(jars[0]);
 
   const fundraising = getCurrentFundraising(fundraisings, fundraisingId);
 

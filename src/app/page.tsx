@@ -1,5 +1,5 @@
 import { redirect } from 'next/navigation';
-import { getFundraisingCampaigns } from './dal';
+import { getFundraisingCampaigns } from '@/dal';
 
 export default async function Page() {
   const fundraisings = await getFundraisingCampaigns();

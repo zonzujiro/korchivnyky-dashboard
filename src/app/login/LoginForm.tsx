@@ -5,7 +5,7 @@
 import { useEffect, useState } from 'react';
 import { useFormState, useFormStatus } from 'react-dom';
 
-import { Button, SiteLogo } from '../library';
+import { Button, SiteLogo } from '@/library';
 
 import styles from './LoginForm.module.css';
 import { authenticate, getAuthToken } from '@/app/actions/auth';

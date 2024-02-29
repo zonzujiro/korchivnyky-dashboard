@@ -4,7 +4,7 @@ import classNames from 'classnames';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 
-import type { FundraisingCampaign } from '@/app/types';
+import type { FundraisingCampaign } from '@/types';
 
 import styles from './NavigationMenu.module.css';
 

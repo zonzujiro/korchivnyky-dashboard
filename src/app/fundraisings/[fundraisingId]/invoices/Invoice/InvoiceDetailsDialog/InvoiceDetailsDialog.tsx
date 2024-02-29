@@ -1,14 +1,8 @@
 import Link from 'next/link';
 
-import { Dialog, Button, FilePreviewer, useDialog } from '@/app/library';
-import { toCurrency } from '@/app/toolbox';
-import type {
-  ExpenseRecord,
-  ExpenseType,
-  Invoice,
-  Jar,
-  User,
-} from '@/app/types';
+import { Dialog, Button, FilePreviewer, useDialog } from '@/library';
+import { toCurrency } from '@/toolbox';
+import type { ExpenseRecord, ExpenseType, Invoice, Jar, User } from '@/types';
 
 import styles from './InvoiceDetails.module.css';
 

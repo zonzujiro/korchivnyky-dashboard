@@ -6,13 +6,13 @@ import type {
   Invoice as InvoiceType,
   Jar,
   User,
-} from '@/app/types';
-import { getDateString, toCurrency } from '@/app/toolbox';
+} from '@/types';
+import { getDateString, toCurrency } from '@/toolbox';
 
 import styles from './Invoice.module.css';
 import { InvoiceDetailsDialog } from './InvoiceDetailsDialog/InvoiceDetailsDialog';
 import { AddExpenseDialog } from './AddExpenseDialog/AddExpenseDialog';
-import { FilePreviewer } from '@/app/library';
+import { FilePreviewer } from '@/library';
 
 type InvoiceProps = {
   invoice: InvoiceType;

@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 
-import { fileToBase64 } from '@/app/toolbox';
+import { fileToBase64 } from '@/toolbox';
 
 import { ImagePreview } from './ImagePreview/ImagePreview';
 import styles from './FilePreviewer.module.css';
