@@ -1,5 +1,3 @@
-import { Suspense } from 'react';
-
 import type { PageParams } from '@/types';
 import { InvoicesStateProvider, getInvoicesPageData } from '@/dal';
 
@@ -11,15 +9,13 @@ export const Invoices = async ({ params }: PageParams) => {
     await getInvoicesPageData({ fundraisingId });
 
   return (
-    <Suspense fallback={<p>🚙 Loading...</p>}>
-      <InvoicesStateProvider invoices={invoices}>
-        <InvoicesList
-          expenses={expenses}
-          jars={jars}
-          expensesTypes={expensesTypes}
-          users={users}
-        />
-      </InvoicesStateProvider>
-    </Suspense>
+    <InvoicesStateProvider invoices={invoices}>
+      <InvoicesList
+        expenses={expenses}
+        jars={jars}
+        expensesTypes={expensesTypes}
+        users={users}
+      />
+    </InvoicesStateProvider>
   );
 };

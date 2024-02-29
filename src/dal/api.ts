@@ -14,7 +14,7 @@ import type {
   InvoicePayload,
   JarsTransactionPayload,
 } from '@/types';
-import { addColorToJar } from '../toolbox/utils';
+import { addColorToJar, identity } from '@/toolbox';
 import { cookies } from 'next/headers';
 import { getFundraisingInvoices } from './dataModificators';
 
@@ -36,7 +36,7 @@ const handleSearchParams = (
   baseUrl: string,
   paramsSource?: Partial<Record<string, Primitive>>
 ) => {
-  if (!paramsSource) {
+  if (!paramsSource || !Object.values(paramsSource).filter(identity).length) {
     return baseUrl;
   }
 
@@ -46,7 +46,7 @@ const handleSearchParams = (
     searchParams.append(key, `${value}`);
   });
 
-  return `${baseUrl}/?${searchParams.toString()}`;
+  return `${baseUrl}?${searchParams.toString()}`;
 };
 
 const get = async (

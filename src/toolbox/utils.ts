@@ -1,6 +1,15 @@
 import randomColor from 'randomcolor';
 import type { Jar } from '@/types';
 
+export const getTimeString = (value: string) => {
+  const date = new Date(value);
+
+  const hours = `${date.getHours()}`.padStart(2, '0');
+  const minutes = `${date.getMinutes()}`.padStart(2, '0');
+
+  return `${hours}:${minutes}`;
+};
+
 export const getDateString = (value: string) => {
   const date = new Date(value);
 
@@ -52,3 +61,5 @@ export const getGatheredMoney = (jars: Array<Jar>) => {
     return acc + accumulated + otherSourcesAccumulated;
   }, 0);
 };
+
+export const identity = <T>(v: T) => v;

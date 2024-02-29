@@ -19,6 +19,10 @@ body {
   font-family: var(--eUkraine);
 }
 
+body:has(dialog[open]) {
+  overflow: hidden;
+}
+
 a {
   color: inherit;
 }

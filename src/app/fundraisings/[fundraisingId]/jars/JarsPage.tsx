@@ -17,8 +17,6 @@ export const JarsPage = async ({ params }: PageParams) => {
   const { jars, expenseTypes, expenses, statistics, fundraisings, users } =
     await getJarsPageData({ fundraisingId });
 
-  console.log(jars[0]);
-
   const fundraising = getCurrentFundraising(fundraisings, fundraisingId);
 
   return (
