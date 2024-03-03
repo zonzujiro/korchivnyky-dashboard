@@ -8,3 +8,4 @@ export * from './TooltipComponent/TooltipComponent';
 export * from './FilePreviewer/FilePreviewer';
 export * from './CuratorsDropdown/CuratorsDropdown';
 export * from './JarsSelector/JarsSelector';
+export * from './Loader/Loader';

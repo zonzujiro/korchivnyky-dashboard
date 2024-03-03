@@ -1,15 +1,13 @@
 'use client';
 
-//TODO: replace with server component
-
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useFormState, useFormStatus } from 'react-dom';
 
 import { Button, SiteLogo } from '@/library';
 
 import styles from './LoginForm.module.css';
-import { authenticate, getAuthToken } from '@/app/actions/auth';
-import Link from 'next/link';
+import { authenticate } from '@/app/actions/auth';
+import { useRouter } from 'next/navigation';
 
 const LoginButton = () => {
   const { pending } = useFormStatus();
@@ -21,21 +19,13 @@ const LoginButton = () => {
   );
 };
 
-export const LoginFormPage = () => {
+export const LoginForm = () => {
   const [status, dispatch] = useFormState(authenticate, undefined);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
-    const navigate = async () => {
-      const token = await getAuthToken();
-
-      if (token) {
-        setIsLoggedIn(true);
-      }
-    };
-
     if (status === 'Success') {
-      navigate();
+      router.push('/');
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status]);
@@ -43,27 +33,25 @@ export const LoginFormPage = () => {
   return (
     <div className={styles['login-form-wrapper']}>
       <SiteLogo />
-      {isLoggedIn && <Link href='/'>🔓 Увірватися</Link>}
-      {!isLoggedIn && (
-        <form action={dispatch} className={styles['login-form']}>
-          <input type='email' name='email' placeholder='Email' required />
-          <input
-            type='password'
-            name='password'
-            placeholder='Password'
-            required
-          />
-          <div>
-            {status === 'Invalid credentials.' && (
-              <p>
-                В ГУРі тебе не знають. Висилаємо безліч бобіків та
-                бронетранспортер. Тікай в жито
-              </p>
-            )}
+      <form action={dispatch} className={styles['login-form']}>
+        <input type='email' name='email' placeholder='Email' required />
+        <input
+          type='password'
+          name='password'
+          placeholder='Password'
+          required
+        />
+        {status === 'Wrong login or password' && (
+          <div className={styles.error}>
+            <p>
+              В ГУРі тебе не знають. Висилаємо безліч бобіків та
+              бронетранспортер.
+            </p>
+            <p>Тікай в жито</p>
           </div>
-          <LoginButton />
-        </form>
-      )}
+        )}
+        <LoginButton />
+      </form>
     </div>
   );
 };

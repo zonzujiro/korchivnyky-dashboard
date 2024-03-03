@@ -1,11 +1,50 @@
 .jars-selector {
-  padding: 20px;
+  padding: 15px 20px 20px;
   margin-top: 15px;
+  width: 320px;
   display: flex;
   flex-direction: column;
-  width: 300px;
+  flex-grow: 1;
 }
 
 .jar-info {
   margin-top: 15px;
+}
+
+.tabs-wrapper {
+  list-style: none;
+  display: flex;
+  margin-bottom: 15px;
+}
+
+.tab {
+  cursor: pointer;
+  padding: 2px;
+  user-select: none;
+}
+
+.tab:hover {
+  background: black;
+  color: white;
+}
+
+.tab:first-child {
+  margin-right: 10px;
+}
+
+.tab.active {
+  border-bottom: 2px solid black;
+}
+
+.tab-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.tab-content label {
+  margin-top: 5px;
+}
+
+.loader {
+  height: 200px;
 }

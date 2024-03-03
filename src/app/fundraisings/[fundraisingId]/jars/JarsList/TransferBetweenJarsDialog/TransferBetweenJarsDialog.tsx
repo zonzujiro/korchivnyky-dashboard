@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { Suspense, useEffect, useRef, useState } from 'react';
 import { useFormStatus } from 'react-dom';
 
 import type { Jar, JarsTransactionPayload } from '@/types';
@@ -34,7 +34,7 @@ export const TransferBetweenJarsDialog = ({
   jars: Array<Jar>;
   selectedJars: Array<Jar>;
 }) => {
-  const inputRef = useRef<HTMLInputElement>(null);
+  const amountInputRef = useRef<HTMLInputElement>(null);
   const formRef = useRef<HTMLFormElement>(null);
 
   const {
@@ -70,22 +70,29 @@ export const TransferBetweenJarsDialog = ({
     const amount = Number(formData.get('sum'));
     const file = formData.get('file')! as File;
 
+    console.log({
+      creditId: formData.get('credit-jar'),
+      debitId: formData.get('debit-jar'),
+    });
+
     const base64 = await fileToBase64(file);
 
-    if (amount > creditJar.accumulated) {
-      inputRef.current?.setCustomValidity('Завелика сума');
-      inputRef.current?.reportValidity();
+    if (amount > creditJar?.accumulated) {
+      amountInputRef.current?.setCustomValidity('Завелика сума');
+      amountInputRef.current?.reportValidity();
       return;
     }
 
     const payload: JarsTransactionPayload = {
-      fromJarId: creditJar.id,
-      toJarId: debitJar.id,
+      fromJarId: creditJar?.id,
+      toJarId: debitJar?.id,
       jarSourceAmount: amount,
       otherSourcesAmount: 0,
       receipt: removeBase64DataPrefix(base64),
       receiptName: file.name,
     };
+
+    console.log({ payload });
 
     const status = await transferMoneyBetweenJars(payload);
 
@@ -126,30 +133,32 @@ export const TransferBetweenJarsDialog = ({
                 <fieldset className={styles['sum-input-fieldset']}>
                   <legend>Сума перерахування</legend>
                   <input
-                    ref={inputRef}
+                    ref={amountInputRef}
+                    type='number'
+                    min='0.00'
+                    step='0.01'
                     name='sum'
                     id='sum-input'
                     placeholder='20 000'
-                    type='text'
-                    required
-                    pattern='[0-9]+'
                     className={styles['sum-input']}
                   />
                 </fieldset>
-                <JarSelector
-                  title='З банки'
-                  id='credit-jar'
-                  jars={jars.filter((jar) => jar.id !== debitJar?.id)}
-                  selectJar={setCreditJar}
-                  selectedJar={creditJar}
-                />
-                <JarSelector
-                  title='На банку'
-                  id='debit-jar'
-                  jars={jars.filter((jar) => jar.id !== creditJar?.id)}
-                  selectJar={setDebitJar}
-                  selectedJar={debitJar}
-                />
+                <Suspense fallback={'Loading...'}>
+                  <JarSelector
+                    title='З банки'
+                    id='credit-jar'
+                    jars={jars.filter((jar) => jar.id !== debitJar?.id)}
+                    selectJar={setCreditJar}
+                    selectedJar={creditJar}
+                  />
+                  <JarSelector
+                    title='На банку'
+                    id='debit-jar'
+                    jars={jars.filter((jar) => jar.id !== creditJar?.id)}
+                    selectJar={setDebitJar}
+                    selectedJar={debitJar}
+                  />
+                </Suspense>
               </div>
             </div>
             <SubmitButton />

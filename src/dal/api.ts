@@ -14,29 +14,39 @@ import type {
   InvoicePayload,
   JarsTransactionPayload,
 } from '@/types';
-import { addColorToJar } from '../toolbox/utils';
+import { addColorToJar, identity } from '@/toolbox';
 import { cookies } from 'next/headers';
 import { getFundraisingInvoices } from './dataModificators';
 
+class NetworkError extends Error {
+  code: number;
+  message: string;
+
+  constructor(code: number, message: string) {
+    super();
+
+    this.message = message;
+    this.code = code;
+
+    console.log(`${code}: ${message}`);
+  }
+}
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const throwError = (response: Response, body: Record<string, any>) => {
-  console.log(body.error);
-  if (body.error.details) {
-    console.error({ errorDetails: body.error.details });
-  }
+  const message = `${response.status} (${response.url}): ${
+    response.statusText
+  } - ${body.error.message || ''}`;
+  const code = body.error.code;
 
-  throw new Error(
-    `${response.status} (${response.url}): ${response.statusText} - ${
-      body.error.code
-    }: ${body.error.message || ''}`
-  );
+  throw new NetworkError(code, message);
 };
 
 const handleSearchParams = (
   baseUrl: string,
   paramsSource?: Partial<Record<string, Primitive>>
 ) => {
-  if (!paramsSource) {
+  if (!paramsSource || !Object.values(paramsSource).filter(identity).length) {
     return baseUrl;
   }
 
@@ -46,7 +56,7 @@ const handleSearchParams = (
     searchParams.append(key, `${value}`);
   });
 
-  return `${baseUrl}/?${searchParams.toString()}`;
+  return `${baseUrl}?${searchParams.toString()}`;
 };
 
 const get = async (
@@ -139,17 +149,7 @@ export const signIn = async (payload: {
   email: string;
   password: string;
 }): Promise<{ token: string }> => {
-  const response = await post('https://jars.fly.dev/sign-in', payload);
-
-  if (response.token) {
-    cookies().set({
-      name: 'authorization',
-      value: response.token,
-      httpOnly: true,
-    });
-  }
-
-  return response;
+  return post('https://jars.fly.dev/sign-in', payload);
 };
 
 export const getFundraisingCampaigns = async (): Promise<

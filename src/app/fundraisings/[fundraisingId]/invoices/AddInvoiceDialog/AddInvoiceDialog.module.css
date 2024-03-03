@@ -2,6 +2,10 @@
   max-width: 900px;
 }
 
+.file-preview {
+  min-height: 700px;
+}
+
 .form-content {
   display: flex;
   flex-direction: column;
@@ -17,8 +21,8 @@
   display: flex;
   flex-direction: column;
   margin-right: 10px;
-  height: 100%;
   padding: 20px;
+  height: fit-content;
 }
 
 .form-inputs:first-child {

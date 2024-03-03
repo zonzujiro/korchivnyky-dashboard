@@ -16,6 +16,7 @@ import { createInvoice } from '@/app/actions';
 import { fileToBase64, removeBase64DataPrefix } from '@/toolbox';
 
 import styles from './AddInvoiceDialog.module.css';
+import classNames from 'classnames';
 
 const SubmitButton = () => {
   const { pending } = useFormStatus();
@@ -96,19 +97,22 @@ export const AddInvoiceDialog = ({
                 className={styles['form-content']}
               >
                 <div className={styles['fieldsets-wrapper']}>
-                  <fieldset className={styles['form-inputs']}>
+                  <fieldset
+                    className={classNames(
+                      styles['form-inputs'],
+                      styles['file-preview ']
+                    )}
+                  >
                     <legend>Завантаження рахунку</legend>
-                    <div className={styles['file-preview']}>
-                      <input
-                        type='file'
-                        name='file'
-                        placeholder='Квитанція у JPG/JPEG, PNG або PDF'
-                        required
-                        onChange={handleInputChange}
-                        accept={previewerFileTypes.join(', ')}
-                      />
-                      <FilePreviewer previewerState={previewerState} />
-                    </div>
+                    <input
+                      type='file'
+                      name='file'
+                      placeholder='Квитанція у JPG/JPEG, PNG або PDF'
+                      required
+                      onChange={handleInputChange}
+                      accept={previewerFileTypes.join(', ')}
+                    />
+                    <FilePreviewer previewerState={previewerState} />
                   </fieldset>
                   <fieldset className={styles['form-inputs']}>
                     <legend>Інформація про рахунок</legend>
@@ -129,12 +133,12 @@ export const AddInvoiceDialog = ({
                     />
                     <label htmlFor='sum-input'>Сума до сплати</label>
                     <input
-                      name='amount'
+                      type='number'
+                      min='0.00'
+                      step='0.01'
+                      name='sum'
                       id='sum-input'
                       placeholder='20 000'
-                      type='text'
-                      required
-                      pattern='[0-9]+'
                     />
                     <label htmlFor='sum'>Дата рахунку</label>
                     <input id='date' type='date' name='date' required />

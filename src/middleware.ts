@@ -3,7 +3,7 @@ import { cookies } from 'next/headers';
 
 export const middleware = async (request: NextRequest) => {
   const requestUrl = new URL(request.url);
-  const token = cookies().get('authorization');
+  const token = cookies().get('authorization-test');
 
   if (requestUrl.pathname !== '/login' && !token?.value) {
     return NextResponse.redirect(new URL('/login', request.url));

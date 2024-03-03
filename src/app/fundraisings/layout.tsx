@@ -1,17 +1,9 @@
 import { Suspense, type ReactNode } from 'react';
 
 import { getFundraisingCampaigns } from '@/dal';
+import { Loader, NavigationMenu, SiteLogo } from '@/library';
 
 import styles from './layout.module.css';
-import { NavigationMenu, SiteLogo } from '@/library';
-
-const Loader = () => {
-  return (
-    <div className={styles.loader}>
-      <p>🚙 Машинка виїхала. Очікуйте...</p>
-    </div>
-  );
-};
 
 const FundraisingsLayout = async ({ children }: { children: ReactNode }) => {
   const fundraisings = await getFundraisingCampaigns();

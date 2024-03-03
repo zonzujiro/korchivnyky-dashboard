@@ -112,7 +112,6 @@ export const AddExpenseDialog = ({
                       <input
                         type='number'
                         min='0.00'
-                        max='10000.00'
                         step='0.01'
                         name='sum'
                         id='sum-input'

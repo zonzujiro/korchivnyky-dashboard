@@ -21,12 +21,10 @@ const SubmitButton = () => {
 export const AddJarDialog = ({
   addJar,
   jars,
-  buttonClassName,
   fundraisingId,
 }: {
   addJar: JarsPageState['addJar'];
   jars: Array<Jar>;
-  buttonClassName: string;
   fundraisingId: string;
 }) => {
   const formRef = useRef<HTMLFormElement>(null);
@@ -84,12 +82,9 @@ export const AddJarDialog = ({
       title='Давай додамо баночку!'
       dialogState={dialogState}
       renderButton={() => (
-        <li
-          className={classNames(buttonClassName, styles['add-jar'])}
-          onClick={openDialog}
-        >
+        <Button className={classNames(styles['add-jar'])} onClick={openDialog}>
           ➕ Додати банку
-        </li>
+        </Button>
       )}
       renderContent={() => (
         <div className={styles['add-jar-inputs-wrapper']}>

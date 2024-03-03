@@ -20,6 +20,10 @@
 }
 
 .login-form > input {
-  margin-bottom: 15px;
+  margin: 15px 0;
   height: 2em;
+}
+
+.error p {
+  margin: 15px 0;
 }

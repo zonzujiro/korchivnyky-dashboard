@@ -1,10 +1,7 @@
 'use server';
 
 import { signIn } from '@/dal';
-
-let token: null | string = null;
-
-export const getAuthToken = async () => token;
+import { cookies } from 'next/headers';
 
 export const authenticate = async (
   currentState: string | undefined,
@@ -18,16 +15,23 @@ export const authenticate = async (
 
     const response = await signIn(requestPayload);
 
-    token = response.token;
+    if (response.token) {
+      cookies().set({
+        name: 'authorization-test-2',
+        value: response.token,
+        httpOnly: true,
+        maxAge: 500,
+      });
+    }
 
     return 'Success';
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
     console.log(error);
     if (error) {
-      switch (error.statusText) {
-        case 'Forbidden':
-          return 'Invalid credentials.';
+      switch (error.code) {
+        case 'FORBIDDEN':
+          return 'Wrong login or password';
         default:
           return 'Something went wrong.';
       }

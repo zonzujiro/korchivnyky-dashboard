@@ -28,6 +28,8 @@
 
 .file-preview {
   padding: 15px;
+  display: flex;
+  flex-direction: column;
 }
 
 .file-preview input {
