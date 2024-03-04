@@ -17,7 +17,7 @@ export const authenticate = async (
 
     if (response.token) {
       cookies().set({
-        name: 'authorization-test-2',
+        name: 'authorization',
         value: response.token,
         httpOnly: true,
         maxAge: 500,

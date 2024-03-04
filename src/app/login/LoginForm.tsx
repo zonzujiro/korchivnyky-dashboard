@@ -2,12 +2,12 @@
 
 import { useEffect } from 'react';
 import { useFormState, useFormStatus } from 'react-dom';
+import { useRouter } from 'next/navigation';
 
 import { Button, SiteLogo } from '@/library';
+import { authenticate } from '@/app/actions';
 
 import styles from './LoginForm.module.css';
-import { authenticate } from '@/app/actions/auth';
-import { useRouter } from 'next/navigation';
 
 const LoginButton = () => {
   const { pending } = useFormStatus();
