@@ -8,7 +8,7 @@ import { getFundraisingInfo, getFundraisingsPageData } from '@/dal';
 import { toCurrency } from '@/toolbox';
 
 import styles from './FundraisingsPage.module.css';
-import { FundraisingInfo } from './components/FundrasingInfo/FundrasingInfo';
+import { FundraisingInfo } from './components/FundraisingInfo/FundraisingInfo';
 
 export const FundraisingsPage = async (props: PageParams) => {
   const { fundraisingId } = props.params;
@@ -22,20 +22,23 @@ export const FundraisingsPage = async (props: PageParams) => {
 
   return (
     <div className={styles['fundraisings-page']}>
-      {/* <div className={styles['fundraisings-mobile-list-wrapper']}>
-        <select
-          className={styles['fundraising-select']}
-          defaultValue={fundraisingId}
-        >
+      <nav className={styles['fundraisings-mobile-list-wrapper']}>
+        <ul className={styles['fundraisings-mobile-list']}>
           {fundraisings.map((item) => {
             return (
-              <option value={item.id} key={item.id}>
+              <li
+                key={item.id}
+                className={classNames({
+                  [styles['current-item']]: item.id === Number(fundraisingId),
+                })}
+              >
                 <Link href={`./${item.id}`}>{item.name}</Link>
-              </option>
+              </li>
             );
           })}
-        </select>
-      </div> */}
+        </ul>
+      </nav>
+
       <div className={styles['fundraisings-list-wrapper']}>
         <h3>Актуальні збори</h3>
         <ul className={styles['fundraisings-list']}>
@@ -56,7 +59,6 @@ export const FundraisingsPage = async (props: PageParams) => {
       </div>
       <div className={styles['fundraisings-info-wrapper']}>
         <h3>Опис збору</h3>
-        <Link href={`./${fundraisingId}/jars`}>Перейти до збору</Link>
         <Suspense fallback={<Loader />}>
           <FundraisingInfo
             fundraisingInfoPromise={fundraisingInfoPromise}

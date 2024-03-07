@@ -6,6 +6,8 @@ import { getDateString } from '@/toolbox';
 import { InvoicesInfo, Progress, JarsInfo, ExpensesTypesInfo } from '@/library';
 
 import styles from './FundraisingInfo.module.css';
+import Link from 'next/link';
+import classNames from 'classnames';
 
 type FundraisingInfoProps = {
   fundraisingInfoPromise: ReturnType<typeof getFundraisingInfo>;
@@ -22,10 +24,18 @@ export const FundraisingInfo = (props: FundraisingInfoProps) => {
   return (
     <div className={styles['fundraising-info']}>
       <div className={styles.column}>
-        <div className={styles['general-info']}>
-          <h2>{fundraising.name}</h2>
-          <p>{fundraising.description}</p>
-          <p>{getDateString(fundraising.createdAt)}</p>
+        <div className={styles.row}>
+          <div className={styles.column}>
+            <div className={styles['general-info']}>
+              <h2>{fundraising.name}</h2>
+              <p>{fundraising.description}</p>
+              <p>{getDateString(fundraising.createdAt)}</p>
+            </div>
+          </div>
+          <div className={classNames(styles.column, styles.links)}>
+            <Link href={`./${fundraising.id}/jars`}>🫙 До банок</Link>
+            <Link href={`./${fundraising.id}/invoices`}>🧾 До рахунків</Link>
+          </div>
         </div>
         <div className={styles['progress-wrapper']}>
           <Progress jars={jars} goal={fundraising.goal} />

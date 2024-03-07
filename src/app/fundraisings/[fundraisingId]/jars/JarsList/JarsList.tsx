@@ -9,15 +9,11 @@ import {
   TooltipComponent,
   CuratorsDropdown,
   JarsInfo,
+  SelectedJarsInfo,
 } from '@/library';
 import type { Jar } from '@/types';
 import { JarsPageContext } from '@/dal';
-import {
-  getAchievedGoalJars,
-  getFinishedJars,
-  getGatheredMoney,
-  toCurrency,
-} from '@/toolbox';
+import { toCurrency } from '@/toolbox';
 
 import styles from './JarsList.module.css';
 import { AddJarDialog } from './AddJarDialog/AddJarDialog';
@@ -168,36 +164,7 @@ export const JarsList = ({ fundraisingId }: { fundraisingId: string }) => {
           <JarsInfo jars={jars} newestRecord={statistics[0]} />
 
           {selectedJars.length ? (
-            <div className={styles['jars-info']}>
-              <h4>Інформація по обраним</h4>
-              <div
-                className={classNames(
-                  styles['jars-info-tag'],
-                  styles['total-jars']
-                )}
-              >
-                🫙 Обрано: {selectedJars.length}
-              </div>
-              <div className={styles['jars-info-tag']}>
-                🏦 Зібрано: {toCurrency(getGatheredMoney(selectedJars))}
-              </div>
-              <div
-                className={classNames(
-                  styles['jars-info-tag'],
-                  styles['gathered-money']
-                )}
-              >
-                💸 Доступно для витрат:{' '}
-                <span className={styles['jars-info-tag-value']}>
-                  {toCurrency(
-                    getGatheredMoney([
-                      ...getFinishedJars(selectedJars),
-                      ...getAchievedGoalJars(selectedJars),
-                    ])
-                  )}
-                </span>
-              </div>
-            </div>
+            <SelectedJarsInfo selectedJars={selectedJars} />
           ) : null}
         </div>
       </div>
