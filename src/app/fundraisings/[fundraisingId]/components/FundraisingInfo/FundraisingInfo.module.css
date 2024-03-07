@@ -1,0 +1,44 @@
+.jar-and-invoices-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.links {
+  padding: 15px;
+  align-items: end;
+  flex-grow: 1;
+}
+
+.fundraising-info {
+  display: flex;
+  flex-wrap: wrap;
+  flex-grow: 1;
+}
+
+.row {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.column {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: column;
+}
+
+.general-info {
+  padding: 15px;
+}
+
+.progress-wrapper,
+.expense-types-wrapper {
+  padding: 15px;
+  width: 100%;
+}
+
+@media (max-width: 600px) {
+  .links {
+    align-items: start;
+  }
+}

@@ -1,0 +1,32 @@
+.invoice-info {
+  padding: 20px;
+  border: 1px dotted;
+  border-radius: 10px;
+  height: fit-content;
+  margin: 10px;
+}
+
+.invoice-info .timestamp {
+  margin-bottom: 10px;
+}
+
+.invoice-info > h4 {
+  margin-bottom: 10px;
+}
+
+.invoice-info-header {
+  margin-top: 10px;
+}
+
+.invoice-info-tag {
+  line-height: 1.5em;
+  margin: 3px 0;
+}
+
+.invoice-info-tag-value {
+  font-weight: 500;
+}
+
+.invoice-info-tag.gathered-money {
+  margin-bottom: 10px;
+}

@@ -161,7 +161,7 @@
   border-bottom: 2px solid black;
 }
 
-@media screen and (max-width: 1200px) {
+@media (max-width: 1200px) {
   .statistics {
     width: 100%;
   }

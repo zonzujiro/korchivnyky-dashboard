@@ -1,0 +1,28 @@
+.jars-info {
+  padding: 20px;
+  border: 1px dotted;
+  border-radius: 10px;
+  height: fit-content;
+  margin: 10px;
+}
+
+.jars-info .timestamp {
+  margin-bottom: 10px;
+}
+
+.jars-info > h4 {
+  margin-bottom: 10px;
+}
+
+.jars-info-tag {
+  line-height: 1.5em;
+  margin: 3px 0;
+}
+
+.jars-info-tag-value {
+  font-weight: 500;
+}
+
+.jars-info-tag.gathered-money {
+  margin-bottom: 10px;
+}
