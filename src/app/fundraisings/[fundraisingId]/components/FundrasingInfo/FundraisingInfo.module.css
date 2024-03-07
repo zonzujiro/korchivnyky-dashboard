@@ -1,0 +1,26 @@
+.jar-and-invoices-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.fundraising-info {
+  display: flex;
+  flex-wrap: wrap;
+  flex-grow: 1;
+}
+
+.column {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: column;
+}
+
+.general-info {
+  padding: 15px;
+}
+
+.progress-wrapper,
+.expense-types-wrapper {
+  padding: 15px;
+  width: 100%;
+}

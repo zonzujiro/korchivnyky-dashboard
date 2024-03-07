@@ -41,7 +41,7 @@
   align-items: center;
 }
 
-.jars-info {
+/* .jars-info {
   padding: 20px;
   border: 1px dotted;
   border-radius: 10px;
@@ -68,7 +68,7 @@
 
 .jars-info-tag.gathered-money {
   margin-bottom: 10px;
-}
+} */
 
 .jars-buttons {
   margin-bottom: 15px;

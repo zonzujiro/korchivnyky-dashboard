@@ -39,6 +39,15 @@ export const NavigationMenu = ({ fundraisings }: NavigationMenuProps) => {
     <nav>
       <ol className={styles['main-menu']}>
         <span className={styles['menu-separator']}>|</span>
+        <li
+          className={classNames(styles['menu-item'], {
+            [styles.active]:
+              !pathname.endsWith('/jars') && !pathname.endsWith('/invoices'),
+          })}
+        >
+          <Link href='./'>Збори</Link>
+        </li>
+        <span className={styles['menu-separator']}>|</span>
         <li className={styles['menu-item']}>
           <select
             className={styles['fundraising-select']}
@@ -59,7 +68,7 @@ export const NavigationMenu = ({ fundraisings }: NavigationMenuProps) => {
         <span className={styles['menu-separator']}>|</span>
         <li
           className={classNames(styles['menu-item'], {
-            [styles.active]: pathname.includes('/jars'),
+            [styles.active]: pathname.endsWith('/jars'),
           })}
         >
           <Link href='./jars'>Банки</Link>
@@ -67,7 +76,7 @@ export const NavigationMenu = ({ fundraisings }: NavigationMenuProps) => {
         <span className={styles['menu-separator']}>|</span>
         <li
           className={classNames(styles['menu-item'], {
-            [styles.active]: pathname.includes('/invoices'),
+            [styles.active]: pathname.endsWith('/invoices'),
           })}
         >
           <Link href='./invoices'>Рахунки</Link>

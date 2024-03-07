@@ -1,0 +1,64 @@
+.fundraisings-page {
+  display: flex;
+}
+
+.fundraisings-list {
+  list-style: none;
+}
+
+.list-item-link {
+  display: block;
+  padding: 15px;
+  border-radius: 10px;
+  border: 1px dotted;
+  margin: 15px 0;
+  text-decoration: none;
+}
+
+.list-item-link.selected {
+  font-weight: 500;
+  border: 1px solid;
+}
+
+.progress-wrapper {
+  border: 1px dotted;
+  border-radius: 10px;
+}
+
+.fundraisings-info-wrapper {
+  flex-grow: 1;
+  padding: 0 15px 15px;
+}
+
+.fundraisings-info-wrapper > h3 {
+  padding-left: 15px;
+}
+
+.fundraisings-list-wrapper {
+  margin-right: 15px;
+}
+
+.fundraisings-mobile-list-wrapper {
+  display: none;
+  padding: 0 30px 15px;
+}
+
+.fundraising-select {
+  background: none;
+  border: none;
+  font-size: 1em;
+}
+
+@media screen and (max-width: 1200px) {
+  .fundraisings-page {
+    flex-direction: column;
+  }
+
+  .fundraisings-list-wrapper {
+    display: none;
+  }
+
+  .fundraisings-mobile-list-wrapper {
+    display: block;
+  }
+}

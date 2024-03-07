@@ -63,3 +63,12 @@ export const getGatheredMoney = (jars: Array<Jar>) => {
 };
 
 export const identity = <T>(v: T) => v;
+
+export const getFinishedJars = (jars: Array<Jar>) =>
+  jars.filter((jar) => jar.isFinished);
+
+export const getAchievedGoalJars = (jars: Array<Jar>) =>
+  jars.filter(
+    (jar) =>
+      jar.goal && jar.accumulated + jar.otherSourcesAccumulated > jar.goal
+  );

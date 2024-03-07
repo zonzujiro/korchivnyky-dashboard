@@ -116,11 +116,7 @@ export const getJars = async (
 };
 
 export const getStatistics = async (): Promise<Array<JarStatisticRecord>> => {
-  const statistics = (await post(
-    'https://jars.fly.dev/statistics'
-  )) as Array<JarStatisticRecord>;
-
-  return statistics;
+  return post('https://jars.fly.dev/statistics');
 };
 
 export const postJar = async (payload: CreateJarPayload) => {
@@ -227,5 +223,41 @@ export const getInvoicesPageData = async ({
     jars,
     currentUser,
     users,
+  };
+};
+
+export const getFundraisingsPageData = async () => {
+  const [fundraisings] = await Promise.all([getFundraisingCampaigns()]);
+
+  return { fundraisings };
+};
+
+export const getFundraisingInfo = async ({
+  fundraisingId,
+}: {
+  fundraisingId: string;
+}) => {
+  const [expensesTypes, expenses, invoices, jars, statistics] =
+    await Promise.all([
+      getExpensesTypes(fundraisingId),
+      getExpenses(fundraisingId),
+      getInvoices(),
+      getJars(fundraisingId),
+      getStatistics(),
+    ]);
+
+  const fundraisingInvoices = getFundraisingInvoices(invoices, expensesTypes);
+
+  const jarsIds = jars.map((jar) => jar.id);
+  const fundraisingStatistics = statistics.filter((record) =>
+    jarsIds.includes(record.jarId)
+  );
+
+  return {
+    expensesTypes,
+    expenses,
+    invoices: fundraisingInvoices,
+    jars,
+    statistics: fundraisingStatistics,
   };
 };

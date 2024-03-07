@@ -3,13 +3,19 @@
 import React, { useState, useContext } from 'react';
 import classNames from 'classnames';
 
-import { Image, Button, TooltipComponent, CuratorsDropdown } from '@/library';
-import type { Jar, JarStatisticRecord } from '@/types';
+import {
+  Image,
+  Button,
+  TooltipComponent,
+  CuratorsDropdown,
+  JarsInfo,
+} from '@/library';
+import type { Jar } from '@/types';
 import { JarsPageContext } from '@/dal';
 import {
-  getDateString,
+  getAchievedGoalJars,
+  getFinishedJars,
   getGatheredMoney,
-  getTimeString,
   toCurrency,
 } from '@/toolbox';
 
@@ -91,76 +97,6 @@ const JarItem = ({ jar, isSelected, onClick }: JarItemProps) => {
   );
 };
 
-const GeneralInfo = ({
-  jars,
-  lastRecord,
-  fundraisingId,
-  selectedJars,
-  addJar,
-}: {
-  jars: Array<Jar>;
-  lastRecord?: JarStatisticRecord;
-  fundraisingId: string;
-  selectedJars: Array<Jar>;
-  addJar: (jar: Jar) => void;
-}) => {
-  const finishedJars = getFinishedJars(jars);
-  const achievedGoals = getAchievedGoalJars(jars);
-
-  return (
-    <>
-      <div className={styles['jars-buttons']}>
-        <AddJarDialog
-          addJar={addJar}
-          jars={jars}
-          fundraisingId={fundraisingId}
-        />
-        <TransferBetweenJarsDialog jars={jars} selectedJars={selectedJars} />
-      </div>
-      <div className={styles['jars-info']}>
-        <h4>Загальна інформація</h4>
-        {lastRecord ? (
-          <small title='Оновлення раз на 12 годин' className={styles.timestamp}>
-            Станом на: {getTimeString(lastRecord.createdAt)}{' '}
-            {getDateString(lastRecord!.createdAt)}
-          </small>
-        ) : null}
-        <div
-          className={classNames(styles['jars-info-tag'], styles['total-jars'])}
-        >
-          🫙 Усього банок: {jars.length}
-        </div>
-        <div
-          className={classNames(
-            styles['jars-info-tag'],
-            styles['gathered-money']
-          )}
-        >
-          💸 Доступно для витрат:{' '}
-          <span className={styles['jars-info-tag-value']}>
-            {toCurrency(getGatheredMoney([...finishedJars, ...achievedGoals]))}
-          </span>
-        </div>
-        <div className={styles['jars-info-tag']}>
-          🎯 Досягнули мети: {achievedGoals.length}
-        </div>
-        <div className={styles['jars-info-tag']}>
-          🔒 Закрили збір: {finishedJars.length}
-        </div>
-      </div>
-    </>
-  );
-};
-
-const getFinishedJars = (jars: Array<Jar>) =>
-  jars.filter((jar) => jar.isFinished);
-
-const getAchievedGoalJars = (jars: Array<Jar>) =>
-  jars.filter(
-    (jar) =>
-      jar.goal && jar.accumulated + jar.otherSourcesAccumulated > jar.goal
-  );
-
 export const JarsList = ({ fundraisingId }: { fundraisingId: string }) => {
   const {
     selectedJars,
@@ -218,13 +154,18 @@ export const JarsList = ({ fundraisingId }: { fundraisingId: string }) => {
           })}
         </ul>
         <div className={styles['jars-info-wrapper']}>
-          <GeneralInfo
-            jars={jars}
-            lastRecord={statistics[0]}
-            fundraisingId={fundraisingId}
-            addJar={addJar}
-            selectedJars={selectedJars}
-          />
+          <div className={styles['jars-buttons']}>
+            <AddJarDialog
+              addJar={addJar}
+              jars={jars}
+              fundraisingId={fundraisingId}
+            />
+            <TransferBetweenJarsDialog
+              jars={jars}
+              selectedJars={selectedJars}
+            />
+          </div>
+          <JarsInfo jars={jars} newestRecord={statistics[0]} />
 
           {selectedJars.length ? (
             <div className={styles['jars-info']}>
