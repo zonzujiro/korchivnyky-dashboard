@@ -1,5 +1,5 @@
 import type { PageParams } from '@/types';
-import { InvoicesStateProvider, getInvoicesPageData } from '@/dal';
+import { getInvoicesPageData } from '@/dal';
 
 import { InvoicesList } from './InvoicesList';
 
@@ -9,13 +9,12 @@ export const Invoices = async ({ params }: PageParams) => {
     await getInvoicesPageData({ fundraisingId });
 
   return (
-    <InvoicesStateProvider invoices={invoices}>
-      <InvoicesList
-        expenses={expenses}
-        jars={jars}
-        expensesTypes={expensesTypes}
-        users={users}
-      />
-    </InvoicesStateProvider>
+    <InvoicesList
+      expenses={expenses}
+      jars={jars}
+      expensesTypes={expensesTypes}
+      users={users}
+      invoices={invoices}
+    />
   );
 };

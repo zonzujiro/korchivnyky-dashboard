@@ -12,6 +12,7 @@
 .invoice-image-preview-frame {
   height: 200px;
   overflow: hidden;
+  display: flex;
 }
 
 .invoice-image-preview-frame > div {

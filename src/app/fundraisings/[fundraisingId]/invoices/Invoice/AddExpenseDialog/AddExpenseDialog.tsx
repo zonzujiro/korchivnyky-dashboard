@@ -1,5 +1,6 @@
 import { useRef, useState } from 'react';
 import { useFormStatus } from 'react-dom';
+import { useRouter } from 'next/navigation';
 
 import {
   Button,
@@ -12,9 +13,10 @@ import {
 } from '@/library';
 import { createExpense } from '@/app/actions';
 import { fileToBase64, removeBase64DataPrefix } from '@/toolbox';
-import { InvoiceTransactionPayload, Jar } from '@/types';
+import { Invoice, InvoiceTransactionPayload, Jar } from '@/types';
 
 import styles from './AddExpenseDialog.module.css';
+import classNames from 'classnames';
 
 const SubmitButton = () => {
   const { pending } = useFormStatus();
@@ -27,14 +29,13 @@ const SubmitButton = () => {
 };
 
 type AddExpenseDialogProps = {
-  invoiceId: number;
+  invoice: Invoice;
   jars: Array<Jar>;
 };
 
-export const AddExpenseDialog = ({
-  invoiceId,
-  jars,
-}: AddExpenseDialogProps) => {
+export const AddExpenseDialog = ({ invoice, jars }: AddExpenseDialogProps) => {
+  const router = useRouter();
+
   const { previewerState, handleInputChange, resetPreviewer } =
     useFilePreviewer();
 
@@ -56,7 +57,7 @@ export const AddExpenseDialog = ({
     const base64 = await fileToBase64(file);
 
     const requestPayload: InvoiceTransactionPayload = {
-      invoiceId,
+      invoiceId: invoice.id,
       fromJarId: Number(formData.get('jar')),
       jarSourceAmount: Number(formData.get('sum')),
       otherSourcesAmount: 0,
@@ -67,6 +68,7 @@ export const AddExpenseDialog = ({
     const status = await createExpense(requestPayload);
 
     if (status === 'Success') {
+      router.refresh();
       resetForm();
       closeDialog();
     }
@@ -91,19 +93,22 @@ export const AddExpenseDialog = ({
                 className={styles['form-content']}
               >
                 <div className={styles['fieldsets-wrapper']}>
-                  <fieldset className={styles['form-inputs']}>
+                  <fieldset
+                    className={classNames(
+                      styles['form-inputs'],
+                      styles['file-preview']
+                    )}
+                  >
                     <legend>Завантаження квитанції</legend>
-                    <div className={styles['file-preview']}>
-                      <input
-                        type='file'
-                        name='file'
-                        placeholder='Квитанція у JPG/JPEG, PNG або PDF'
-                        required
-                        onChange={handleInputChange}
-                        accept={previewerFileTypes.join(', ')}
-                      />
-                      <FilePreviewer previewerState={previewerState} />
-                    </div>
+                    <input
+                      type='file'
+                      name='file'
+                      placeholder='Квитанція у JPG/JPEG, PNG або PDF'
+                      required
+                      onChange={handleInputChange}
+                      accept={previewerFileTypes.join(', ')}
+                    />
+                    <FilePreviewer previewerState={previewerState} />
                   </fieldset>
                   <div>
                     <fieldset className={styles['form-inputs']}>

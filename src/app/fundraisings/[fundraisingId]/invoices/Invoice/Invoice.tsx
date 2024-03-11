@@ -1,5 +1,3 @@
-'use client';
-
 import type {
   ExpenseRecord,
   ExpenseType,
@@ -8,11 +6,11 @@ import type {
   User,
 } from '@/types';
 import { getDateString, toCurrency } from '@/toolbox';
+import { FilePreviewer } from '@/library';
 
 import styles from './Invoice.module.css';
 import { InvoiceDetailsDialog } from './InvoiceDetailsDialog/InvoiceDetailsDialog';
 import { AddExpenseDialog } from './AddExpenseDialog/AddExpenseDialog';
-import { FilePreviewer } from '@/library';
 
 type InvoiceProps = {
   invoice: InvoiceType;
@@ -77,7 +75,7 @@ export const Invoice = ({
           owner={invoiceOwner}
           jars={jars}
         />
-        <AddExpenseDialog invoiceId={invoice.id} jars={jars} />
+        <AddExpenseDialog invoice={invoice} jars={jars} />
       </div>
     </div>
   );

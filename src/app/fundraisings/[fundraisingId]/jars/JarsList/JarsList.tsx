@@ -86,7 +86,7 @@ const JarItem = ({ jar, isSelected, onClick }: JarItemProps) => {
           <span>
             Зібрано: {toCurrency(accumulated + otherSourcesAccumulated)}
           </span>
-          <span>{goal ? `Мета: ${toCurrency(goal)}` : 'Немає'}</span>
+          <span>{goal ? `Мета: ${toCurrency(goal)}` : 'Мета: Немає'}</span>
         </div>
       </div>
     </li>

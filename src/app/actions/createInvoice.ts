@@ -1,16 +1,15 @@
 'use server';
 
-import type { Invoice, InvoicePayload } from '../../types';
+import type { InvoicePayload } from '../../types';
 import { createInvoice as sendRequest } from '@/dal';
 
-export const createInvoice = async (
-  invoiceData: InvoicePayload
-): Promise<string | Invoice> => {
+export const createInvoice = async (invoiceData: InvoicePayload) => {
   try {
-    const response = await sendRequest(invoiceData);
+    await sendRequest(invoiceData);
 
-    return response;
+    return 'Success';
   } catch (e) {
+    console.log({ e });
     return 'Not success';
   }
 };

@@ -2,6 +2,10 @@
   max-width: 900px;
 }
 
+.file-preview {
+  min-height: 600px;
+}
+
 .form-content {
   display: flex;
   flex-direction: column;

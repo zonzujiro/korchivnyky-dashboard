@@ -17,6 +17,7 @@
 .expenses-list {
   list-style: none;
   padding-right: 10px;
+  max-height: 400px;
 }
 
 .expense-item {
@@ -41,6 +42,7 @@
 .invoice-image-frame {
   width: 400px;
   border: 1px solid black;
+  display: flex;
 }
 
 .invoice-description {

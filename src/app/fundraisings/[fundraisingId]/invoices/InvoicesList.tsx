@@ -1,12 +1,14 @@
 'use client';
 
-import { useContext } from 'react';
-
-import type { ExpenseRecord, ExpenseType, Jar, User } from '@/types';
-import { InvoicesPageContext } from '@/dal';
+import type {
+  ExpenseRecord,
+  ExpenseType,
+  Jar,
+  User,
+  Invoice as IInvoice,
+} from '@/types';
 
 import { Invoice } from './Invoice/Invoice';
-
 import styles from './InvoicesList.module.css';
 import { AddInvoiceDialog } from './AddInvoiceDialog/AddInvoiceDialog';
 
@@ -15,6 +17,7 @@ type InvoicesListProps = {
   expensesTypes: Array<ExpenseType>;
   jars: Array<Jar>;
   users: Array<User>;
+  invoices: Array<IInvoice>;
 };
 
 export const InvoicesList = ({
@@ -22,16 +25,12 @@ export const InvoicesList = ({
   expensesTypes,
   jars,
   users,
+  invoices,
 }: InvoicesListProps) => {
-  const { invoices, addInvoice } = useContext(InvoicesPageContext);
-
   return (
     <div className={styles['invoices-content-wrapper']}>
       <div className={styles['invoices-toolbox']}>
-        <AddInvoiceDialog
-          expensesTypes={expensesTypes}
-          addInvoice={addInvoice}
-        />
+        <AddInvoiceDialog expensesTypes={expensesTypes} />
       </div>
       <div className={styles['invoices-list']}>
         {invoices.map((invoice) => {

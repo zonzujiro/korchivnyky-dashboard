@@ -2,8 +2,10 @@
 
 import { useRef } from 'react';
 import { useFormStatus } from 'react-dom';
+import classNames from 'classnames';
+import { useRouter } from 'next/navigation';
 
-import type { ExpenseType, Invoice, InvoicePayload } from '@/types';
+import type { ExpenseType, InvoicePayload } from '@/types';
 import {
   Button,
   Dialog,
@@ -16,7 +18,6 @@ import { createInvoice } from '@/app/actions';
 import { fileToBase64, removeBase64DataPrefix } from '@/toolbox';
 
 import styles from './AddInvoiceDialog.module.css';
-import classNames from 'classnames';
 
 const SubmitButton = () => {
   const { pending } = useFormStatus();
@@ -30,13 +31,11 @@ const SubmitButton = () => {
 
 type AddInvoiceDialogProps = {
   expensesTypes: Array<ExpenseType>;
-  addInvoice: (invoice: Invoice) => void;
 };
 
-export const AddInvoiceDialog = ({
-  expensesTypes,
-  addInvoice,
-}: AddInvoiceDialogProps) => {
+export const AddInvoiceDialog = ({ expensesTypes }: AddInvoiceDialogProps) => {
+  const router = useRouter();
+
   const { previewerState, handleInputChange, resetPreviewer } =
     useFilePreviewer();
 
@@ -72,12 +71,10 @@ export const AddInvoiceDialog = ({
 
     const response = await createInvoice(requestPayload);
 
-    if (typeof response === 'string') {
-      return;
+    if (response === 'Success') {
+      router.refresh();
+      closeDialog();
     }
-
-    addInvoice(response);
-    closeDialog();
   };
 
   return (
