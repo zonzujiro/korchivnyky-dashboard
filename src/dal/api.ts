@@ -4,19 +4,21 @@ import type {
   ExpenseType,
   FundraisingCampaign,
   Invoice,
-  InvoiceTransactionPayload,
   Jar,
   JarStatisticRecord,
   User,
   Primitive,
-  CreateJarPayload,
   ExpenseRecord,
-  InvoicePayload,
-  JarsTransactionPayload,
 } from '@/types';
 import { addColorToJar, identity } from '@/toolbox';
 import { cookies } from 'next/headers';
 import { getFundraisingInvoices } from './dataModificators';
+import type {
+  CreateJarPayload,
+  InvoiceTransactionPayload,
+  JarsTransactionPayload,
+  InvoicePayload,
+} from './types';
 
 class NetworkError extends Error {
   code: number;
@@ -129,6 +131,10 @@ export const getExpensesTypes = (
   return get('https://jars.fly.dev/expensive-types', {
     fundraisingCampaignId,
   });
+};
+
+export const postExpenseType = () => {
+  return post('https://jars.fly.dev/expensive-types');
 };
 
 export const getInvoices = (): Promise<Array<Invoice>> => {

@@ -13,7 +13,8 @@ import {
 } from '@/library';
 import { createExpense } from '@/app/actions';
 import { fileToBase64, removeBase64DataPrefix } from '@/toolbox';
-import { Invoice, InvoiceTransactionPayload, Jar } from '@/types';
+import type { Invoice, Jar } from '@/types';
+import type { InvoiceTransactionPayload } from '@/dal';
 
 import styles from './AddExpenseDialog.module.css';
 import classNames from 'classnames';
@@ -36,6 +37,8 @@ type AddExpenseDialogProps = {
 export const AddExpenseDialog = ({ invoice, jars }: AddExpenseDialogProps) => {
   const router = useRouter();
 
+  const sumInputRef = useRef<HTMLInputElement>(null);
+
   const { previewerState, handleInputChange, resetPreviewer } =
     useFilePreviewer();
 
@@ -55,6 +58,16 @@ export const AddExpenseDialog = ({ invoice, jars }: AddExpenseDialogProps) => {
   const handleSubmit = async (formData: FormData) => {
     const file = formData.get('file')! as File;
     const base64 = await fileToBase64(file);
+    const sum = Number(formData.get('sum'));
+    const jarId = Number(formData.get('jar'));
+
+    const creditJar = jars.find((jar) => jar.id === jarId)!;
+
+    if (sum > creditJar.accumulated) {
+      sumInputRef.current?.setCustomValidity('На банці недостатньо коштів');
+      sumInputRef.current?.reportValidity();
+      return;
+    }
 
     const requestPayload: InvoiceTransactionPayload = {
       invoiceId: invoice.id,
@@ -115,6 +128,7 @@ export const AddExpenseDialog = ({ invoice, jars }: AddExpenseDialogProps) => {
                       <legend>Інформація про оплату</legend>
                       <label htmlFor='sum-input'>Сплачена сума</label>
                       <input
+                        ref={sumInputRef}
                         type='number'
                         min='0.00'
                         step='0.01'

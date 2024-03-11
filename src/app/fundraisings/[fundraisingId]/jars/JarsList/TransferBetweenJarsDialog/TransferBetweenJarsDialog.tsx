@@ -1,7 +1,7 @@
 import { Suspense, useEffect, useRef, useState } from 'react';
 import { useFormStatus } from 'react-dom';
 
-import type { Jar, JarsTransactionPayload } from '@/types';
+import type { Jar } from '@/types';
 
 import {
   Button,
@@ -13,9 +13,11 @@ import {
   useFilePreviewer,
 } from '@/library';
 import { transferMoneyBetweenJars } from '@/app/actions';
+import type { JarsTransactionPayload } from '@/dal';
 
 import styles from './TransferBetweenJarsDialog.module.css';
 import { fileToBase64, removeBase64DataPrefix } from '@/toolbox';
+import { useRouter } from 'next/navigation';
 
 const SubmitButton = () => {
   const { pending } = useFormStatus();
@@ -34,6 +36,7 @@ export const TransferBetweenJarsDialog = ({
   jars: Array<Jar>;
   selectedJars: Array<Jar>;
 }) => {
+  const router = useRouter();
   const amountInputRef = useRef<HTMLInputElement>(null);
   const formRef = useRef<HTMLFormElement>(null);
 
@@ -70,15 +73,10 @@ export const TransferBetweenJarsDialog = ({
     const amount = Number(formData.get('sum'));
     const file = formData.get('file')! as File;
 
-    console.log({
-      creditId: formData.get('credit-jar'),
-      debitId: formData.get('debit-jar'),
-    });
-
     const base64 = await fileToBase64(file);
 
     if (amount > creditJar?.accumulated) {
-      amountInputRef.current?.setCustomValidity('Завелика сума');
+      amountInputRef.current?.setCustomValidity('На банці недостатньо коштів');
       amountInputRef.current?.reportValidity();
       return;
     }
@@ -92,11 +90,10 @@ export const TransferBetweenJarsDialog = ({
       receiptName: file.name,
     };
 
-    console.log({ payload });
-
     const status = await transferMoneyBetweenJars(payload);
 
     if (status === 'Success') {
+      router.refresh();
       prepareClosing();
       closeDialog();
     }
