@@ -1,0 +1,20 @@
+.dialog-content {
+  max-width: 900px;
+}
+
+.form-inputs {
+  display: flex;
+  flex-direction: column;
+  margin-right: 10px;
+  padding: 20px;
+  height: fit-content;
+}
+
+.is-auto-info {
+  margin-bottom: 20px;
+}
+
+.is-auto-checkbox input {
+  margin-left: 10px;
+  margin-bottom: 2px;
+}

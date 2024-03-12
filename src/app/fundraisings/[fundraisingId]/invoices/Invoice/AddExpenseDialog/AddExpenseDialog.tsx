@@ -130,7 +130,7 @@ export const AddExpenseDialog = ({ invoice, jars }: AddExpenseDialogProps) => {
                       <input
                         ref={sumInputRef}
                         type='number'
-                        min='0.00'
+                        min='1'
                         step='0.01'
                         name='sum'
                         id='sum-input'

@@ -132,7 +132,7 @@ export const TransferBetweenJarsDialog = ({
                   <input
                     ref={amountInputRef}
                     type='number'
-                    min='0.00'
+                    min='1'
                     step='0.01'
                     name='sum'
                     id='sum-input'

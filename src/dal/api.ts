@@ -18,19 +18,31 @@ import type {
   InvoiceTransactionPayload,
   JarsTransactionPayload,
   InvoicePayload,
+  ExpenseTypePayload,
 } from './types';
 
 class NetworkError extends Error {
   code: number;
   message: string;
+  details?: Array<{ message: string }>;
 
-  constructor(code: number, message: string) {
+  constructor(
+    code: number,
+    message: string,
+    details?: Array<{ message: string }>
+  ) {
     super();
 
     this.message = message;
     this.code = code;
+    this.details = details;
 
     console.log(`${code}: ${message}`);
+
+    if (details?.length) {
+      console.log('Error details:');
+      console.log(JSON.stringify(details.map(({ message }) => message)));
+    }
   }
 }
 
@@ -38,10 +50,10 @@ class NetworkError extends Error {
 const throwError = (response: Response, body: Record<string, any>) => {
   const message = `${response.status} (${response.url}): ${
     response.statusText
-  } - ${body.error.message || ''}`;
+  } - ${body.error.message || 'No message'}`;
   const code = body.error.code;
 
-  throw new NetworkError(code, message);
+  throw new NetworkError(code, message, body.error.details);
 };
 
 const handleSearchParams = (
@@ -133,8 +145,8 @@ export const getExpensesTypes = (
   });
 };
 
-export const postExpenseType = () => {
-  return post('https://jars.fly.dev/expensive-types');
+export const createExpenseType = (payload: ExpenseTypePayload) => {
+  return post('https://jars.fly.dev/expensive-types', payload);
 };
 
 export const getInvoices = (): Promise<Array<Invoice>> => {

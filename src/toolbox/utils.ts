@@ -63,3 +63,6 @@ export const getGatheredMoney = (jars: Array<Jar>) => {
 };
 
 export const identity = <T>(v: T) => v;
+
+export const getFormValues = <InputsNames extends string>(formData: FormData) =>
+  Object.fromEntries(formData.entries()) as Record<InputsNames, string>;

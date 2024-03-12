@@ -1,11 +1,11 @@
 'use client';
 
 import { useRef } from 'react';
-import { useFormStatus } from 'react-dom';
 import classNames from 'classnames';
 import { useRouter } from 'next/navigation';
 
-import type { ExpenseType, InvoicePayload } from '@/types';
+import type { ExpenseType } from '@/types';
+import type { InvoicePayload } from '@/dal';
 import {
   Button,
   Dialog,
@@ -13,21 +13,12 @@ import {
   useFilePreviewer,
   previewerFileTypes,
   useDialog,
+  SubmitButton,
 } from '@/library';
 import { createInvoice } from '@/app/actions';
 import { fileToBase64, removeBase64DataPrefix } from '@/toolbox';
 
 import styles from './AddInvoiceDialog.module.css';
-
-const SubmitButton = () => {
-  const { pending } = useFormStatus();
-
-  return (
-    <Button disabled={pending} type='submit' className={styles['save-expense']}>
-      {pending ? 'Зберігаємо...' : '💾 Зберегти'}
-    </Button>
-  );
-};
 
 type AddInvoiceDialogProps = {
   expensesTypes: Array<ExpenseType>;
@@ -41,13 +32,12 @@ export const AddInvoiceDialog = ({ expensesTypes }: AddInvoiceDialogProps) => {
 
   const formRef = useRef<HTMLFormElement>(null);
 
-  const resetForm = () => {
-    formRef.current?.reset();
-    resetPreviewer();
-  };
-
   const { openDialog, dialogState, closeDialog } = useDialog({
-    prepareClosing: resetForm,
+    prepareClosing: () => {
+      router.refresh();
+      formRef.current?.reset();
+      resetPreviewer();
+    },
   });
 
   const handleSubmit = async (formData: FormData) => {
@@ -64,7 +54,7 @@ export const AddInvoiceDialog = ({ expensesTypes }: AddInvoiceDialogProps) => {
       file: removeBase64DataPrefix(base64),
       fileName: file.name,
       name: formData.get('name') as string,
-      amount: Number(formData.get('amount')),
+      amount: Number(formData.get('sum')),
       expensiveTypeId: Number(formData.get('expenseType')),
       ...maybeWithDescription,
     };
@@ -72,7 +62,6 @@ export const AddInvoiceDialog = ({ expensesTypes }: AddInvoiceDialogProps) => {
     const response = await createInvoice(requestPayload);
 
     if (response === 'Success') {
-      router.refresh();
       closeDialog();
     }
   };
@@ -131,7 +120,7 @@ export const AddInvoiceDialog = ({ expensesTypes }: AddInvoiceDialogProps) => {
                     <label htmlFor='sum-input'>Сума до сплати</label>
                     <input
                       type='number'
-                      min='0.00'
+                      min='1'
                       step='0.01'
                       name='sum'
                       id='sum-input'

@@ -8,6 +8,7 @@ import { InvoicesInfo, Progress, JarsInfo, ExpensesTypesInfo } from '@/library';
 import styles from './FundraisingInfo.module.css';
 import Link from 'next/link';
 import classNames from 'classnames';
+import { ExpenseTypeDialog } from '../ExpenseTypeDialog/ExpenseTypeDialog';
 
 type FundraisingInfoProps = {
   fundraisingInfoPromise: ReturnType<typeof getFundraisingInfo>;
@@ -51,6 +52,7 @@ export const FundraisingInfo = (props: FundraisingInfoProps) => {
       </div>
       <div className={styles.column}>
         <div className={styles['expense-types-wrapper']}>
+          <ExpenseTypeDialog fundraisingCampaignId={fundraising.id} />
           <ExpensesTypesInfo
             expensesTypes={expensesTypes}
             expenses={expenses}

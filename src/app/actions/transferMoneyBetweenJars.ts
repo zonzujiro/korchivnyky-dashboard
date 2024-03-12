@@ -1,7 +1,6 @@
 'use server';
 
-import { createJarsTransaction } from '@/dal';
-import { JarsTransactionPayload } from '../../types';
+import { type JarsTransactionPayload, createJarsTransaction } from '@/dal';
 
 export const transferMoneyBetweenJars = async (
   payload: JarsTransactionPayload
