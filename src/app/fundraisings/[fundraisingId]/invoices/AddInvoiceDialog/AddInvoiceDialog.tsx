@@ -1,7 +1,6 @@
 'use client';
 
 import { useRef } from 'react';
-import classNames from 'classnames';
 import { useRouter } from 'next/navigation';
 
 import type { ExpenseType } from '@/types';
@@ -11,9 +10,10 @@ import {
   Dialog,
   FilePreviewer,
   useFilePreviewer,
-  previewerFileTypes,
   useDialog,
   SubmitButton,
+  Fieldset,
+  previewerFileTypes,
 } from '@/library';
 import { createInvoice } from '@/app/actions';
 import { fileToBase64, removeBase64DataPrefix } from '@/toolbox';
@@ -83,12 +83,7 @@ export const AddInvoiceDialog = ({ expensesTypes }: AddInvoiceDialogProps) => {
                 className={styles['form-content']}
               >
                 <div className={styles['fieldsets-wrapper']}>
-                  <fieldset
-                    className={classNames(
-                      styles['form-inputs'],
-                      styles['file-preview ']
-                    )}
-                  >
+                  <Fieldset>
                     <legend>Завантаження рахунку</legend>
                     <input
                       type='file'
@@ -99,8 +94,8 @@ export const AddInvoiceDialog = ({ expensesTypes }: AddInvoiceDialogProps) => {
                       accept={previewerFileTypes.join(', ')}
                     />
                     <FilePreviewer previewerState={previewerState} />
-                  </fieldset>
-                  <fieldset className={styles['form-inputs']}>
+                  </Fieldset>
+                  <Fieldset>
                     <legend>Інформація про рахунок</legend>
                     <label htmlFor='invoice-name'>Назва рахунку</label>
                     <input
@@ -143,7 +138,7 @@ export const AddInvoiceDialog = ({ expensesTypes }: AddInvoiceDialogProps) => {
                         ))}
                     </select>
                     <SubmitButton />
-                  </fieldset>
+                  </Fieldset>
                 </div>
               </form>
             </div>

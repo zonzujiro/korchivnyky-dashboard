@@ -5,19 +5,16 @@ import { useRouter } from 'next/navigation';
 import {
   Button,
   Dialog,
-  FilePreviewer,
-  useFilePreviewer,
-  previewerFileTypes,
   useDialog,
   JarSelector,
+  FilesInput,
+  useFilesInput,
 } from '@/library';
 import { createExpense } from '@/app/actions';
-import { fileToBase64, removeBase64DataPrefix } from '@/toolbox';
 import type { Invoice, Jar } from '@/types';
 import type { InvoiceTransactionPayload } from '@/dal';
 
 import styles from './AddExpenseDialog.module.css';
-import classNames from 'classnames';
 
 const SubmitButton = () => {
   const { pending } = useFormStatus();
@@ -39,16 +36,16 @@ export const AddExpenseDialog = ({ invoice, jars }: AddExpenseDialogProps) => {
 
   const sumInputRef = useRef<HTMLInputElement>(null);
 
-  const { previewerState, handleInputChange, resetPreviewer } =
-    useFilePreviewer();
+  const filesInput = useFilesInput();
 
   const [selectedJar, setSelectedJar] = useState(jars[0]);
 
   const formRef = useRef<HTMLFormElement>(null);
 
   const resetForm = () => {
+    router.refresh();
     formRef.current?.reset();
-    resetPreviewer();
+    filesInput.resetPreviewer();
   };
 
   const { openDialog, dialogState, closeDialog } = useDialog({
@@ -56,8 +53,13 @@ export const AddExpenseDialog = ({ invoice, jars }: AddExpenseDialogProps) => {
   });
 
   const handleSubmit = async (formData: FormData) => {
-    const file = formData.get('file')! as File;
-    const base64 = await fileToBase64(file);
+    const base64s = filesInput.filesMetadata.map((metadata) => metadata.src);
+
+    if (!base64s.length) {
+      filesInput.setErrorText('🤪 Не вистачає файлів!');
+      return;
+    }
+
     const sum = Number(formData.get('sum'));
     const jarId = Number(formData.get('jar'));
 
@@ -74,15 +76,15 @@ export const AddExpenseDialog = ({ invoice, jars }: AddExpenseDialogProps) => {
       fromJarId: Number(formData.get('jar')),
       jarSourceAmount: Number(formData.get('sum')),
       otherSourcesAmount: 0,
-      receipt: removeBase64DataPrefix(base64),
+      //@ts-expect-error waiting for Dima
+      receipt: base64s,
+      //@ts-expect-error waiting for Dima
       receiptName: file.name,
     };
 
     const status = await createExpense(requestPayload);
 
     if (status === 'Success') {
-      router.refresh();
-      resetForm();
       closeDialog();
     }
   };
@@ -106,23 +108,10 @@ export const AddExpenseDialog = ({ invoice, jars }: AddExpenseDialogProps) => {
                 className={styles['form-content']}
               >
                 <div className={styles['fieldsets-wrapper']}>
-                  <fieldset
-                    className={classNames(
-                      styles['form-inputs'],
-                      styles['file-preview']
-                    )}
-                  >
-                    <legend>Завантаження квитанції</legend>
-                    <input
-                      type='file'
-                      name='file'
-                      placeholder='Квитанція у JPG/JPEG, PNG або PDF'
-                      required
-                      onChange={handleInputChange}
-                      accept={previewerFileTypes.join(', ')}
-                    />
-                    <FilePreviewer previewerState={previewerState} />
-                  </fieldset>
+                  <FilesInput
+                    filesInputState={filesInput}
+                    title='Завантаження рахунку'
+                  />
                   <div>
                     <fieldset className={styles['form-inputs']}>
                       <legend>Інформація про оплату</legend>
@@ -135,6 +124,7 @@ export const AddExpenseDialog = ({ invoice, jars }: AddExpenseDialogProps) => {
                         name='sum'
                         id='sum-input'
                         placeholder='20 000'
+                        required
                       />
                       <label htmlFor='sum'>Дата оплати</label>
                       <input id='date' type='date' name='date' required />

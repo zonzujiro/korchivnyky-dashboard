@@ -1,0 +1,25 @@
+.drop-target {
+  position: relative;
+}
+
+.drop-target-overlay {
+  width: 350px;
+  height: 100%;
+  display: flex;
+  background: white;
+  justify-content: center;
+  align-items: center;
+  font-size: 2em;
+}
+
+.active-drop-target {
+  border: 2px dotted black;
+}
+
+.drop-target.has-error:not(.active-drop-target) {
+  border: 2px dotted red;
+}
+
+.error-text {
+  color: red;
+}
