@@ -45,7 +45,7 @@ export const AddExpenseDialog = ({ invoice, jars }: AddExpenseDialogProps) => {
   const resetForm = () => {
     router.refresh();
     formRef.current?.reset();
-    filesInput.resetPreviewer();
+    filesInput.reset();
   };
 
   const { openDialog, dialogState, closeDialog } = useDialog({
@@ -53,7 +53,7 @@ export const AddExpenseDialog = ({ invoice, jars }: AddExpenseDialogProps) => {
   });
 
   const handleSubmit = async (formData: FormData) => {
-    const base64s = filesInput.filesMetadata.map((metadata) => metadata.src);
+    const base64s = filesInput.value.map((metadata) => metadata.src);
 
     if (!base64s.length) {
       filesInput.setErrorText('🤪 Не вистачає файлів!');
