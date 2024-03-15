@@ -51,30 +51,26 @@ export const useFilesInput = () => {
 type FileInputProps = {
   filesInputState: ReturnType<typeof useFilesInput>;
   title: string;
+  multiple?: boolean;
 };
 
-export const FilesInput = ({ filesInputState, title }: FileInputProps) => {
+export const FilesInput = ({
+  filesInputState,
+  title,
+  multiple,
+}: FileInputProps) => {
   const [isDraggedOver, setIsDraggedOver] = useState(false);
 
-  const { value, validity, inputRef, reset, setValue } = filesInputState;
+  const { value, validity, inputRef, setValue } = filesInputState;
 
-  const handleFileList = async (fileList: FileList) => {
-    const files = [...fileList];
-
+  const handleFileList = async (files: Array<File>) => {
     if (!files?.length) {
       return;
     }
 
-    const withoutDuplicates = files.filter((maybeUnique, index) => {
-      return (
-        files.findLastIndex((file) => file.name === maybeUnique.name) === index
-      );
-    });
-
-    const onlyValidFiles = withoutDuplicates.filter(isValidFile);
+    const onlyValidFiles = files.filter(isValidFile);
 
     if (!onlyValidFiles.length) {
-      reset();
       return;
     }
 
@@ -90,17 +86,34 @@ export const FilesInput = ({ filesInputState, title }: FileInputProps) => {
       })
     );
 
-    setValue(filesMetadata);
+    const nextValue = [...value, ...filesMetadata];
+
+    const unique = nextValue.filter((maybeUnique, index) => {
+      return (
+        nextValue.findLastIndex(
+          (file) => file.fileName === maybeUnique.fileName
+        ) === index
+      );
+    });
+
+    setValue(unique);
   };
 
   const handleFilesDrop = async (ev: React.DragEvent<HTMLFieldSetElement>) => {
     ev.preventDefault();
+    setIsDraggedOver(false);
 
     if (!ev.dataTransfer.files.length) {
       return;
     }
 
-    return handleFileList(ev.dataTransfer.files);
+    const files = [...ev.dataTransfer.files];
+
+    if (!multiple) {
+      return handleFileList([files[0]]);
+    }
+
+    return handleFileList(files);
   };
 
   const handleInputChange = (ev: React.FormEvent<HTMLInputElement>) => {
@@ -110,7 +123,7 @@ export const FilesInput = ({ filesInputState, title }: FileInputProps) => {
       return;
     }
 
-    return handleFileList(ev.currentTarget.files);
+    return handleFileList([...ev.currentTarget.files]);
   };
 
   const removeFileMetadata = (fileName: string) => {
@@ -128,16 +141,9 @@ export const FilesInput = ({ filesInputState, title }: FileInputProps) => {
       onDrop={handleFilesDrop}
       onDragOver={(ev) => {
         ev.preventDefault();
-
-        if (!isDraggedOver) {
-          setIsDraggedOver(true);
-        }
+        setIsDraggedOver(true);
       }}
-      onDragLeave={() => {
-        if (isDraggedOver) {
-          setIsDraggedOver(false);
-        }
-      }}
+      onDragLeave={() => setIsDraggedOver(false)}
     >
       <legend>{title}</legend>
       {!value.length && (
@@ -148,19 +154,23 @@ export const FilesInput = ({ filesInputState, title }: FileInputProps) => {
           placeholder='Квитанція у JPG/JPEG, PNG або PDF'
           onChange={handleInputChange}
           accept={previewerFileTypes.join(', ')}
-          multiple
+          multiple={multiple}
         />
       )}
       {validity.customError && (
         <small className={styles['error-text']}>{validity.customError}</small>
       )}
-      {!value.length ? (
+      {!value.length || isDraggedOver ? (
         <div className={styles['drop-target-overlay']}>
-          <span>📥 Файли сюди</span>
+          {multiple ? <span>📥 Файли сюди</span> : <span>📥 Файл сюди</span>}
           <small>pdf, png, jpg/jpeg</small>
         </div>
       ) : (
-        <FilesPreviewer filesMetadata={value} removeFile={removeFileMetadata} />
+        <FilesPreviewer
+          filesMetadata={value}
+          removeFile={removeFileMetadata}
+          multiple={multiple}
+        />
       )}
     </fieldset>
   );

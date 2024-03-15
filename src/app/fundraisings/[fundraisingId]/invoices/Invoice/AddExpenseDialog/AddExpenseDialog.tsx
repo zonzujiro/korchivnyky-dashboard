@@ -13,6 +13,7 @@ import {
 import { createExpense } from '@/app/actions';
 import type { Invoice, Jar } from '@/types';
 import type { InvoiceTransactionPayload } from '@/dal';
+import { removeBase64DataPrefix } from '@/toolbox';
 
 import styles from './AddExpenseDialog.module.css';
 
@@ -43,7 +44,6 @@ export const AddExpenseDialog = ({ invoice, jars }: AddExpenseDialogProps) => {
   const formRef = useRef<HTMLFormElement>(null);
 
   const resetForm = () => {
-    router.refresh();
     formRef.current?.reset();
     filesInput.reset();
   };
@@ -53,9 +53,7 @@ export const AddExpenseDialog = ({ invoice, jars }: AddExpenseDialogProps) => {
   });
 
   const handleSubmit = async (formData: FormData) => {
-    const base64s = filesInput.value.map((metadata) => metadata.src);
-
-    if (!base64s.length) {
+    if (!filesInput.value.length) {
       filesInput.setErrorText('🤪 Не вистачає файлів!');
       return;
     }
@@ -76,15 +74,16 @@ export const AddExpenseDialog = ({ invoice, jars }: AddExpenseDialogProps) => {
       fromJarId: Number(formData.get('jar')),
       jarSourceAmount: Number(formData.get('sum')),
       otherSourcesAmount: 0,
-      //@ts-expect-error waiting for Dima
-      receipt: base64s,
-      //@ts-expect-error waiting for Dima
-      receiptName: file.name,
+      receipts: filesInput.value.map((metadata) => ({
+        receiptName: metadata.fileName,
+        receipt: removeBase64DataPrefix(metadata.src),
+      })),
     };
 
     const status = await createExpense(requestPayload);
 
     if (status === 'Success') {
+      router.refresh();
       closeDialog();
     }
   };
@@ -111,6 +110,7 @@ export const AddExpenseDialog = ({ invoice, jars }: AddExpenseDialogProps) => {
                   <FilesInput
                     filesInputState={filesInput}
                     title='Завантаження рахунку'
+                    multiple
                   />
                   <div>
                     <fieldset className={styles['form-inputs']}>

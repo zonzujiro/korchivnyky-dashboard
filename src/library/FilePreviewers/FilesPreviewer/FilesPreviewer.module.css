@@ -31,3 +31,7 @@
   cursor: pointer;
   user-select: none;
 }
+
+.counter {
+  padding-left: 15px;
+}

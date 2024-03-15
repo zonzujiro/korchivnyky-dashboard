@@ -31,12 +31,14 @@ export const Invoice = ({
   jars,
   users,
 }: InvoiceProps) => {
-  const { name, amount, fileUrl, isActive, createdAt } = invoice;
+  const { name, amount, fileUrl, createdAt } = invoice;
 
   const payedSum = getSum(invoiceExpenses);
   const creationDate = getDateString(createdAt);
 
   const invoiceOwner = users.find((user) => user.id === invoice.userId)!;
+
+  const isActive = Boolean(amount - payedSum);
 
   return (
     <div className={styles.invoice}>
@@ -47,15 +49,14 @@ export const Invoice = ({
           }}
         />
       </div>
-      <h4 className={styles['invoice-name']}>
-        {isActive ? null : <span>✅</span>}
-        {name}
-      </h4>
+      <h4 className={styles['invoice-name']}>{name} </h4>
       <p className={styles['invoice-preview-description']}>
         Сума: {toCurrency(amount)}
       </p>
       <p className={styles['invoice-preview-description']}>
-        До сплати: {toCurrency(amount - payedSum)}
+        {isActive
+          ? `До сплати: ${toCurrency(amount - payedSum)}`
+          : '✅ Cплачено'}
       </p>
       <div className={styles['invoice-additional-info']}>
         <p className={styles['invoice-preview-description']}>
