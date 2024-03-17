@@ -3,25 +3,21 @@
 import { useRef, useState } from 'react';
 import classNames from 'classnames';
 
+import { fileToBase64 } from '@/toolbox';
+
 import {
   FilesPreviewer,
   previewerFileTypes,
-  defaultState as filePreviewerDefaultState,
   isValidFile,
 } from '../../FilePreviewers';
-
 import formStyles from '../Form.module.css';
 
-import styles from './FilesInput.module.css';
-import { fileToBase64 } from '@/toolbox';
+import styles from './FileInput.module.css';
 
-const defaultState: Array<
-  typeof filePreviewerDefaultState & {
-    fileName: string;
-  }
-> = [];
+const defaultState: Array<{ base64: string; name: string; isPDF: boolean }> =
+  [];
 
-export const useFilesInput = () => {
+export const useFileInput = () => {
   const [errorText, setErrorText] = useState('');
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -39,7 +35,7 @@ export const useFilesInput = () => {
     setErrorText,
     validity: {
       customError: errorText,
-      valid: Boolean(errorText),
+      valid: !Boolean(errorText),
     },
     inputRef,
     setValue,
@@ -49,12 +45,12 @@ export const useFilesInput = () => {
 };
 
 type FileInputProps = {
-  filesInputState: ReturnType<typeof useFilesInput>;
+  filesInputState: ReturnType<typeof useFileInput>;
   title: string;
   multiple?: boolean;
 };
 
-export const FilesInput = ({
+export const FileInput = ({
   filesInputState,
   title,
   multiple,
@@ -79,9 +75,9 @@ export const FilesInput = ({
         const base64 = await fileToBase64(file);
 
         return {
-          src: base64,
+          base64,
           isPDF: file.type.includes('pdf'),
-          fileName: file.name,
+          name: file.name,
         };
       })
     );
@@ -90,9 +86,8 @@ export const FilesInput = ({
 
     const unique = nextValue.filter((maybeUnique, index) => {
       return (
-        nextValue.findLastIndex(
-          (file) => file.fileName === maybeUnique.fileName
-        ) === index
+        nextValue.findLastIndex((file) => file.name === maybeUnique.name) ===
+        index
       );
     });
 
@@ -127,7 +122,7 @@ export const FilesInput = ({
   };
 
   const removeFileMetadata = (fileName: string) => {
-    const update = value.filter((metadata) => metadata.fileName !== fileName);
+    const update = value.filter((metadata) => metadata.name !== fileName);
 
     setValue(update);
   };
@@ -136,7 +131,7 @@ export const FilesInput = ({
     <fieldset
       className={classNames(formStyles['form-inputs'], styles['drop-target'], {
         [styles['active-drop-target']]: isDraggedOver,
-        [styles['has-error']]: validity.valid,
+        [styles['has-error']]: !validity.valid,
       })}
       onDrop={handleFilesDrop}
       onDragOver={(ev) => {
@@ -163,11 +158,19 @@ export const FilesInput = ({
       {!value.length || isDraggedOver ? (
         <div className={styles['drop-target-overlay']}>
           {multiple ? <span>📥 Файли сюди</span> : <span>📥 Файл сюди</span>}
-          <small>pdf, png, jpg/jpeg</small>
+          <small>
+            {previewerFileTypes
+              .map((fileType) => fileType.split('/')[1])
+              .join(', ')}
+          </small>
         </div>
       ) : (
         <FilesPreviewer
-          filesMetadata={value}
+          filesMetadata={value.map(({ name, base64, isPDF }) => ({
+            src: base64,
+            isPDF,
+            name,
+          }))}
           removeFile={removeFileMetadata}
           multiple={multiple}
         />

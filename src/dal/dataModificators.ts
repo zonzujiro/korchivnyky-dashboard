@@ -17,7 +17,5 @@ export const getFundraisingInvoices = (
 ) => {
   const typesIds = expensesTypes.map((expense) => expense.id);
 
-  return invoices.filter((invoice) =>
-    typesIds.includes(invoice.expensiveTypeId)
-  );
+  return invoices.filter((invoice) => typesIds.includes(invoice.expenseTypeId));
 };

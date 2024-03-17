@@ -64,7 +64,7 @@ export type Invoice = {
   isActive: boolean;
   fileUrl: string;
   createdAt: string;
-  expensiveTypeId: number;
+  expenseTypeId: number;
 };
 
 export type PageParams = {

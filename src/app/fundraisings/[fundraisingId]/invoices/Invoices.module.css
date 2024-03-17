@@ -1,0 +1,15 @@
+.invoices-wrapper {
+  display: flex;
+}
+
+.invoices-info {
+  width: 40%;
+}
+
+.invoices-info-wrapper {
+  width: 400px;
+}
+
+.invoices-list {
+  width: 60%;
+}

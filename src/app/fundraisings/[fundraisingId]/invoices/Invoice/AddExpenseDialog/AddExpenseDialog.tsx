@@ -7,8 +7,8 @@ import {
   Dialog,
   useDialog,
   JarSelector,
-  FilesInput,
-  useFilesInput,
+  FileInput,
+  useFileInput,
 } from '@/library';
 import { createExpense } from '@/app/actions';
 import type { Invoice, Jar } from '@/types';
@@ -37,7 +37,7 @@ export const AddExpenseDialog = ({ invoice, jars }: AddExpenseDialogProps) => {
 
   const sumInputRef = useRef<HTMLInputElement>(null);
 
-  const filesInput = useFilesInput();
+  const filesInput = useFileInput();
 
   const [selectedJar, setSelectedJar] = useState(jars[0]);
 
@@ -75,8 +75,8 @@ export const AddExpenseDialog = ({ invoice, jars }: AddExpenseDialogProps) => {
       jarSourceAmount: Number(formData.get('sum')),
       otherSourcesAmount: 0,
       receipts: filesInput.value.map((metadata) => ({
-        receiptName: metadata.fileName,
-        receipt: removeBase64DataPrefix(metadata.src),
+        receiptName: metadata.name,
+        receipt: removeBase64DataPrefix(metadata.base64),
       })),
     };
 
@@ -107,7 +107,7 @@ export const AddExpenseDialog = ({ invoice, jars }: AddExpenseDialogProps) => {
                 className={styles['form-content']}
               >
                 <div className={styles['fieldsets-wrapper']}>
-                  <FilesInput
+                  <FileInput
                     filesInputState={filesInput}
                     title='Завантаження рахунку'
                     multiple

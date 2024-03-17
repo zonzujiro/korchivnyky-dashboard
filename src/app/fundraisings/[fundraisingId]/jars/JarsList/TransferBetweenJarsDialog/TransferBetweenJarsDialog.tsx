@@ -6,18 +6,17 @@ import type { Jar } from '@/types';
 import {
   Button,
   Dialog,
-  FilePreviewer,
+  FileInput,
   JarSelector,
-  previewerFileTypes,
   useDialog,
-  useFilePreviewer,
+  useFileInput,
 } from '@/library';
 import { transferMoneyBetweenJars } from '@/app/actions';
 import type { JarsTransactionPayload } from '@/dal';
 
 import styles from './TransferBetweenJarsDialog.module.css';
-import { fileToBase64, removeBase64DataPrefix } from '@/toolbox';
 import { useRouter } from 'next/navigation';
+import { removeBase64DataPrefix } from '@/toolbox';
 
 const SubmitButton = () => {
   const { pending } = useFormStatus();
@@ -40,11 +39,7 @@ export const TransferBetweenJarsDialog = ({
   const amountInputRef = useRef<HTMLInputElement>(null);
   const formRef = useRef<HTMLFormElement>(null);
 
-  const {
-    previewerState,
-    handleInputChange: handleFileInputChange,
-    resetPreviewer,
-  } = useFilePreviewer();
+  const fileInput = useFileInput();
 
   const [creditJar, setCreditJar] = useState(
     selectedJars.length ? selectedJars[0] : jars[0]
@@ -62,7 +57,7 @@ export const TransferBetweenJarsDialog = ({
 
   const prepareClosing = () => {
     formRef?.current?.reset();
-    resetPreviewer();
+    fileInput.reset();
   };
 
   const { dialogState, openDialog, closeDialog } = useDialog({
@@ -70,10 +65,14 @@ export const TransferBetweenJarsDialog = ({
   });
 
   const handleSubmit = async (formData: FormData) => {
-    const amount = Number(formData.get('sum'));
-    const file = formData.get('file')! as File;
+    const [fileMetadata] = fileInput.value;
 
-    const base64 = await fileToBase64(file);
+    if (!fileMetadata) {
+      fileInput.setErrorText('🤪 Не вистачає файлів!');
+      return;
+    }
+
+    const amount = Number(formData.get('sum'));
 
     if (amount > creditJar?.accumulated) {
       amountInputRef.current?.setCustomValidity('На банці недостатньо коштів');
@@ -86,8 +85,8 @@ export const TransferBetweenJarsDialog = ({
       toJarId: debitJar?.id,
       jarSourceAmount: amount,
       otherSourcesAmount: 0,
-      receipt: removeBase64DataPrefix(base64),
-      receiptName: file.name,
+      receipt: removeBase64DataPrefix(fileMetadata.base64),
+      receiptName: fileMetadata.name,
     };
 
     const status = await transferMoneyBetweenJars(payload);
@@ -114,18 +113,7 @@ export const TransferBetweenJarsDialog = ({
             ref={formRef}
           >
             <div className={styles['jars-and-previewer-wrapper']}>
-              <fieldset className={styles['file-preview']}>
-                <legend>Квитанція</legend>
-                <input
-                  type='file'
-                  name='file'
-                  placeholder='Квитанція у JPG/JPEG, PNG або PDF'
-                  required
-                  onChange={handleFileInputChange}
-                  accept={previewerFileTypes.join(', ')}
-                />
-                <FilePreviewer previewerState={previewerState} />
-              </fieldset>
+              <FileInput title='Квитанція' filesInputState={fileInput} />
               <div className={styles['jars-selection']}>
                 <fieldset className={styles['sum-input-fieldset']}>
                   <legend>Сума перерахування</legend>

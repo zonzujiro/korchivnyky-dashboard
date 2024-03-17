@@ -1,14 +1,9 @@
 import classNames from 'classnames';
 
-import type { Jar, JarStatisticRecord } from '@/types';
+import type { Jar } from '@/types';
+import { getGatheredMoney, toCurrency } from '@/toolbox';
 
 import styles from './JarsInfo.module.css';
-import {
-  getDateString,
-  getGatheredMoney,
-  getTimeString,
-  toCurrency,
-} from '@/toolbox';
 
 const getFinishedJars = (jars: Array<Jar>) =>
   jars.filter((jar) => jar.isFinished);
@@ -25,23 +20,16 @@ const getCollectiveGoal = (jars: Array<Jar>) => {
 
 type JarsInfoProps = {
   jars: Array<Jar>;
-  newestRecord?: JarStatisticRecord;
 };
 
-export const JarsInfo = ({ jars, newestRecord }: JarsInfoProps) => {
+export const JarsInfo = ({ jars }: JarsInfoProps) => {
   const finishedJars = getFinishedJars(jars);
   const achievedGoals = getAchievedGoalJars(jars);
   const collectiveGoal = getCollectiveGoal(jars);
 
   return (
     <div className={styles['jars-info']}>
-      <h4>Загальна інформація</h4>
-      {newestRecord ? (
-        <small title='Оновлення раз на 12 годин' className={styles.timestamp}>
-          Станом на: {getTimeString(newestRecord.createdAt)}{' '}
-          {getDateString(newestRecord.createdAt)}
-        </small>
-      ) : null}
+      <h4>Інформація по надходженнях</h4>
       <div className={styles['jars-info-tag']}>
         💰 Запланована мета:{' '}
         <span className={styles['jars-info-tag-value']}>

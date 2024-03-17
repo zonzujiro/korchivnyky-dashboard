@@ -129,8 +129,13 @@ export const createExpenseType = (payload: ExpenseTypePayload) => {
   return post('https://jars.fly.dev/expensive-types', payload);
 };
 
-export const getInvoices = (): Promise<Array<Invoice>> => {
-  return get('https://jars.fly.dev/invoices');
+export const getInvoices = async (): Promise<Array<Invoice>> => {
+  const result = await get('https://jars.fly.dev/invoices');
+
+  return result.map((invoice: Record<string, Primitive>) => ({
+    ...invoice,
+    expenseTypeId: invoice.expensiveTypeId,
+  }));
 };
 
 export const getExpenses = (

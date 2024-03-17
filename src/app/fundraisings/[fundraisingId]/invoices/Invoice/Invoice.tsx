@@ -50,6 +50,7 @@ export const Invoice = ({
         />
       </div>
       <h4 className={styles['invoice-name']}>{name} </h4>
+
       <p className={styles['invoice-preview-description']}>
         Сума: {toCurrency(amount)}
       </p>

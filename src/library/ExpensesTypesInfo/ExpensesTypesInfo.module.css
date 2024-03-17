@@ -12,10 +12,9 @@
 .expense-type-info {
   display: grid;
   grid-gap: 1rem;
-  grid-template-columns: minmax(50%, 0.5fr) minmax(25%, 0.5fr) minmax(
-      25%,
-      0.5fr
-    );
+  grid-template-columns:
+    minmax(45%, 0.5fr) minmax(20%, 0.5fr) minmax(20%, 0.5fr)
+    minmax(15%, 0.5fr);
   margin-bottom: 5px;
 }
 

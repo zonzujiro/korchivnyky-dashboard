@@ -6,7 +6,7 @@ import { toCurrency } from '@/toolbox';
 import styles from './InvoicesInfo.module.css';
 
 type InvoiceInfoProps = {
-  expensesTypes?: Array<ExpenseType>;
+  expensesTypes: Array<ExpenseType>;
   invoices: Array<Invoice>;
   expenses: Array<ExpenseRecord>;
 };
@@ -22,9 +22,14 @@ const getPayedSum = (expenses: Array<ExpenseRecord>, invoiceId: number) => {
 export const InvoicesInfo = (props: InvoiceInfoProps) => {
   const { expensesTypes, invoices, expenses } = props;
 
-  const plannedExpenses = expensesTypes?.reduce((acc, expense) => {
-    return acc + expense.targetSum;
+  const plannedExpenses = expensesTypes?.reduce((acc, expenseType) => {
+    return acc + expenseType.targetSum;
   }, 0);
+
+  const totalInvoicesSum = invoices.reduce(
+    (acc, invoice) => acc + invoice.amount,
+    0
+  );
 
   const payedInvoices = invoices.filter((invoice) => {
     const payedSum = getPayedSum(expenses, invoice.id);
@@ -42,17 +47,20 @@ export const InvoicesInfo = (props: InvoiceInfoProps) => {
     <div className={styles['invoice-info']}>
       <h4>Інформація по витратах</h4>
       <div className={classNames(styles['invoice-info-tag'])}>
-        💸 Заплановані витрати: {toCurrency(plannedExpenses || 0)}
+        💸 Заплановані витрати - {toCurrency(plannedExpenses || 0)}
       </div>
       <div className={classNames(styles['invoice-info-tag'])}>
-        📉 Борг по рахунках: {toCurrency(activeDebt)}
+        🧮 Створили рахунків на - {toCurrency(totalInvoicesSum)}
+      </div>
+      <div className={classNames(styles['invoice-info-tag'])}>
+        📉 З них не сплатили - {toCurrency(activeDebt)}
       </div>
       <h4 className={styles['invoice-info-header']}>Рахунки</h4>
       <div className={styles['invoice-info-tag']}>
-        🧾 Всього рахунків: {invoices.length}
+        🧾 Всього рахунків - {invoices.length}
       </div>
       <div className={styles['invoice-info-tag']}>
-        🧮 З них сплачено: {payedInvoices.length}
+        📝 З них сплачено - {payedInvoices.length}
       </div>
     </div>
   );

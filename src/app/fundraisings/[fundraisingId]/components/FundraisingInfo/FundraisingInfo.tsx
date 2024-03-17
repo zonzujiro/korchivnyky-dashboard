@@ -39,10 +39,14 @@ export const FundraisingInfo = (props: FundraisingInfoProps) => {
           </div>
         </div>
         <div className={styles['progress-wrapper']}>
-          <Progress jars={jars} goal={fundraising.goal} />
+          <Progress
+            jars={jars}
+            goal={fundraising.goal}
+            newestRecord={statistics[0]}
+          />
         </div>
         <div className={styles['jar-and-invoices-wrapper']}>
-          <JarsInfo jars={jars} newestRecord={statistics[0]} />
+          <JarsInfo jars={jars} />
           <InvoicesInfo
             expensesTypes={expensesTypes}
             expenses={expenses}

@@ -7,3 +7,8 @@
 .invoices-toolbox {
   margin: 15px;
 }
+
+.expense-types-select,
+.expense-types-select select {
+  margin-left: 10px;
+}

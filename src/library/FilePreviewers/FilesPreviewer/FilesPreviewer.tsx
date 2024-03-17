@@ -1,10 +1,13 @@
+'use client';
+
 import { FilePreviewer, useFilePreviewer } from '../FilePreviewer';
 
 import styles from './FilesPreviewer.module.css';
+
 type FilesPreviewerProp = {
   removeFile: (fileName: string) => void;
   filesMetadata: Array<
-    ReturnType<typeof useFilePreviewer>['previewerState'] & { fileName: string }
+    ReturnType<typeof useFilePreviewer>['previewerState'] & { name: string }
   >;
   multiple?: boolean;
 };
@@ -15,13 +18,13 @@ type PreviewerProps = {
 };
 
 const Previewer = ({ metadata, removeFile }: PreviewerProps) => (
-  <div key={metadata.fileName} className={styles['file-previewer-wrapper']}>
+  <div key={metadata.name} className={styles['file-previewer-wrapper']}>
     <div className={styles['item-header']}>
-      <span className={styles['filename']}>{metadata.fileName}</span>
+      <span className={styles['filename']}>{metadata.name}</span>
       <span
         className={styles['delete-button']}
         title='Видалити файл'
-        onClick={() => removeFile(metadata.fileName)}
+        onClick={() => removeFile(metadata.name)}
       >
         ❌
       </span>
@@ -44,15 +47,15 @@ export const FilesPreviewer = (props: FilesPreviewerProp) => {
         {multiple &&
           filesMetadata.map((metadata) => (
             <Previewer
-              key={metadata.fileName}
+              key={metadata.name}
               metadata={metadata}
-              removeFile={() => removeFile(metadata.fileName)}
+              removeFile={() => removeFile(metadata.name)}
             />
           ))}
         {!multiple && filesMetadata[0] && (
           <Previewer
             metadata={filesMetadata[0]}
-            removeFile={() => removeFile(filesMetadata[0].fileName)}
+            removeFile={() => removeFile(filesMetadata[0].name)}
           />
         )}
       </div>
