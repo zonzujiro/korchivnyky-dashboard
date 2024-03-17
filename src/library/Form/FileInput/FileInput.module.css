@@ -1,0 +1,28 @@
+.drop-target-overlay {
+  width: 350px;
+  height: 100%;
+  display: flex;
+  background: white;
+  justify-content: center;
+  align-items: center;
+  font-size: 2em;
+  border: 2px dashed gainsboro;
+  border-radius: 10px;
+  flex-direction: column;
+}
+
+.drop-target-overlay small {
+  font-size: 0.5em;
+}
+
+.active-drop-target {
+  border: 2px dotted black;
+}
+
+.drop-target.has-error:not(.active-drop-target) {
+  border: 2px dotted red;
+}
+
+.error-text {
+  color: red;
+}

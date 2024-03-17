@@ -17,23 +17,6 @@
   margin-bottom: 20px;
 }
 
-.form-inputs {
-  display: flex;
-  flex-direction: column;
-  margin-right: 10px;
-  padding: 20px;
-  height: fit-content;
-}
-
-.form-inputs:first-child {
-  margin-right: 10px;
-}
-
-.form-inputs input,
-.form-inputs select {
-  margin-bottom: 20px;
-}
-
 .receipt-preview-frame {
   max-height: 500px;
   overflow: hidden;

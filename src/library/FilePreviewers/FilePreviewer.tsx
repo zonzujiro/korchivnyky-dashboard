@@ -5,29 +5,54 @@ import { useEffect, useState } from 'react';
 import { fileToBase64 } from '@/toolbox';
 
 import { ImagePreview } from './ImagePreview/ImagePreview';
-import styles from './FilePreviewer.module.css';
+import styles from './FilePreviewers.module.css';
+import { isValidFile, isURL } from './FilePreviewers.utils';
 
-export const previewerFileTypes = [
-  'image/png',
-  'image/jpeg',
-  'image/jpg',
-  'application/pdf',
-];
-
-const isURL = (maybeUrl: string) =>
-  maybeUrl.startsWith('http') || maybeUrl.startsWith('https');
-
-const isBase64 = (maybeBase64: string) => maybeBase64.includes('base64');
-
-const isValidFile = (file: File) =>
-  previewerFileTypes.some((type) => type === file.type);
-
-const RECEIPT_PREVIEW_DEFAULT_STATE = {
+export const defaultState = {
   src: '',
   isPDF: false,
 };
 
-const usePDFUrlPreviewer = (src: string) => {
+const getIsPDF = (src: string) => {
+  if (isURL(src)) {
+    return src.includes('.pdf');
+  }
+
+  return src.includes('data:application/pdf');
+};
+
+const isBase64 = (maybeBase64: string) => maybeBase64.includes('base64');
+
+export const useFilePreviewer = () => {
+  const [previewerState, setFileContent] = useState(defaultState);
+
+  const resetPreviewer = () => {
+    setFileContent(defaultState);
+  };
+
+  const handleInputChange = async (ev: React.FormEvent<HTMLInputElement>) => {
+    const { files } = ev.currentTarget;
+
+    if (!files) {
+      return;
+    }
+
+    const [file] = files;
+
+    if (!isValidFile(file)) {
+      resetPreviewer();
+      return;
+    }
+
+    const base64 = await fileToBase64(file);
+
+    setFileContent({ src: base64, isPDF: file.type.includes('pdf') });
+  };
+
+  return { previewerState, handleInputChange, resetPreviewer };
+};
+
+export const usePDFUrlPreviewer = (src: string) => {
   const [pdfContent, setPDFContent] = useState<null | string>(null);
 
   useEffect(() => {
@@ -58,37 +83,6 @@ const usePDFUrlPreviewer = (src: string) => {
   return pdfContent;
 };
 
-export const useFilePreviewer = () => {
-  const [previewerState, setFileContent] = useState(
-    RECEIPT_PREVIEW_DEFAULT_STATE
-  );
-
-  const resetPreviewer = () => {
-    setFileContent(RECEIPT_PREVIEW_DEFAULT_STATE);
-  };
-
-  const handleInputChange = async (ev: React.FormEvent<HTMLInputElement>) => {
-    const { files } = ev.currentTarget;
-
-    if (!files) {
-      return;
-    }
-
-    const [file] = files;
-
-    if (!isValidFile(file)) {
-      resetPreviewer();
-      return;
-    }
-
-    const base64 = await fileToBase64(file);
-
-    setFileContent({ src: base64, isPDF: file.type.includes('pdf') });
-  };
-
-  return { previewerState, handleInputChange, resetPreviewer };
-};
-
 const PDFPreviewer = ({ src }: { src: string }) => {
   const pdfContent = usePDFUrlPreviewer(src);
 
@@ -116,7 +110,7 @@ export const FilePreviewer = ({
 }) => {
   const { src } = previewerState;
 
-  const isPDF = previewerState.isPDF || src.includes('pdf');
+  const isPDF = previewerState.isPDF ?? getIsPDF(src);
 
   if (!src) {
     return (

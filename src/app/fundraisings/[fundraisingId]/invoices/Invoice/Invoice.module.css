@@ -7,6 +7,7 @@
   display: flex;
   flex-flow: column;
   padding: 10px;
+  height: 380px;
 }
 
 .invoice-image-preview-frame {
@@ -43,4 +44,8 @@
 .invoice-additional-info {
   font-size: 0.8em;
   margin-top: 10px;
+}
+
+.is-active {
+  padding-bottom: 10px;
 }

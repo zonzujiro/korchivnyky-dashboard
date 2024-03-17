@@ -1,7 +1,6 @@
 'use client';
 
 import { useRef } from 'react';
-import classNames from 'classnames';
 import { useRouter } from 'next/navigation';
 
 import type { ExpenseType } from '@/types';
@@ -9,14 +8,14 @@ import type { InvoicePayload } from '@/dal';
 import {
   Button,
   Dialog,
-  FilePreviewer,
-  useFilePreviewer,
-  previewerFileTypes,
   useDialog,
   SubmitButton,
+  Fieldset,
+  FileInput,
+  useFileInput,
 } from '@/library';
 import { createInvoice } from '@/app/actions';
-import { fileToBase64, removeBase64DataPrefix } from '@/toolbox';
+import { removeBase64DataPrefix } from '@/toolbox';
 
 import styles from './AddInvoiceDialog.module.css';
 
@@ -27,22 +26,24 @@ type AddInvoiceDialogProps = {
 export const AddInvoiceDialog = ({ expensesTypes }: AddInvoiceDialogProps) => {
   const router = useRouter();
 
-  const { previewerState, handleInputChange, resetPreviewer } =
-    useFilePreviewer();
+  const fileInput = useFileInput();
 
   const formRef = useRef<HTMLFormElement>(null);
 
   const { openDialog, dialogState, closeDialog } = useDialog({
     prepareClosing: () => {
-      router.refresh();
       formRef.current?.reset();
-      resetPreviewer();
+      fileInput.reset();
     },
   });
 
   const handleSubmit = async (formData: FormData) => {
-    const file = formData.get('file')! as File;
-    const base64 = await fileToBase64(file);
+    const [fileMetadata] = fileInput.value;
+
+    if (!fileMetadata) {
+      fileInput.setErrorText('🤪 Не вистачає файлів!');
+      return;
+    }
 
     const maybeWithDescription = formData.get('description')
       ? {
@@ -51,10 +52,11 @@ export const AddInvoiceDialog = ({ expensesTypes }: AddInvoiceDialogProps) => {
       : {};
 
     const requestPayload: InvoicePayload = {
-      file: removeBase64DataPrefix(base64),
-      fileName: file.name,
+      file: removeBase64DataPrefix(fileMetadata.base64),
+      fileName: fileMetadata.name,
       name: formData.get('name') as string,
       amount: Number(formData.get('sum')),
+      // it's how it called on server :)
       expensiveTypeId: Number(formData.get('expenseType')),
       ...maybeWithDescription,
     };
@@ -62,6 +64,7 @@ export const AddInvoiceDialog = ({ expensesTypes }: AddInvoiceDialogProps) => {
     const response = await createInvoice(requestPayload);
 
     if (response === 'Success') {
+      router.refresh();
       closeDialog();
     }
   };
@@ -83,24 +86,11 @@ export const AddInvoiceDialog = ({ expensesTypes }: AddInvoiceDialogProps) => {
                 className={styles['form-content']}
               >
                 <div className={styles['fieldsets-wrapper']}>
-                  <fieldset
-                    className={classNames(
-                      styles['form-inputs'],
-                      styles['file-preview ']
-                    )}
-                  >
-                    <legend>Завантаження рахунку</legend>
-                    <input
-                      type='file'
-                      name='file'
-                      placeholder='Квитанція у JPG/JPEG, PNG або PDF'
-                      required
-                      onChange={handleInputChange}
-                      accept={previewerFileTypes.join(', ')}
-                    />
-                    <FilePreviewer previewerState={previewerState} />
-                  </fieldset>
-                  <fieldset className={styles['form-inputs']}>
+                  <FileInput
+                    filesInputState={fileInput}
+                    title='Завантаження рахунку'
+                  />
+                  <Fieldset>
                     <legend>Інформація про рахунок</legend>
                     <label htmlFor='invoice-name'>Назва рахунку</label>
                     <input
@@ -143,7 +133,7 @@ export const AddInvoiceDialog = ({ expensesTypes }: AddInvoiceDialogProps) => {
                         ))}
                     </select>
                     <SubmitButton />
-                  </fieldset>
+                  </Fieldset>
                 </div>
               </form>
             </div>

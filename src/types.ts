@@ -37,12 +37,12 @@ export type ExpenseType = {
 export type ExpenseRecord = {
   id: number;
   sum: number;
-  jarId: number;
+  fromJarId: number;
+  toJarId: number | null;
   createdAt: string;
-  date: string;
-  expenseTypeId: ExpenseType['id'];
   receiptUrl: string;
   invoiceId: number;
+  type: 'InvoicePayment';
 };
 
 export type FundraisingCampaign = {
@@ -64,7 +64,7 @@ export type Invoice = {
   isActive: boolean;
   fileUrl: string;
   createdAt: string;
-  expensiveTypeId: number;
+  expenseTypeId: number;
 };
 
 export type PageParams = {

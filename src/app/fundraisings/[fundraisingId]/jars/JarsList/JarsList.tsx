@@ -94,14 +94,8 @@ const JarItem = ({ jar, isSelected, onClick }: JarItemProps) => {
 };
 
 export const JarsList = ({ fundraisingId }: { fundraisingId: string }) => {
-  const {
-    selectedJars,
-    toggleJarSelection,
-    jars,
-    resetJarSelection,
-    statistics,
-    addJar,
-  } = useContext(JarsPageContext);
+  const { selectedJars, toggleJarSelection, jars, resetJarSelection, addJar } =
+    useContext(JarsPageContext);
 
   const [isAllVisible, setIsAllVisible] = useState(jars.length < 10);
   const [selectedCurator, setSelectedCurator] = useState('all');
@@ -161,7 +155,7 @@ export const JarsList = ({ fundraisingId }: { fundraisingId: string }) => {
               selectedJars={selectedJars}
             />
           </div>
-          <JarsInfo jars={jars} newestRecord={statistics[0]} />
+          <JarsInfo jars={jars} />
 
           {selectedJars.length ? (
             <SelectedJarsInfo selectedJars={selectedJars} />

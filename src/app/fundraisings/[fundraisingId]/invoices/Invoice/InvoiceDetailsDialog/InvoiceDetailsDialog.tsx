@@ -32,9 +32,9 @@ export const InvoiceDetailsDialog = (props: InvoiceDetailsDialogProps) => {
   const { openDialog, dialogState } = useDialog();
 
   const getJarName = (expense: ExpenseRecord) => {
-    const jar = jars.find((jar) => expense.jarId === jar.id);
+    const jar = jars.find((jar) => expense.fromJarId === jar.id);
 
-    return jar?.jarName;
+    return jar?.ownerName;
   };
 
   return (
@@ -97,11 +97,15 @@ export const InvoiceDetailsDialog = (props: InvoiceDetailsDialogProps) => {
                     <div className={styles['expense-info']}>
                       <p>Сума: {toCurrency(expense.sum)}</p>
                       <p>Дата: {creationDate}</p>
-                      <p>З якої банки:{getJarName(expense)}</p>
+                      <p>
+                        Платник: <span>{getJarName(expense)}</span>
+                      </p>
                     </div>
                     <div className={styles['expense-actions']}>
                       <Link href={expense.receiptUrl}>
-                        💾 Завантажити квитанцію
+                        {expense.receiptUrl.includes('.zip')
+                          ? '📦 Завантажити квитанції'
+                          : '💾 Завантажити квитанцію'}
                       </Link>
                     </div>
                   </li>

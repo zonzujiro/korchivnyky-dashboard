@@ -1,6 +1,5 @@
 export type InvoiceTransactionPayload = {
-  receiptName: string;
-  receipt: string;
+  receipts: Array<{ receiptName: string; receipt: string }>;
   fromJarId: number;
   invoiceId: number;
   jarSourceAmount: number;

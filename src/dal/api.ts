@@ -24,37 +24,16 @@ import type {
 class NetworkError extends Error {
   code: number;
   message: string;
-  details?: Array<{ message: string }>;
 
-  constructor(
-    code: number,
-    message: string,
-    details?: Array<{ message: string }>
-  ) {
+  constructor(response: Response) {
     super();
 
-    this.message = message;
-    this.code = code;
-    this.details = details;
+    this.message = `(${response.url}): ${response.statusText}}`;
+    this.code = response.status;
 
-    console.log(`${code}: ${message}`);
-
-    if (details?.length) {
-      console.log('Error details:');
-      console.log(JSON.stringify(details.map(({ message }) => message)));
-    }
+    console.log(`${this.code}: ${this.message}`);
   }
 }
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const throwError = (response: Response, body: Record<string, any>) => {
-  const message = `${response.status} (${response.url}): ${
-    response.statusText
-  } - ${body.error.message || 'No message'}`;
-  const code = body.error.code;
-
-  throw new NetworkError(code, message, body.error.details);
-};
 
 const handleSearchParams = (
   baseUrl: string,
@@ -83,16 +62,17 @@ const get = async (
     },
   });
 
-  const json = await response.json();
-
   if (response.status > 200) {
-    throwError(response, json);
+    throw new NetworkError(response);
   }
+
+  const json = await response.json();
 
   return json;
 };
 
-const post = async (url: string, payload?: Record<string, Primitive>) => {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const post = async (url: string, payload?: Record<string, any>) => {
   const options = payload
     ? {
         headers: {
@@ -110,11 +90,11 @@ const post = async (url: string, payload?: Record<string, Primitive>) => {
     ...options,
   });
 
-  const json = await response.json();
-
   if (response.status > 200) {
-    throwError(response, json);
+    throw new NetworkError(response);
   }
+
+  const json = await response.json();
 
   return json;
 };
@@ -149,8 +129,13 @@ export const createExpenseType = (payload: ExpenseTypePayload) => {
   return post('https://jars.fly.dev/expensive-types', payload);
 };
 
-export const getInvoices = (): Promise<Array<Invoice>> => {
-  return get('https://jars.fly.dev/invoices');
+export const getInvoices = async (): Promise<Array<Invoice>> => {
+  const result = await get('https://jars.fly.dev/invoices');
+
+  return result.map((invoice: Record<string, Primitive>) => ({
+    ...invoice,
+    expenseTypeId: invoice.expensiveTypeId,
+  }));
 };
 
 export const getExpenses = (

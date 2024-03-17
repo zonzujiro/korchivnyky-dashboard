@@ -5,19 +5,17 @@ import { useRouter } from 'next/navigation';
 import {
   Button,
   Dialog,
-  FilePreviewer,
-  useFilePreviewer,
-  previewerFileTypes,
   useDialog,
   JarSelector,
+  FileInput,
+  useFileInput,
 } from '@/library';
 import { createExpense } from '@/app/actions';
-import { fileToBase64, removeBase64DataPrefix } from '@/toolbox';
 import type { Invoice, Jar } from '@/types';
 import type { InvoiceTransactionPayload } from '@/dal';
+import { removeBase64DataPrefix } from '@/toolbox';
 
 import styles from './AddExpenseDialog.module.css';
-import classNames from 'classnames';
 
 const SubmitButton = () => {
   const { pending } = useFormStatus();
@@ -39,8 +37,7 @@ export const AddExpenseDialog = ({ invoice, jars }: AddExpenseDialogProps) => {
 
   const sumInputRef = useRef<HTMLInputElement>(null);
 
-  const { previewerState, handleInputChange, resetPreviewer } =
-    useFilePreviewer();
+  const filesInput = useFileInput();
 
   const [selectedJar, setSelectedJar] = useState(jars[0]);
 
@@ -48,7 +45,7 @@ export const AddExpenseDialog = ({ invoice, jars }: AddExpenseDialogProps) => {
 
   const resetForm = () => {
     formRef.current?.reset();
-    resetPreviewer();
+    filesInput.reset();
   };
 
   const { openDialog, dialogState, closeDialog } = useDialog({
@@ -56,8 +53,11 @@ export const AddExpenseDialog = ({ invoice, jars }: AddExpenseDialogProps) => {
   });
 
   const handleSubmit = async (formData: FormData) => {
-    const file = formData.get('file')! as File;
-    const base64 = await fileToBase64(file);
+    if (!filesInput.value.length) {
+      filesInput.setErrorText('🤪 Не вистачає файлів!');
+      return;
+    }
+
     const sum = Number(formData.get('sum'));
     const jarId = Number(formData.get('jar'));
 
@@ -74,15 +74,16 @@ export const AddExpenseDialog = ({ invoice, jars }: AddExpenseDialogProps) => {
       fromJarId: Number(formData.get('jar')),
       jarSourceAmount: Number(formData.get('sum')),
       otherSourcesAmount: 0,
-      receipt: removeBase64DataPrefix(base64),
-      receiptName: file.name,
+      receipts: filesInput.value.map((metadata) => ({
+        receiptName: metadata.name,
+        receipt: removeBase64DataPrefix(metadata.base64),
+      })),
     };
 
     const status = await createExpense(requestPayload);
 
     if (status === 'Success') {
       router.refresh();
-      resetForm();
       closeDialog();
     }
   };
@@ -106,23 +107,11 @@ export const AddExpenseDialog = ({ invoice, jars }: AddExpenseDialogProps) => {
                 className={styles['form-content']}
               >
                 <div className={styles['fieldsets-wrapper']}>
-                  <fieldset
-                    className={classNames(
-                      styles['form-inputs'],
-                      styles['file-preview']
-                    )}
-                  >
-                    <legend>Завантаження квитанції</legend>
-                    <input
-                      type='file'
-                      name='file'
-                      placeholder='Квитанція у JPG/JPEG, PNG або PDF'
-                      required
-                      onChange={handleInputChange}
-                      accept={previewerFileTypes.join(', ')}
-                    />
-                    <FilePreviewer previewerState={previewerState} />
-                  </fieldset>
+                  <FileInput
+                    filesInputState={filesInput}
+                    title='Завантаження рахунку'
+                    multiple
+                  />
                   <div>
                     <fieldset className={styles['form-inputs']}>
                       <legend>Інформація про оплату</legend>
@@ -135,6 +124,7 @@ export const AddExpenseDialog = ({ invoice, jars }: AddExpenseDialogProps) => {
                         name='sum'
                         id='sum-input'
                         placeholder='20 000'
+                        required
                       />
                       <label htmlFor='sum'>Дата оплати</label>
                       <input id='date' type='date' name='date' required />

@@ -1,5 +1,7 @@
 'use client';
 
+import { useState } from 'react';
+
 import type {
   ExpenseRecord,
   ExpenseType,
@@ -20,6 +22,8 @@ type InvoicesListProps = {
   invoices: Array<IInvoice>;
 };
 
+const defaultValue = 'all';
+
 export const InvoicesList = ({
   expenses,
   expensesTypes,
@@ -27,13 +31,38 @@ export const InvoicesList = ({
   users,
   invoices,
 }: InvoicesListProps) => {
+  const [selectedExpenseType, selectExpenseType] = useState<'all' | string>(
+    defaultValue
+  );
+
+  const usedInvoices =
+    selectedExpenseType !== 'all'
+      ? invoices.filter(
+          (invoice) => invoice.expenseTypeId === Number(selectedExpenseType)
+        )
+      : invoices;
+
   return (
-    <div className={styles['invoices-content-wrapper']}>
+    <div className={styles['invoices-list-wrapper']}>
       <div className={styles['invoices-toolbox']}>
         <AddInvoiceDialog expensesTypes={expensesTypes} />
+        <label className={styles['expense-types-select']}>
+          Тип витрат:
+          <select
+            onChange={(ev) => selectExpenseType(ev.currentTarget.value)}
+            defaultValue={defaultValue}
+          >
+            <option value='all'>Всі</option>
+            {expensesTypes.map((expenseType) => (
+              <option key={expenseType.id} value={expenseType.id}>
+                {expenseType.name}
+              </option>
+            ))}
+          </select>
+        </label>
       </div>
       <div className={styles['invoices-list']}>
-        {invoices.map((invoice) => {
+        {usedInvoices.map((invoice) => {
           const invoiceExpenses = expenses.filter(
             (expense) => expense.invoiceId === invoice.id
           );
@@ -47,7 +76,7 @@ export const InvoicesList = ({
               users={users}
               expenseType={
                 expensesTypes.find(
-                  (expense) => expense.id === invoice.expensiveTypeId
+                  (expenseType) => expenseType.id === invoice.expenseTypeId
                 )!
               }
             />

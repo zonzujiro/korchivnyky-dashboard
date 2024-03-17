@@ -1,0 +1,37 @@
+.files-previewer-wrapper {
+  width: 400px;
+  max-width: 400px;
+  overflow-x: scroll;
+  height: 500px;
+  position: relative;
+}
+
+.files-previewer-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.file-previewer-wrapper {
+  display: flex;
+  height: 500px;
+  padding: 15px;
+  flex-direction: column;
+}
+
+.item-header {
+  display: flex;
+  margin-bottom: 5px;
+}
+
+.filename {
+  flex-grow: 1;
+}
+
+.delete-button {
+  cursor: pointer;
+  user-select: none;
+}
+
+.counter {
+  padding-left: 15px;
+}

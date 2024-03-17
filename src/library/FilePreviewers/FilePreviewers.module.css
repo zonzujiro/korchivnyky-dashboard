@@ -3,6 +3,7 @@
   flex-grow: 1;
   max-width: 400px;
   overflow: hidden;
+  max-height: 500px;
 }
 
 .file-preview-frame > div {
