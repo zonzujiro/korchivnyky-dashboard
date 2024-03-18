@@ -34,14 +34,12 @@ type AddExpenseDialogProps = {
 
 export const AddExpenseDialog = ({ invoice, jars }: AddExpenseDialogProps) => {
   const router = useRouter();
-
-  const sumInputRef = useRef<HTMLInputElement>(null);
-
-  const filesInput = useFileInput();
-
   const [selectedJar, setSelectedJar] = useState(jars[0]);
 
+  const sumInputRef = useRef<HTMLInputElement>(null);
   const formRef = useRef<HTMLFormElement>(null);
+
+  const filesInput = useFileInput();
 
   const resetForm = () => {
     formRef.current?.reset();
@@ -71,8 +69,8 @@ export const AddExpenseDialog = ({ invoice, jars }: AddExpenseDialogProps) => {
 
     const requestPayload: InvoiceTransactionPayload = {
       invoiceId: invoice.id,
-      fromJarId: Number(formData.get('jar')),
-      jarSourceAmount: Number(formData.get('sum')),
+      fromJarId: jarId,
+      jarSourceAmount: sum,
       otherSourcesAmount: 0,
       receipts: filesInput.value.map((metadata) => ({
         receiptName: metadata.name,
@@ -85,6 +83,8 @@ export const AddExpenseDialog = ({ invoice, jars }: AddExpenseDialogProps) => {
     if (status === 'Success') {
       router.refresh();
       closeDialog();
+    } else {
+      console.error(status);
     }
   };
 

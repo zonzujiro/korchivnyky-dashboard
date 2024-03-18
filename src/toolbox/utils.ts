@@ -66,3 +66,21 @@ export const identity = <T>(v: T) => v;
 
 export const getFormValues = <InputsNames extends string>(formData: FormData) =>
   Object.fromEntries(formData.entries()) as Record<InputsNames, string>;
+
+export class NetworkError extends Error {
+  code: number;
+  message: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  backendError?: any;
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  constructor(response: Response, body?: Record<string, any>) {
+    super();
+
+    this.message = `(${response.url}): ${response.statusText}}`;
+    this.code = response.status;
+    this.backendError = body;
+
+    console.log(`${this.code}: ${this.message}`);
+  }
+}

@@ -1,6 +1,7 @@
 'use server';
 
 import { type JarsTransactionPayload, createJarsTransaction } from '@/dal';
+import { NetworkError } from '@/toolbox';
 
 export const transferMoneyBetweenJars = async (
   payload: JarsTransactionPayload
@@ -9,8 +10,16 @@ export const transferMoneyBetweenJars = async (
     await createJarsTransaction(payload);
 
     return 'Success';
-  } catch (e) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (e: any) {
     console.log({ e });
-    return 'Not success';
+
+    const message = `${e.code}: ${e.message}`;
+
+    if (e instanceof NetworkError) {
+      return e.backendError ? e.backendError : message;
+    }
+
+    return message;
   }
 };

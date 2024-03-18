@@ -66,6 +66,8 @@ export const AddInvoiceDialog = ({ expensesTypes }: AddInvoiceDialogProps) => {
     if (response === 'Success') {
       router.refresh();
       closeDialog();
+    } else {
+      console.error(response);
     }
   };
 

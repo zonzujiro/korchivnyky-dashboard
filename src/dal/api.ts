@@ -10,7 +10,7 @@ import type {
   Primitive,
   ExpenseRecord,
 } from '@/types';
-import { addColorToJar, identity } from '@/toolbox';
+import { NetworkError, addColorToJar, identity } from '@/toolbox';
 import { cookies } from 'next/headers';
 import { getFundraisingInvoices } from './dataModificators';
 import type {
@@ -20,20 +20,6 @@ import type {
   InvoicePayload,
   ExpenseTypePayload,
 } from './types';
-
-class NetworkError extends Error {
-  code: number;
-  message: string;
-
-  constructor(response: Response) {
-    super();
-
-    this.message = `(${response.url}): ${response.statusText}}`;
-    this.code = response.status;
-
-    console.log(`${this.code}: ${this.message}`);
-  }
-}
 
 const handleSearchParams = (
   baseUrl: string,
@@ -90,11 +76,11 @@ const post = async (url: string, payload?: Record<string, any>) => {
     ...options,
   });
 
-  if (response.status > 200) {
-    throw new NetworkError(response);
-  }
-
   const json = await response.json();
+
+  if (!response.ok) {
+    throw new NetworkError(response, json);
+  }
 
   return json;
 };

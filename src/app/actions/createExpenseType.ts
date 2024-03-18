@@ -4,6 +4,7 @@ import {
   type ExpenseTypePayload,
   createExpenseType as postExpenseType,
 } from '@/dal';
+import { NetworkError } from '@/toolbox';
 
 const createRepairPayload = (expenseTypeData: ExpenseTypePayload) => {
   return {
@@ -37,8 +38,16 @@ export const createExpenseType = async (
     }
 
     return 'Success';
-  } catch (e) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (e: any) {
     console.log({ e });
-    return 'Not success';
+
+    const message = `${e.code}: ${e.message}`;
+
+    if (e instanceof NetworkError) {
+      return e.backendError ? e.backendError : message;
+    }
+
+    return message;
   }
 };
