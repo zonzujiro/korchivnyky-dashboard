@@ -1,14 +1,12 @@
 'use client';
 
-import { FilePreviewer, useFilePreviewer } from '../FilePreviewer';
+import { FilePreviewer } from '../FilePreviewer';
 
 import styles from './FilesPreviewer.module.css';
 
 type FilesPreviewerProp = {
   removeFile: (fileName: string) => void;
-  filesMetadata: Array<
-    ReturnType<typeof useFilePreviewer>['previewerState'] & { name: string }
-  >;
+  filesMetadata: Array<{ name: string; src: string }>;
   multiple?: boolean;
 };
 

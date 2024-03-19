@@ -128,11 +128,5 @@ export const FilePreviewer = ({
     );
   }
 
-  if (isURL(src)) {
-    <div className={styles['file-preview-skeleton']}>
-      <span>🖼️</span>
-    </div>;
-  }
-
   return <PDFPreviewer src={src} />;
 };

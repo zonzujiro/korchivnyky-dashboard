@@ -12,7 +12,8 @@ import type {
 
 import { Invoice } from './Invoice/Invoice';
 import styles from './InvoicesList.module.css';
-import { AddInvoiceDialog } from './AddInvoiceDialog/AddInvoiceDialog';
+import { InvoiceDialog } from './InvoiceDialog/InvoiceDialog';
+import { Button } from '@/library';
 
 type InvoicesListProps = {
   expenses: Array<ExpenseRecord>;
@@ -45,7 +46,12 @@ export const InvoicesList = ({
   return (
     <div className={styles['invoices-list-wrapper']}>
       <div className={styles['invoices-toolbox']}>
-        <AddInvoiceDialog expensesTypes={expensesTypes} />
+        <InvoiceDialog
+          expensesTypes={expensesTypes}
+          renderButton={(onClick) => (
+            <Button onClick={onClick}>➕ Додати рахунок</Button>
+          )}
+        />
         <label className={styles['expense-types-select']}>
           Тип витрат:
           <select
@@ -74,11 +80,7 @@ export const InvoicesList = ({
               invoiceExpenses={invoiceExpenses}
               jars={jars}
               users={users}
-              expenseType={
-                expensesTypes.find(
-                  (expenseType) => expenseType.id === invoice.expenseTypeId
-                )!
-              }
+              expensesTypes={expensesTypes}
             />
           );
         })}

@@ -46,6 +46,24 @@ export const uniqueBy = <TItem>(
   return Object.values(grouped).flat();
 };
 
+export const diff = <
+  TSource extends Record<string, any>,
+  TTarget extends Record<string, any>
+>(
+  source: TSource,
+  target: TTarget
+) => {
+  const changes = {} as Record<string, any>;
+
+  Object.keys(source).forEach((key) => {
+    if (source[key] !== target[key]) {
+      changes[key] = source[key];
+    }
+  });
+
+  return changes as Partial<TTarget>;
+};
+
 export const addColorToJar = (jar: Jar) => ({
   ...jar,
   color: jar.color || randomColor(),

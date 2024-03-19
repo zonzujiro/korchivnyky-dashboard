@@ -79,7 +79,7 @@ export const AddExpenseDialog = ({
       otherSourcesAmount: 0,
       receipts: filesInput.value.map((metadata) => ({
         receiptName: metadata.name,
-        receipt: removeBase64DataPrefix(metadata.base64),
+        receipt: removeBase64DataPrefix(metadata.src),
       })),
     };
 
