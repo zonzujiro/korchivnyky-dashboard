@@ -125,7 +125,7 @@ export const getInvoices = async (): Promise<Array<Invoice>> => {
 };
 
 export const getExpenses = (
-  fundraisingCampaignId: string
+  fundraisingCampaignId?: string
 ): Promise<Array<ExpenseRecord>> => {
   return get('https://jars.fly.dev/transactions', { fundraisingCampaignId });
 };

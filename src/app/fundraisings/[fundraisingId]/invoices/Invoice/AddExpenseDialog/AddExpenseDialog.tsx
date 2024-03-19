@@ -11,7 +11,7 @@ import {
   useFileInput,
 } from '@/library';
 import { createExpense } from '@/app/actions';
-import type { Invoice, Jar } from '@/types';
+import type { ExpenseRecord, Invoice, Jar } from '@/types';
 import type { InvoiceTransactionPayload } from '@/dal';
 import { removeBase64DataPrefix } from '@/toolbox';
 
@@ -30,9 +30,14 @@ const SubmitButton = () => {
 type AddExpenseDialogProps = {
   invoice: Invoice;
   jars: Array<Jar>;
+  expenses: Array<ExpenseRecord>;
 };
 
-export const AddExpenseDialog = ({ invoice, jars }: AddExpenseDialogProps) => {
+export const AddExpenseDialog = ({
+  invoice,
+  jars,
+  expenses,
+}: AddExpenseDialogProps) => {
   const router = useRouter();
   const [selectedJar, setSelectedJar] = useState(jars[0]);
 
@@ -135,6 +140,7 @@ export const AddExpenseDialog = ({ invoice, jars }: AddExpenseDialogProps) => {
                       selectedJar={selectedJar}
                       id='jar'
                       jars={jars}
+                      expenses={expenses}
                       className={styles['jar-selector']}
                     />
                     <SubmitButton />

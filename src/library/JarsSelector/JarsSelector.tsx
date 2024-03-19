@@ -3,16 +3,22 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
 
-import type { Jar } from '@/types';
+import type { ExpenseRecord, Jar } from '@/types';
 import { toCurrency, useDependency } from '@/toolbox';
 
 import { CuratorsDropdown } from '../CuratorsDropdown/CuratorsDropdown';
 import styles from './JarsSelector.module.css';
 import classNames from 'classnames';
-import { getFundraisingCampaigns, getJars } from '@/dal';
+import { getExpenses, getFundraisingCampaigns, getJars } from '@/dal';
 import { Loader } from '../Loader/Loader';
 
-const SelectedJarInfo = ({ jar }: { jar?: Jar }) => {
+const SelectedJarInfo = ({
+  jar,
+  payedSum,
+}: {
+  jar?: Jar;
+  payedSum: number;
+}) => {
   if (!jar) {
     return (
       <div className={styles['jar-info']}>
@@ -26,7 +32,7 @@ const SelectedJarInfo = ({ jar }: { jar?: Jar }) => {
     <div className={styles['jar-info']}>
       <h4>Що по банці?</h4>
       <p>{jar!.isFinished ? '🔓 Збір завершено' : '🔒 Збір продовжується'}</p>
-      <p>Зібрано: {toCurrency(jar!.accumulated)}</p>
+      <p>Залишок: {toCurrency(jar!.accumulated - payedSum)}</p>
     </div>
   );
 };
@@ -34,11 +40,14 @@ const SelectedJarInfo = ({ jar }: { jar?: Jar }) => {
 const TabContent = (props: {
   id: string;
   selectCurator: (value: string) => void;
-  value: Jar;
+  value?: Jar;
   jars: Array<Jar>;
   selectJar: (id: number) => void;
+  jarExpenses: Array<ExpenseRecord>;
 }) => {
-  const { id, selectCurator, selectJar, value, jars } = props;
+  const { id, selectCurator, selectJar, value, jars, jarExpenses } = props;
+
+  const payedSum = jarExpenses.reduce((acc, expense) => acc + expense.sum, 0);
 
   return (
     <>
@@ -58,7 +67,7 @@ const TabContent = (props: {
           </option>
         ))}
       </select>
-      <SelectedJarInfo jar={value} />
+      <SelectedJarInfo jar={value} payedSum={payedSum} />
     </>
   );
 };
@@ -110,20 +119,21 @@ const PastCampaignsTab = (props: PastCampaignsTabProps) => {
 
   // For past campaigns we need all data
   const jars = useJarsSource(campaignId, currentJars, curator);
-  const { result: campaigns, isLoading: isLoadingCampaigns } = useDependency(
-    () => getFundraisingCampaigns()
-  );
+  const { result: campaigns } = useDependency(() => getFundraisingCampaigns());
+  const { result: expenses } = useDependency(() => getExpenses());
 
   const filteredJars =
     curator === 'all'
       ? jars
       : jars.filter((jar) => jar.userId === Number(curator));
 
+  const noData = !(campaigns && expenses);
+
   return (
-    <Loader className={styles.loader} isLoading={isLoadingCampaigns}>
+    <Loader className={styles.loader} isLoading={noData}>
       <div className={styles['tab-content']}>
         <label>Оберіть збір</label>
-        {campaigns ? (
+        {campaigns && (
           <select
             id='campaign-selector'
             name='campaign-selector'
@@ -136,17 +146,23 @@ const PastCampaignsTab = (props: PastCampaignsTabProps) => {
               </option>
             ))}
           </select>
-        ) : null}
-        <TabContent
-          id={jarSelectorId}
-          value={selectedJar || filteredJars[0]}
-          selectJar={(id) => {
-            const jar = jars.find((jar) => jar.id === Number(id))!;
-            selectJar(jar);
-          }}
-          selectCurator={selectCurator}
-          jars={filteredJars}
-        />
+        )}
+
+        {expenses && (
+          <TabContent
+            id={jarSelectorId}
+            value={selectedJar || filteredJars[0]}
+            selectJar={(id) => {
+              const jar = jars.find((jar) => jar.id === Number(id))!;
+              selectJar(jar);
+            }}
+            selectCurator={selectCurator}
+            jars={filteredJars}
+            jarExpenses={expenses!.filter(
+              (expense) => expense.fromJarId === selectedJar.id
+            )}
+          />
+        )}
       </div>
     </Loader>
   );
@@ -159,6 +175,7 @@ type JarSelectorProps = {
   jars: Array<Jar>;
   selectedJar: Jar;
   className?: string;
+  expenses: Array<ExpenseRecord>;
 };
 
 export const JarSelector = ({
@@ -168,6 +185,7 @@ export const JarSelector = ({
   selectJar,
   selectedJar,
   className,
+  expenses,
 }: JarSelectorProps) => {
   const [curator, selectCurator] = useState('all');
   const [activeTab, setActiveTab] = useState<'current' | 'past'>('current');
@@ -183,6 +201,8 @@ export const JarSelector = ({
     selectJar(filteredJars[0] || null);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [curator]);
+
+  const value = selectedJar || filteredJars[0];
 
   return (
     <fieldset className={classNames(styles['jars-selector'], className)}>
@@ -209,10 +229,13 @@ export const JarSelector = ({
         <div className={styles['tab-content']}>
           <TabContent
             id={jarSelectorId}
-            value={selectedJar || filteredJars[0]}
+            value={value}
             selectJar={(id) => selectJar(findJar(id))}
             selectCurator={selectCurator}
             jars={filteredJars}
+            jarExpenses={expenses.filter(
+              (expense) => expense.fromJarId === value.id
+            )}
           />
         </div>
       ) : null}
@@ -223,7 +246,7 @@ export const JarSelector = ({
           selectJar={selectJar}
           curator={curator}
           selectCurator={selectCurator}
-          selectedJar={selectedJar}
+          selectedJar={value}
         />
       ) : null}
     </fieldset>
