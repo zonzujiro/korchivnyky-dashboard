@@ -1,7 +1,7 @@
 import { Suspense, useEffect, useRef, useState } from 'react';
 import { useFormStatus } from 'react-dom';
 
-import type { Jar } from '@/types';
+import type { ExpenseRecord, Jar } from '@/types';
 
 import {
   Button,
@@ -31,9 +31,11 @@ const SubmitButton = () => {
 export const TransferBetweenJarsDialog = ({
   jars,
   selectedJars,
+  expenses,
 }: {
   jars: Array<Jar>;
   selectedJars: Array<Jar>;
+  expenses: Array<ExpenseRecord>;
 }) => {
   const router = useRouter();
   const amountInputRef = useRef<HTMLInputElement>(null);
@@ -135,6 +137,7 @@ export const TransferBetweenJarsDialog = ({
                     jars={jars.filter((jar) => jar.id !== debitJar?.id)}
                     selectJar={setCreditJar}
                     selectedJar={creditJar}
+                    expenses={expenses}
                   />
                   <JarSelector
                     title='На банку'
@@ -142,6 +145,7 @@ export const TransferBetweenJarsDialog = ({
                     jars={jars.filter((jar) => jar.id !== creditJar?.id)}
                     selectJar={setDebitJar}
                     selectedJar={debitJar}
+                    expenses={expenses}
                   />
                 </Suspense>
               </div>
