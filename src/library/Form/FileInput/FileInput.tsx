@@ -14,14 +14,17 @@ import formStyles from '../Form.module.css';
 
 import styles from './FileInput.module.css';
 
-const defaultState: Array<{ base64: string; name: string; isPDF: boolean }> =
-  [];
+export type FileInputValue = Array<{ src: string; name: string }>;
 
-export const useFileInput = () => {
+const defaultState: FileInputValue = [];
+
+type UseFileInputConfig = { defaultValue?: typeof defaultState };
+
+export const useFileInput = (config?: UseFileInputConfig | null) => {
   const [errorText, setErrorText] = useState('');
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const [value, setValue] = useState(defaultState);
+  const [value, setValue] = useState(config?.defaultValue || defaultState);
 
   const reset = () => {
     setValue(defaultState);
@@ -75,7 +78,7 @@ export const FileInput = ({
         const base64 = await fileToBase64(file);
 
         return {
-          base64,
+          src: base64,
           isPDF: file.type.includes('pdf'),
           name: file.name,
         };
@@ -166,11 +169,7 @@ export const FileInput = ({
         </div>
       ) : (
         <FilesPreviewer
-          filesMetadata={value.map(({ name, base64, isPDF }) => ({
-            src: base64,
-            isPDF,
-            name,
-          }))}
+          filesMetadata={value}
           removeFile={removeFileMetadata}
           multiple={multiple}
         />

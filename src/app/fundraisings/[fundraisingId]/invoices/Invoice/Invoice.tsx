@@ -6,18 +6,19 @@ import type {
   User,
 } from '@/types';
 import { getDateString, toCurrency } from '@/toolbox';
-import { FilePreviewer } from '@/library';
+import { Button, FilePreviewer } from '@/library';
 
 import styles from './Invoice.module.css';
 import { InvoiceDetailsDialog } from './InvoiceDetailsDialog/InvoiceDetailsDialog';
 import { AddExpenseDialog } from './AddExpenseDialog/AddExpenseDialog';
+import { InvoiceDialog } from '../InvoiceDialog/InvoiceDialog';
 
 type InvoiceProps = {
   invoice: InvoiceType;
   invoiceExpenses: Array<ExpenseRecord>;
-  expenseType: ExpenseType;
   jars: Array<Jar>;
   users: Array<User>;
+  expensesTypes: Array<ExpenseType>;
 };
 
 const getSum = (expenses: Array<ExpenseRecord>) => {
@@ -26,12 +27,16 @@ const getSum = (expenses: Array<ExpenseRecord>) => {
 
 export const Invoice = ({
   invoice,
-  expenseType,
+  expensesTypes,
   invoiceExpenses,
   jars,
   users,
 }: InvoiceProps) => {
   const { name, amount, fileUrl, createdAt } = invoice;
+
+  const expenseType = expensesTypes.find(
+    (expenseType) => expenseType.id === invoice.expenseTypeId
+  )!;
 
   const payedSum = getSum(invoiceExpenses);
   const creationDate = getDateString(createdAt);
@@ -84,6 +89,15 @@ export const Invoice = ({
             expenses={invoiceExpenses}
           />
         )}
+        <InvoiceDialog
+          invoice={invoice}
+          expensesTypes={expensesTypes}
+          renderButton={(onClick) => (
+            <Button title='Редагувати' onClick={onClick}>
+              ✏️
+            </Button>
+          )}
+        />
       </div>
     </div>
   );

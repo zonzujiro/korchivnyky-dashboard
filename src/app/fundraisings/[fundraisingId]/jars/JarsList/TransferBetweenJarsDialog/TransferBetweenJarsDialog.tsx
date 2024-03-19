@@ -87,7 +87,7 @@ export const TransferBetweenJarsDialog = ({
       toJarId: debitJar?.id,
       jarSourceAmount: amount,
       otherSourcesAmount: 0,
-      receipt: removeBase64DataPrefix(fileMetadata.base64),
+      receipt: removeBase64DataPrefix(fileMetadata.src),
       receiptName: fileMetadata.name,
     };
 
