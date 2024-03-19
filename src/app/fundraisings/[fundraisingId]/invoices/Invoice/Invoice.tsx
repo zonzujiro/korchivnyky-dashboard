@@ -77,11 +77,13 @@ export const Invoice = ({
           owner={invoiceOwner}
           jars={jars}
         />
-        <AddExpenseDialog
-          invoice={invoice}
-          jars={jars}
-          expenses={invoiceExpenses}
-        />
+        {isActive && (
+          <AddExpenseDialog
+            invoice={invoice}
+            jars={jars}
+            expenses={invoiceExpenses}
+          />
+        )}
       </div>
     </div>
   );
