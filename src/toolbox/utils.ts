@@ -1,5 +1,5 @@
 import randomColor from 'randomcolor';
-import type { Jar } from '@/types';
+import type { ExpenseRecord, Jar } from '@/types';
 
 export const getTimeString = (value: string) => {
   const date = new Date(value);
@@ -111,3 +111,12 @@ export class NetworkError extends Error {
     console.log(`${this.code}: ${this.message}`);
   }
 }
+
+export const getJarLeftovers = (jar: Jar, expenses: Array<ExpenseRecord>) => {
+  const jarExpenses = expenses.filter(
+    (expense) => expense.fromJarId === jar.id
+  );
+  const payedSum = jarExpenses.reduce((acc, expense) => acc + expense.sum, 0);
+
+  return jar.accumulated - payedSum;
+};

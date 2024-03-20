@@ -4,20 +4,20 @@ import { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
 
 import type { ExpenseRecord, Jar } from '@/types';
-import { toCurrency, useDependency } from '@/toolbox';
+import { getJarLeftovers, toCurrency, useDependency } from '@/toolbox';
 
 import { CuratorsDropdown } from '../CuratorsDropdown/CuratorsDropdown';
 import styles from './JarsSelector.module.css';
 import classNames from 'classnames';
-import { getExpenses, getFundraisingCampaigns, getJars } from '@/dal';
+import { getFundraisingCampaigns, getJars } from '@/dal';
 import { Loader } from '../Loader/Loader';
 
 const SelectedJarInfo = ({
   jar,
-  payedSum,
+  jarLeftovers,
 }: {
   jar?: Jar;
-  payedSum: number;
+  jarLeftovers: number;
 }) => {
   if (!jar) {
     return (
@@ -32,7 +32,7 @@ const SelectedJarInfo = ({
     <div className={styles['jar-info']}>
       <h4>Що по банці?</h4>
       <p>{jar!.isFinished ? '🔓 Збір завершено' : '🔒 Збір продовжується'}</p>
-      <p>Залишок: {toCurrency(jar!.accumulated - payedSum)}</p>
+      <p>Залишок: {toCurrency(jarLeftovers)}</p>
     </div>
   );
 };
@@ -40,14 +40,14 @@ const SelectedJarInfo = ({
 const TabContent = (props: {
   id: string;
   selectCurator: (value: string) => void;
-  value?: Jar;
+  value: Jar;
   jars: Array<Jar>;
   selectJar: (id: number) => void;
-  jarExpenses: Array<ExpenseRecord>;
+  expenses: Array<ExpenseRecord>;
 }) => {
-  const { id, selectCurator, selectJar, value, jars, jarExpenses } = props;
+  const { id, selectCurator, selectJar, value, jars, expenses } = props;
 
-  const payedSum = jarExpenses.reduce((acc, expense) => acc + expense.sum, 0);
+  const leftovers = getJarLeftovers(value, expenses);
 
   return (
     <>
@@ -67,7 +67,7 @@ const TabContent = (props: {
           </option>
         ))}
       </select>
-      <SelectedJarInfo jar={value} payedSum={payedSum} />
+      <SelectedJarInfo jar={value} jarLeftovers={leftovers} />
     </>
   );
 };
@@ -79,6 +79,7 @@ type PastCampaignsTabProps = {
   curator: string;
   selectCurator: (curator: string) => void;
   selectedJar: Jar;
+  expenses: Array<ExpenseRecord>;
 };
 
 const useJarsSource = (
@@ -109,6 +110,7 @@ const PastCampaignsTab = (props: PastCampaignsTabProps) => {
     selectCurator,
     curator,
     selectedJar,
+    expenses,
   } = props;
 
   const { fundraisingId } = useParams<{
@@ -120,17 +122,14 @@ const PastCampaignsTab = (props: PastCampaignsTabProps) => {
   // For past campaigns we need all data
   const jars = useJarsSource(campaignId, currentJars, curator);
   const { result: campaigns } = useDependency(() => getFundraisingCampaigns());
-  const { result: expenses } = useDependency(() => getExpenses());
 
   const filteredJars =
     curator === 'all'
       ? jars
       : jars.filter((jar) => jar.userId === Number(curator));
 
-  const noData = !(campaigns && expenses);
-
   return (
-    <Loader className={styles.loader} isLoading={noData}>
+    <Loader className={styles.loader} isLoading={!campaigns}>
       <div className={styles['tab-content']}>
         <label>Оберіть збір</label>
         {campaigns && (
@@ -147,22 +146,17 @@ const PastCampaignsTab = (props: PastCampaignsTabProps) => {
             ))}
           </select>
         )}
-
-        {expenses && (
-          <TabContent
-            id={jarSelectorId}
-            value={selectedJar || filteredJars[0]}
-            selectJar={(id) => {
-              const jar = jars.find((jar) => jar.id === Number(id))!;
-              selectJar(jar);
-            }}
-            selectCurator={selectCurator}
-            jars={filteredJars}
-            jarExpenses={expenses!.filter(
-              (expense) => expense.fromJarId === selectedJar.id
-            )}
-          />
-        )}
+        <TabContent
+          id={jarSelectorId}
+          value={selectedJar || filteredJars[0]}
+          selectJar={(id) => {
+            const jar = jars.find((jar) => jar.id === Number(id))!;
+            selectJar(jar);
+          }}
+          selectCurator={selectCurator}
+          jars={filteredJars}
+          expenses={expenses}
+        />
       </div>
     </Loader>
   );
@@ -233,9 +227,7 @@ export const JarSelector = ({
             selectJar={(id) => selectJar(findJar(id))}
             selectCurator={selectCurator}
             jars={filteredJars}
-            jarExpenses={expenses.filter(
-              (expense) => expense.fromJarId === value.id
-            )}
+            expenses={expenses}
           />
         </div>
       ) : null}
@@ -247,6 +239,7 @@ export const JarSelector = ({
           curator={curator}
           selectCurator={selectCurator}
           selectedJar={value}
+          expenses={expenses}
         />
       ) : null}
     </fieldset>

@@ -13,7 +13,7 @@ import {
 import { createExpense } from '@/app/actions';
 import type { ExpenseRecord, Invoice, Jar } from '@/types';
 import type { InvoiceTransactionPayload } from '@/dal';
-import { removeBase64DataPrefix } from '@/toolbox';
+import { getJarLeftovers, removeBase64DataPrefix } from '@/toolbox';
 
 import styles from './AddExpenseDialog.module.css';
 
@@ -65,8 +65,9 @@ export const AddExpenseDialog = ({
     const jarId = Number(formData.get('jar'));
 
     const creditJar = jars.find((jar) => jar.id === jarId)!;
+    const leftovers = getJarLeftovers(creditJar, expenses);
 
-    if (sum > creditJar.accumulated) {
+    if (sum > leftovers) {
       sumInputRef.current?.setCustomValidity('На банці недостатньо коштів');
       sumInputRef.current?.reportValidity();
       return;

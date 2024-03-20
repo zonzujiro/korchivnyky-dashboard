@@ -9,11 +9,11 @@ import type {
   User,
   Invoice as IInvoice,
 } from '@/types';
+import { Button } from '@/library';
 
 import { Invoice } from './Invoice/Invoice';
 import styles from './InvoicesList.module.css';
 import { InvoiceDialog } from './InvoiceDialog/InvoiceDialog';
-import { Button } from '@/library';
 
 type InvoicesListProps = {
   expenses: Array<ExpenseRecord>;
@@ -69,15 +69,11 @@ export const InvoicesList = ({
       </div>
       <div className={styles['invoices-list']}>
         {usedInvoices.map((invoice) => {
-          const invoiceExpenses = expenses.filter(
-            (expense) => expense.invoiceId === invoice.id
-          );
-
           return (
             <Invoice
               key={invoice.id}
               invoice={invoice}
-              invoiceExpenses={invoiceExpenses}
+              expenses={expenses}
               jars={jars}
               users={users}
               expensesTypes={expensesTypes}

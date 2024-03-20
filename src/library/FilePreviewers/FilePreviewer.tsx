@@ -109,7 +109,6 @@ export const FilePreviewer = ({
   previewerState: { src: string; isPDF?: boolean };
 }) => {
   const { src } = previewerState;
-
   const isPDF = previewerState.isPDF ?? getIsPDF(src);
 
   if (!src) {
