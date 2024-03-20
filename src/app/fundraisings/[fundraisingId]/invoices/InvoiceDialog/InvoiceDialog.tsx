@@ -100,8 +100,6 @@ export const InvoiceDialog = ({
       ? createInvoice(requestPayload as CreateInvoicePayload)
       : editInvoice(invoice!.id, requestPayload);
 
-    console.log({ requestPayload });
-
     const response = await request;
 
     if (response === 'Success') {
@@ -163,14 +161,6 @@ export const InvoiceDialog = ({
                       id='sum-input'
                       placeholder='20 000'
                       defaultValue={invoice?.amount}
-                    />
-                    <label htmlFor='sum'>Дата рахунку</label>
-                    <input
-                      id='date'
-                      type='date'
-                      name='date'
-                      required
-                      defaultValue={invoice?.createdAt}
                     />
                     <label htmlFor='expense-type'>Тип витрат</label>
                     <select

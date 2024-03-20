@@ -15,7 +15,7 @@ import { InvoiceDialog } from '../InvoiceDialog/InvoiceDialog';
 
 type InvoiceProps = {
   invoice: InvoiceType;
-  invoiceExpenses: Array<ExpenseRecord>;
+  expenses: Array<ExpenseRecord>;
   jars: Array<Jar>;
   users: Array<User>;
   expensesTypes: Array<ExpenseType>;
@@ -28,12 +28,15 @@ const getSum = (expenses: Array<ExpenseRecord>) => {
 export const Invoice = ({
   invoice,
   expensesTypes,
-  invoiceExpenses,
+  expenses,
   jars,
   users,
 }: InvoiceProps) => {
   const { name, amount, fileUrl, createdAt } = invoice;
 
+  const invoiceExpenses = expenses.filter(
+    (expense) => expense.invoiceId === invoice.id
+  );
   const expenseType = expensesTypes.find(
     (expenseType) => expenseType.id === invoice.expenseTypeId
   )!;
@@ -83,11 +86,7 @@ export const Invoice = ({
           jars={jars}
         />
         {isActive && (
-          <AddExpenseDialog
-            invoice={invoice}
-            jars={jars}
-            expenses={invoiceExpenses}
-          />
+          <AddExpenseDialog invoice={invoice} jars={jars} expenses={expenses} />
         )}
         <InvoiceDialog
           invoice={invoice}
