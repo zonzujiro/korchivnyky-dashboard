@@ -4,11 +4,7 @@ import React, { ReactElement, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 
 import type { ExpenseType, Invoice } from '@/types';
-import {
-  editInvoice,
-  type CreateInvoicePayload,
-  type EditInvoicePayload,
-} from '@/dal';
+import { type CreateInvoicePayload, type EditInvoicePayload } from '@/dal';
 import {
   Dialog,
   useDialog,
@@ -18,7 +14,7 @@ import {
   useFileInput,
   FileInputValue,
 } from '@/library';
-import { createInvoice } from '@/app/actions';
+import { createInvoice, editInvoice } from '@/app/actions';
 import { diff, removeBase64DataPrefix } from '@/toolbox';
 
 import styles from './InvoiceDialog.module.css';
@@ -34,17 +30,10 @@ const getInvoicePayload = (
   fileMetadata: FileInputValue[number],
   invoice?: Invoice
 ): CreateInvoicePayload | EditInvoicePayload => {
-  const maybeWithDescription = formData.get('description')
-    ? {
-        description: formData.get('description') as string,
-      }
-    : {};
-
   const userData = {
     name: formData.get('name') as string,
     amount: Number(formData.get('sum')),
     expenseTypeId: Number(formData.get('expenseType')),
-    ...maybeWithDescription,
   };
 
   if (!invoice) {
@@ -75,9 +64,9 @@ export const InvoiceDialog = ({
   const formRef = useRef<HTMLFormElement>(null);
 
   const fileInputDefaultValue = invoice
-    ? { defaultValue: [{ src: invoice.fileUrl, name: invoice.name }] }
-    : null;
-  const fileInput = useFileInput(fileInputDefaultValue);
+    ? [{ src: invoice.fileUrl, name: invoice.name }]
+    : undefined;
+  const fileInput = useFileInput();
 
   const { openDialog, dialogState, closeDialog } = useDialog({
     prepareClosing: () => {
@@ -96,7 +85,7 @@ export const InvoiceDialog = ({
 
     const requestPayload = getInvoicePayload(formData, fileMetadata, invoice);
 
-    const request = invoice
+    const request = !invoice
       ? createInvoice(requestPayload as CreateInvoicePayload)
       : editInvoice(invoice!.id, requestPayload);
 
@@ -132,6 +121,7 @@ export const InvoiceDialog = ({
                   <FileInput
                     filesInputState={fileInput}
                     title='Завантаження рахунку'
+                    defaultValue={fileInputDefaultValue}
                   />
                   <Fieldset>
                     <legend>Інформація про рахунок</legend>
@@ -143,14 +133,6 @@ export const InvoiceDialog = ({
                       placeholder='За СТО'
                       required
                       defaultValue={invoice?.name}
-                    />
-                    <label htmlFor='invoice-description'>Коментар</label>
-                    <input
-                      type='text'
-                      name='description'
-                      id='invoice-description'
-                      placeholder='Якісь деталі, для історії'
-                      defaultValue={invoice?.description}
                     />
                     <label htmlFor='sum-input'>Сума до сплати</label>
                     <input

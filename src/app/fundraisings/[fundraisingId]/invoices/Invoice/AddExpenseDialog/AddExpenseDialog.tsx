@@ -132,8 +132,6 @@ export const AddExpenseDialog = ({
                         placeholder='20 000'
                         required
                       />
-                      <label htmlFor='sum'>Дата оплати</label>
-                      <input id='date' type='date' name='date' required />
                     </fieldset>
                     <JarSelector
                       title='З якої банки оплата'

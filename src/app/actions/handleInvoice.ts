@@ -6,7 +6,7 @@ import {
   editInvoice as sendEditRequest,
   EditInvoicePayload,
 } from '@/dal';
-import { NetworkError } from '@/toolbox';
+import { NetworkError, ParsingError } from '@/toolbox';
 
 export const createInvoice = async (invoiceData: CreateInvoicePayload) => {
   const { expenseTypeId, ...rest } = invoiceData;
@@ -60,6 +60,10 @@ export const editInvoice = async (
 
     if (e instanceof NetworkError) {
       return e.backendError ? e.backendError : message;
+    }
+
+    if (e instanceof ParsingError) {
+      return `${e.code}: ${e.customMessage} > ${e.name}: ${e.message}`;
     }
 
     return message;

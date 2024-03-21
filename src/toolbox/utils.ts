@@ -96,19 +96,33 @@ export const getFormValues = <InputsNames extends string>(formData: FormData) =>
 
 export class NetworkError extends Error {
   code: number;
-  message: string;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  customMessage: string;
   backendError?: any;
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   constructor(response: Response, body?: Record<string, any>) {
     super();
 
-    this.message = `(${response.url}): ${response.statusText}}`;
+    this.customMessage = `(${response.url}): ${response.statusText}}`;
     this.code = response.status;
     this.backendError = body;
 
-    console.log(`${this.code}: ${this.message}`);
+    console.log(`${this.code}: ${this.customMessage}`);
+  }
+}
+
+export class ParsingError extends SyntaxError {
+  customMessage: string;
+  code: number;
+
+  constructor(response: Response, error: SyntaxError) {
+    super();
+
+    this.customMessage = `(${response.url}): ${response.statusText}}`;
+    this.code = response.status;
+    this.cause = error.cause;
+    this.message = error.message;
+
+    console.log(`${this.code}: ${this.customMessage}`);
   }
 }
 
