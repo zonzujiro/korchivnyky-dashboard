@@ -12,7 +12,7 @@ import type {
   Primitive,
   ExpenseRecord,
 } from '@/types';
-import { NetworkError, addColorToJar, identity } from '@/toolbox';
+import { NetworkError, ParsingError, addColorToJar, identity } from '@/toolbox';
 
 import { getFundraisingInvoices } from './dataModificators';
 import type {
@@ -87,7 +87,7 @@ const post = async (url: string, payload?: Record<string, any>) => {
   return json;
 };
 
-const put = async (url: string, payload?: Record<string, any>) => {
+const patch = async (url: string, payload?: Record<string, any>) => {
   const options = payload
     ? {
         headers: {
@@ -101,17 +101,27 @@ const put = async (url: string, payload?: Record<string, any>) => {
     : {};
 
   const response = await fetch(url, {
-    method: 'put',
+    method: 'patch',
     ...options,
   });
 
-  const json = await response.json();
+  try {
+    const json = await response.json();
 
-  if (!response.ok) {
-    throw new NetworkError(response, json);
+    if (!response.ok) {
+      throw new NetworkError(response, json);
+    }
+
+    return json;
+  } catch (e) {
+    if (e instanceof NetworkError) {
+      throw e;
+    }
+
+    if (e instanceof SyntaxError) {
+      throw new ParsingError(response, e);
+    }
   }
-
-  return json;
 };
 
 export const getJars = async (
@@ -195,7 +205,7 @@ export const editInvoice = (
   invoiceId: number,
   payload: Partial<CreateInvoicePayloadWithMissPrint>
 ) => {
-  return put(`https://jars.fly.dev/invoices/${invoiceId}`, payload);
+  return patch(`https://jars.fly.dev/invoices/${invoiceId}`, payload);
 };
 
 export const getUsers = async (): Promise<Array<User>> => {

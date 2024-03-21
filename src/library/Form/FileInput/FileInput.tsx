@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import classNames from 'classnames';
 
 import { fileToBase64 } from '@/toolbox';
@@ -18,13 +18,11 @@ export type FileInputValue = Array<{ src: string; name: string }>;
 
 const defaultState: FileInputValue = [];
 
-type UseFileInputConfig = { defaultValue?: typeof defaultState };
-
-export const useFileInput = (config?: UseFileInputConfig | null) => {
+export const useFileInput = () => {
   const [errorText, setErrorText] = useState('');
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const [value, setValue] = useState(config?.defaultValue || defaultState);
+  const [value, setValue] = useState(defaultState);
 
   const reset = () => {
     setValue(defaultState);
@@ -51,16 +49,25 @@ type FileInputProps = {
   filesInputState: ReturnType<typeof useFileInput>;
   title: string;
   multiple?: boolean;
+  defaultValue?: FileInputValue;
 };
 
 export const FileInput = ({
   filesInputState,
   title,
   multiple,
+  defaultValue,
 }: FileInputProps) => {
   const [isDraggedOver, setIsDraggedOver] = useState(false);
 
   const { value, validity, inputRef, setValue } = filesInputState;
+
+  useEffect(() => {
+    if (defaultValue) {
+      setValue(defaultValue);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleFileList = async (files: Array<File>) => {
     if (!files?.length) {

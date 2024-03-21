@@ -86,17 +86,23 @@ export const Invoice = ({
           jars={jars}
         />
         {isActive && (
-          <AddExpenseDialog invoice={invoice} jars={jars} expenses={expenses} />
+          <>
+            <AddExpenseDialog
+              invoice={invoice}
+              jars={jars}
+              expenses={expenses}
+            />
+            <InvoiceDialog
+              invoice={invoice}
+              expensesTypes={expensesTypes}
+              renderButton={(onClick) => (
+                <Button title='Редагувати' onClick={onClick}>
+                  ✏️
+                </Button>
+              )}
+            />
+          </>
         )}
-        <InvoiceDialog
-          invoice={invoice}
-          expensesTypes={expensesTypes}
-          renderButton={(onClick) => (
-            <Button title='Редагувати' onClick={onClick}>
-              ✏️
-            </Button>
-          )}
-        />
       </div>
     </div>
   );
