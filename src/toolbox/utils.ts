@@ -61,7 +61,7 @@ export const diff = <
     }
   });
 
-  return changes as Partial<TTarget>;
+  return changes as Partial<TSource>;
 };
 
 export const addColorToJar = (jar: Jar) => ({

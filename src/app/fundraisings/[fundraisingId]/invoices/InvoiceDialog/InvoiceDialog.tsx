@@ -4,7 +4,7 @@ import React, { ReactElement, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 
 import type { ExpenseType, Invoice } from '@/types';
-import { type CreateInvoicePayload, type EditInvoicePayload } from '@/dal';
+import type { CreateInvoicePayload, EditInvoicePayload } from '@/dal';
 import {
   Dialog,
   useDialog,
@@ -23,6 +23,7 @@ type InvoiceDialogProps = {
   expensesTypes: Array<ExpenseType>;
   renderButton(onClick: () => void): ReactElement;
   invoice?: Invoice;
+  invoices: Array<Invoice>;
 };
 
 const getInvoicePayload = (
@@ -59,9 +60,11 @@ export const InvoiceDialog = ({
   expensesTypes,
   renderButton,
   invoice,
+  invoices,
 }: InvoiceDialogProps) => {
   const router = useRouter();
   const formRef = useRef<HTMLFormElement>(null);
+  const nameInputRef = useRef<HTMLInputElement>(null);
 
   const fileInputDefaultValue = invoice
     ? [{ src: invoice.fileUrl, name: invoice.name }]
@@ -77,9 +80,21 @@ export const InvoiceDialog = ({
 
   const handleSubmit = async (formData: FormData) => {
     const [fileMetadata] = fileInput.value;
+    const name = formData.get('name') as string;
+    let hasError = false;
 
     if (!fileMetadata) {
       fileInput.setErrorText('🤪 Не вистачає файлів!');
+      hasError = true;
+    }
+
+    if (invoices.some((invoice) => invoice.name === name)) {
+      nameInputRef.current?.setCustomValidity("Інвойс с таким ім'ям вже існує");
+      hasError = true;
+    }
+
+    if (hasError) {
+      formRef.current?.reportValidity();
       return;
     }
 
@@ -127,6 +142,7 @@ export const InvoiceDialog = ({
                     <legend>Інформація про рахунок</legend>
                     <label htmlFor='invoice-name'>Назва рахунку</label>
                     <input
+                      ref={nameInputRef}
                       type='text'
                       name='name'
                       id='invoice-name'

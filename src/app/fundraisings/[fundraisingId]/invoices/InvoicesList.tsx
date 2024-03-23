@@ -48,6 +48,7 @@ export const InvoicesList = ({
       <div className={styles['invoices-toolbox']}>
         <InvoiceDialog
           expensesTypes={expensesTypes}
+          invoices={invoices}
           renderButton={(onClick) => (
             <Button onClick={onClick}>➕ Додати рахунок</Button>
           )}
@@ -77,6 +78,7 @@ export const InvoicesList = ({
               jars={jars}
               users={users}
               expensesTypes={expensesTypes}
+              invoices={invoices}
             />
           );
         })}
