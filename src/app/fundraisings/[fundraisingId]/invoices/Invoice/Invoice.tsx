@@ -1,7 +1,7 @@
 import type {
   ExpenseRecord,
   ExpenseType,
-  Invoice as InvoiceType,
+  Invoice as IInvoice,
   Jar,
   User,
 } from '@/types';
@@ -14,11 +14,12 @@ import { AddExpenseDialog } from './AddExpenseDialog/AddExpenseDialog';
 import { InvoiceDialog } from '../InvoiceDialog/InvoiceDialog';
 
 type InvoiceProps = {
-  invoice: InvoiceType;
+  invoice: IInvoice;
   expenses: Array<ExpenseRecord>;
   jars: Array<Jar>;
   users: Array<User>;
   expensesTypes: Array<ExpenseType>;
+  invoices: Array<IInvoice>;
 };
 
 const getSum = (expenses: Array<ExpenseRecord>) => {
@@ -31,6 +32,7 @@ export const Invoice = ({
   expenses,
   jars,
   users,
+  invoices,
 }: InvoiceProps) => {
   const { name, amount, fileUrl, createdAt } = invoice;
 
@@ -95,6 +97,7 @@ export const Invoice = ({
             <InvoiceDialog
               invoice={invoice}
               expensesTypes={expensesTypes}
+              invoices={invoices}
               renderButton={(onClick) => (
                 <Button title='Редагувати' onClick={onClick}>
                   ✏️
