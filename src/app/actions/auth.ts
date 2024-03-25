@@ -20,7 +20,6 @@ export const authenticate = async (
         name: 'authorization',
         value: response.token,
         httpOnly: true,
-        maxAge: 500,
       });
     }
 
