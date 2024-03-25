@@ -64,14 +64,14 @@ export const AddExpenseDialog = ({
     const sum = Number(formData.get('sum'));
     const jarId = Number(formData.get('jar'));
 
-    const creditJar = jars.find((jar) => jar.id === jarId)!;
-    const leftovers = getJarLeftovers(creditJar, expenses);
+    // const creditJar = jars.find((jar) => jar.id === jarId)!;
+    // const leftovers = getJarLeftovers(creditJar, expenses);
 
-    if (sum > leftovers) {
-      sumInputRef.current?.setCustomValidity('На банці недостатньо коштів');
-      sumInputRef.current?.reportValidity();
-      return;
-    }
+    // if (sum > leftovers) {
+    //   sumInputRef.current?.setCustomValidity('На банці недостатньо коштів');
+    //   sumInputRef.current?.reportValidity();
+    //   return;
+    // }
 
     const requestPayload: InvoiceTransactionPayload = {
       invoiceId: invoice.id,

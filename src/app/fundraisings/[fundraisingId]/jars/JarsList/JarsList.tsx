@@ -23,9 +23,10 @@ type JarItemProps = {
   jar: Jar;
   isSelected: boolean;
   onClick(): void;
+  context: React.Context<any>;
 };
 
-const JarItem = ({ jar, isSelected, onClick }: JarItemProps) => {
+const JarItem = ({ jar, isSelected, onClick, context }: JarItemProps) => {
   const {
     url,
     goal,
@@ -36,6 +37,10 @@ const JarItem = ({ jar, isSelected, onClick }: JarItemProps) => {
     color,
     otherSourcesAccumulated,
   } = jar;
+
+  const propsContext = useContext(context);
+
+  console.log({ propsContext });
 
   const [copyClicked, setCopyClicked] = useState(false);
 
@@ -112,7 +117,9 @@ export const JarsList = ({ fundraisingId }: { fundraisingId: string }) => {
       : jars;
 
   const toRender =
-    !selectedCurator && isAllVisible ? byCurator : byCurator.slice(0, 10);
+    selectedCurator === 'all' && isAllVisible
+      ? byCurator
+      : byCurator.slice(0, 10);
 
   return (
     <>
@@ -145,6 +152,7 @@ export const JarsList = ({ fundraisingId }: { fundraisingId: string }) => {
                   selectedJars.find((selectedJar) => selectedJar.id === item.id)
                 )}
                 onClick={() => toggleJarSelection(item)}
+                context={JarsPageContext}
               />
             );
           })}

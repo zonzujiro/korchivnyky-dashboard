@@ -11,9 +11,9 @@ import type {
 } from '@/types';
 import { Button } from '@/library';
 
+import { InvoiceDialog } from './InvoiceDialog/InvoiceDialog';
 import { Invoice } from './Invoice/Invoice';
 import styles from './InvoicesList.module.css';
-import { InvoiceDialog } from './InvoiceDialog/InvoiceDialog';
 
 type InvoicesListProps = {
   expenses: Array<ExpenseRecord>;
@@ -35,13 +35,18 @@ export const InvoicesList = ({
   const [selectedExpenseType, selectExpenseType] = useState<'all' | string>(
     defaultValue
   );
+  const [isOnlyActiveInvoices, setIsOnlyActiveInvoices] = useState(true);
 
-  const usedInvoices =
+  const byExpenseType =
     selectedExpenseType !== 'all'
       ? invoices.filter(
           (invoice) => invoice.expenseTypeId === Number(selectedExpenseType)
         )
       : invoices;
+
+  const byVisibility = isOnlyActiveInvoices
+    ? byExpenseType.filter((invoice) => invoice.isActive)
+    : byExpenseType;
 
   return (
     <div className={styles['invoices-list-wrapper']}>
@@ -53,6 +58,12 @@ export const InvoicesList = ({
             <Button onClick={onClick}>➕ Додати рахунок</Button>
           )}
         />
+        <Button
+          onClick={() => setIsOnlyActiveInvoices(!isOnlyActiveInvoices)}
+          disabled={invoices.every((invoice) => invoice.isActive)}
+        >
+          {isOnlyActiveInvoices ? 'Приховали неактивні 🫣' : 'Показуємо все 👀'}
+        </Button>
         <label className={styles['expense-types-select']}>
           Тип витрат:
           <select
@@ -69,7 +80,7 @@ export const InvoicesList = ({
         </label>
       </div>
       <div className={styles['invoices-list']}>
-        {usedInvoices.map((invoice) => {
+        {byVisibility.map((invoice) => {
           return (
             <Invoice
               key={invoice.id}

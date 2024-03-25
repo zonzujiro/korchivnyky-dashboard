@@ -22,10 +22,6 @@
   overflow: hidden;
 }
 
-.receipt-preview-frame > div {
-  position: unset !important;
-}
-
 .pdf-preview {
   width: 400px;
   height: 500px;

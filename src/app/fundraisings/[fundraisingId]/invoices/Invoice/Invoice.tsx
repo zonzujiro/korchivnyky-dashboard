@@ -34,7 +34,7 @@ export const Invoice = ({
   users,
   invoices,
 }: InvoiceProps) => {
-  const { name, amount, fileUrl, createdAt } = invoice;
+  const { name, amount, fileUrl, createdAt, isActive } = invoice;
 
   const invoiceExpenses = expenses.filter(
     (expense) => expense.invoiceId === invoice.id
@@ -47,8 +47,6 @@ export const Invoice = ({
   const creationDate = getDateString(createdAt);
 
   const invoiceOwner = users.find((user) => user.id === invoice.userId)!;
-
-  const isActive = Boolean(amount - payedSum);
 
   return (
     <div className={styles.invoice}>

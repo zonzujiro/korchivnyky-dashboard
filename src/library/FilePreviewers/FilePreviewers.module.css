@@ -6,10 +6,6 @@
   max-height: 500px;
 }
 
-.file-preview-frame > div {
-  position: unset !important;
-}
-
 .pdf-preview {
   width: 400px;
   flex-grow: 1;

@@ -4,7 +4,7 @@ import React, { ReactElement, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 
 import type { ExpenseType, Invoice } from '@/types';
-import type { CreateInvoicePayload, EditInvoicePayload } from '@/dal';
+import { type CreateInvoicePayload, type EditInvoicePayload } from '@/dal';
 import {
   Dialog,
   useDialog,
@@ -13,9 +13,11 @@ import {
   FileInput,
   useFileInput,
   FileInputValue,
+  resetInputValidity,
+  isURL,
 } from '@/library';
 import { createInvoice, editInvoice } from '@/app/actions';
-import { diff, removeBase64DataPrefix } from '@/toolbox';
+import { diff, isEmpty, removeBase64DataPrefix } from '@/toolbox';
 
 import styles from './InvoiceDialog.module.css';
 
@@ -47,13 +49,48 @@ const getInvoicePayload = (
 
   const result = diff(userData, invoice);
 
-  return invoice?.fileUrl === fileMetadata.src
+  return isURL(fileMetadata.src)
     ? result
     : {
         ...result,
         file: removeBase64DataPrefix(fileMetadata.src),
         fileName: fileMetadata.name,
       };
+};
+
+const validateEditing = (
+  formData: FormData,
+  invoices: Array<Invoice>,
+  invoice: Invoice,
+  fileMetadata?: FileInputValue[number]
+) => {
+  const name = formData.get('name') as string;
+
+  console.log({
+    name,
+    invoices,
+    isValid: invoices.every((invoice) => invoice.name !== name),
+  });
+
+  return {
+    file: Boolean(fileMetadata?.src),
+    name:
+      name === invoice.name ||
+      invoices.every((invoice) => invoice.name !== name),
+  };
+};
+
+const validateCreation = (
+  formData: FormData,
+  invoices: Array<Invoice>,
+  fileMetadata?: FileInputValue[number]
+) => {
+  const name = formData.get('name') as string;
+
+  return {
+    file: Boolean(fileMetadata?.src),
+    name: invoices.every((invoice) => invoice.name !== name),
+  };
 };
 
 export const InvoiceDialog = ({
@@ -80,25 +117,31 @@ export const InvoiceDialog = ({
 
   const handleSubmit = async (formData: FormData) => {
     const [fileMetadata] = fileInput.value;
-    const name = formData.get('name') as string;
-    let hasError = false;
 
-    if (!fileMetadata) {
+    const validityState = invoice
+      ? validateEditing(formData, invoices, invoice, fileMetadata)
+      : validateCreation(formData, invoices, fileMetadata);
+
+    if (!validityState.file) {
       fileInput.setErrorText('🤪 Не вистачає файлів!');
-      hasError = true;
     }
 
-    if (invoices.some((invoice) => invoice.name === name)) {
+    if (!validityState.name) {
       nameInputRef.current?.setCustomValidity("Інвойс с таким ім'ям вже існує");
-      hasError = true;
+      nameInputRef.current?.reportValidity();
     }
 
-    if (hasError) {
-      formRef.current?.reportValidity();
+    if (Object.values(validityState).some((value) => value === false)) {
       return;
     }
 
     const requestPayload = getInvoicePayload(formData, fileMetadata, invoice);
+
+    if (isEmpty(requestPayload)) {
+      return;
+    }
+
+    console.log({ requestPayload });
 
     const request = !invoice
       ? createInvoice(requestPayload as CreateInvoicePayload)
@@ -149,6 +192,7 @@ export const InvoiceDialog = ({
                       placeholder='За СТО'
                       required
                       defaultValue={invoice?.name}
+                      onChange={resetInputValidity}
                     />
                     <label htmlFor='sum-input'>Сума до сплати</label>
                     <input

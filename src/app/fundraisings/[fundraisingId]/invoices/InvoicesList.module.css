@@ -8,7 +8,10 @@
   margin: 15px;
 }
 
-.expense-types-select,
+.invoices-toolbox > * {
+  margin-right: 10px;
+}
+
 .expense-types-select select {
   margin-left: 10px;
 }
