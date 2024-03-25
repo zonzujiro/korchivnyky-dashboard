@@ -1,6 +1,6 @@
 'use client';
 
-import { ReactElement, useEffect, useRef, useState } from 'react';
+import { type ReactElement, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 
 import styles from './Dialog.module.css';
@@ -61,6 +61,10 @@ export const Dialog = (props: DialogProps) => {
    */
   const catchEvent = (ev: React.MouseEvent<HTMLDialogElement>) => {
     ev.stopPropagation();
+
+    if ((ev.target as Element).tagName === 'DIALOG') {
+      closeDialog();
+    }
   };
 
   return (

@@ -1,14 +1,12 @@
 'use client';
 
-import randomColor from 'randomcolor';
-
 import {
   getDateString,
   getGatheredMoney,
   getTimeString,
   toCurrency,
 } from '@/toolbox';
-import { Jar, JarStatisticRecord } from '@/types';
+import type { Jar, JarStatisticRecord } from '@/types';
 
 import styles from './Progress.module.css';
 
@@ -17,8 +15,6 @@ type ProgressProps = {
   jars: Array<Jar>;
   newestRecord?: JarStatisticRecord;
 };
-
-const progressColor = randomColor();
 
 export const Progress = ({ goal, jars, newestRecord }: ProgressProps) => {
   const currentSum = getGatheredMoney(jars);
@@ -32,7 +28,7 @@ export const Progress = ({ goal, jars, newestRecord }: ProgressProps) => {
         <div className={styles['progress-bar']}>
           <div
             className={styles['current-progress']}
-            style={{ width: percentage, backgroundColor: progressColor }}
+            style={{ width: percentage }}
           />
         </div>
         <span>{percentage}</span>

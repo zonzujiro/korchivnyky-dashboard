@@ -16,6 +16,7 @@
 
 .current-progress {
   height: inherit;
+  background-color: rgb(1, 165, 119);
 }
 
 @media (max-width: 1200px) {
