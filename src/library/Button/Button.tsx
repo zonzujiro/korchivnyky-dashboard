@@ -7,7 +7,7 @@ type ButtonProps = {
   className?: string;
   children: ReactNode;
   disabled?: boolean;
-  onClick?: () => void;
+  onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
   pressed?: boolean;
   type?: 'submit';
   title?: string;
@@ -22,6 +22,11 @@ export const Button = ({
   pressed,
   title,
 }: ButtonProps) => {
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.stopPropagation();
+    onClick?.(event);
+  };
+
   return (
     <button
       disabled={disabled}
@@ -29,7 +34,7 @@ export const Button = ({
       className={classNames(styles.button, className, {
         [styles.pressed]: pressed,
       })}
-      onClick={onClick}
+      onClick={handleClick}
       type={type}
     >
       {children}
