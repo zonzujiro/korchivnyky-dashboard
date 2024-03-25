@@ -1,4 +1,4 @@
-export type Primitive = string | number | boolean;
+export type Primitive = string | number | boolean | null;
 
 export type Jar = {
   id: number;
@@ -104,9 +104,12 @@ export type JarsTransactionPayload = {
   receipt: string;
 };
 
-export type CreateJarPayload = {
-  url: string;
-  ownerName?: string;
-  fundraisingCampaignId: number;
-  color: string;
-};
+export type CreateJarPayload = Pick<
+  Jar,
+  | 'url'
+  | 'fundraisingCampaignId'
+  | 'color'
+  | 'goal'
+  | 'isFinished'
+  | 'otherSourcesAccumulated'
+> & { ownerName: string };

@@ -32,11 +32,10 @@ class NetworkError extends Error {
   }
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const throwError = (response: Response, body: Record<string, any>) => {
   const message = `${response.status} (${response.url}): ${
     response.statusText
-  } - ${body.error.message || ''}`;
+  } - ${body.error.message || JSON.stringify(body.error.details) || ''}`;
   const code = body.error.code;
 
   throw new NetworkError(code, message);
@@ -78,7 +77,11 @@ const get = async (
   return json;
 };
 
-const post = async (url: string, payload?: Record<string, Primitive>) => {
+const sendPayload = async (
+  method: 'post' | 'put',
+  url: string,
+  payload?: Record<string, Primitive>
+) => {
   const options = payload
     ? {
         headers: {
@@ -92,17 +95,28 @@ const post = async (url: string, payload?: Record<string, Primitive>) => {
     : {};
 
   const response = await fetch(url, {
-    method: 'post',
+    method,
     ...options,
   });
 
-  const json = await response.json();
-
-  if (response.status > 200) {
-    throwError(response, json);
+  if (response.headers.get('Content-Type')?.includes('application/json')) {
+    const json = await response.json();
+    if (response.status > 200) {
+      throwError(response, json);
+    }
+    return json;
+  } else {
+    // if response is not JSON
+    throw new Error(`Помилка: ${response.status} ${response.statusText}}`);
   }
+};
 
-  return json;
+const post = async (url: string, payload?: Record<string, Primitive>) => {
+  return sendPayload('post', url, payload);
+};
+
+const put = async (url: string, payload?: Record<string, Primitive>) => {
+  return sendPayload('put', url, payload);
 };
 
 export const getJars = async (
@@ -123,8 +137,12 @@ export const getStatistics = async (): Promise<Array<JarStatisticRecord>> => {
   return statistics;
 };
 
-export const postJar = async (payload: CreateJarPayload) => {
+export const postJar = async (payload: CreateJarPayload): Promise<Jar> => {
   return post('https://jars.fly.dev/jars', payload);
+};
+
+export const putJar = async (payload: CreateJarPayload): Promise<Jar> => {
+  return put('https://jars.fly.dev/jars', payload);
 };
 
 export const getExpensesTypes = (

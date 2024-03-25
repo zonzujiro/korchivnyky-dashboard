@@ -21,9 +21,11 @@ type JarItemProps = {
   jar: Jar;
   isSelected: boolean;
   onClick(): void;
+  fundraisingId: string;
+  jars: any;
 };
 
-const JarItem = ({ jar, isSelected, onClick }: JarItemProps) => {
+const JarItem = ({ jar, isSelected, onClick, fundraisingId }: JarItemProps) => {
   const {
     url,
     goal,
@@ -74,6 +76,15 @@ const JarItem = ({ jar, isSelected, onClick }: JarItemProps) => {
           >
             <TooltipComponent />
           </span>
+          <span>
+            <AddJarDialog
+              jar={jar}
+              fundraisingId={fundraisingId}
+              renderButton={(openDialog) => (
+                <Button onClick={openDialog}>Редагувати банку</Button>
+              )}
+            />
+          </span>
         </div>
       </div>
       <div className={classNames(styles['item-column'], styles['jar-info'])}>
@@ -111,9 +122,11 @@ const GeneralInfo = ({
     <>
       <div className={styles['jars-buttons']}>
         <AddJarDialog
-          addJar={addJar}
           jars={jars}
           fundraisingId={fundraisingId}
+          renderButton={(openDialog) => (
+            <Button onClick={openDialog}>Редагувати банку</Button>
+          )}
         />
         <TransferBetweenJarsDialog jars={jars} selectedJars={selectedJars} />
       </div>
@@ -209,10 +222,12 @@ export const JarsList = ({ fundraisingId }: { fundraisingId: string }) => {
               <JarItem
                 key={item.id}
                 jar={item}
+                jars={jars}
                 isSelected={Boolean(
                   selectedJars.find((selectedJar) => selectedJar.id === item.id)
                 )}
                 onClick={() => toggleJarSelection(item)}
+                fundraisingId={fundraisingId}
               />
             );
           })}

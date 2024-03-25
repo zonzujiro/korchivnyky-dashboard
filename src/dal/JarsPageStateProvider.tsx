@@ -22,6 +22,7 @@ export type JarsPageState = StateProviderProps & {
   selectedJars: Array<Jar>;
   toggleJarSelection(jar: Jar): void;
   addJar(jar: Jar): void;
+  replaceJar(jar: Jar): void;
   resetJarSelection(): void;
   addExpense(expense: ExpenseRecord): void;
 };
@@ -35,6 +36,7 @@ export const JarsPageContext = React.createContext<JarsPageState>({
   users: [],
   toggleJarSelection: () => {},
   addJar: () => {},
+  replaceJar: () => {},
   resetJarSelection: () => {},
   addExpense: () => {},
 });
@@ -72,6 +74,14 @@ export const JarsPageStateProvider = ({
     setJars(nextJars);
   };
 
+  const replaceJar = (jar: Jar) => {
+    const nextJars = [...jars];
+    const index = nextJars.findIndex((el) => el.id === jar.id);
+    nextJars[index] = jar;
+
+    setJars(nextJars);
+  };
+
   const addExpense = (expense: ExpenseRecord) => {
     setExpenses([...expenses, expense]);
   };
@@ -81,6 +91,7 @@ export const JarsPageStateProvider = ({
     toggleJarSelection,
     jars,
     addJar,
+    replaceJar,
     resetJarSelection,
     expenses,
     expenseTypes,

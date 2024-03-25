@@ -12,6 +12,15 @@
   border-radius: 0 15px;
 }
 
+.edit-jar {
+  background-color: white;
+}
+
+.edit-jar:hover {
+  background-color: lightgray;
+  transition: 0.15s;
+}
+
 .add-jar-dialog {
   position: absolute;
   left: 0;
