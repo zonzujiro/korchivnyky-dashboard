@@ -14,10 +14,10 @@ import { Loader } from '../Loader/Loader';
 
 const SelectedJarInfo = ({
   jar,
-  jarLeftovers,
+  expenses,
 }: {
   jar?: Jar;
-  jarLeftovers: number;
+  expenses: Array<ExpenseRecord>;
 }) => {
   if (!jar) {
     return (
@@ -28,11 +28,13 @@ const SelectedJarInfo = ({
     );
   }
 
+  const leftovers = getJarLeftovers(jar, expenses);
+
   return (
     <div className={styles['jar-info']}>
       <h4>Що по банці?</h4>
       <p>{jar!.isFinished ? '🔓 Збір завершено' : '🔒 Збір продовжується'}</p>
-      <p>Залишок: {toCurrency(jarLeftovers)}</p>
+      <p>Залишок: {toCurrency(leftovers)}</p>
     </div>
   );
 };
@@ -40,14 +42,12 @@ const SelectedJarInfo = ({
 const TabContent = (props: {
   id: string;
   selectCurator: (value: string) => void;
-  value: Jar;
+  value?: Jar;
   jars: Array<Jar>;
   selectJar: (id: number) => void;
   expenses: Array<ExpenseRecord>;
 }) => {
   const { id, selectCurator, selectJar, value, jars, expenses } = props;
-
-  const leftovers = getJarLeftovers(value, expenses);
 
   return (
     <>
@@ -61,13 +61,15 @@ const TabContent = (props: {
         value={value?.id || ''}
         required
       >
-        {jars.map((jar) => (
-          <option key={jar.id} value={jar.id}>
-            {jar.ownerName}: {jar.jarName}
-          </option>
-        ))}
+        {jars
+          .filter((jar) => !jar.isFinished)
+          .map((jar) => (
+            <option key={jar.id} value={jar.id}>
+              {jar.ownerName}: {jar.jarName}
+            </option>
+          ))}
       </select>
-      <SelectedJarInfo jar={value} jarLeftovers={leftovers} />
+      <SelectedJarInfo jar={value} expenses={expenses} />
     </>
   );
 };
@@ -197,6 +199,8 @@ export const JarSelector = ({
   }, [curator]);
 
   const value = selectedJar || filteredJars[0];
+
+  console.log({ value });
 
   return (
     <fieldset className={classNames(styles['jars-selector'], className)}>

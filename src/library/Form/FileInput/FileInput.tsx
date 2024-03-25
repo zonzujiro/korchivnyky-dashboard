@@ -60,7 +60,7 @@ export const FileInput = ({
 }: FileInputProps) => {
   const [isDraggedOver, setIsDraggedOver] = useState(false);
 
-  const { value, validity, inputRef, setValue } = filesInputState;
+  const { value, validity, inputRef, setValue, setErrorText } = filesInputState;
 
   useEffect(() => {
     if (defaultValue) {
@@ -101,6 +101,7 @@ export const FileInput = ({
       );
     });
 
+    setErrorText('');
     setValue(unique);
   };
 

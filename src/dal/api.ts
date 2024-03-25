@@ -14,7 +14,7 @@ import type {
 } from '@/types';
 import { NetworkError, ParsingError, addColorToJar, identity } from '@/toolbox';
 
-import { getFundraisingInvoices } from './dataModificators';
+import { deactivateInvoices, getFundraisingInvoices } from './dataModificators';
 import type {
   CreateJarPayload,
   InvoiceTransactionPayload,
@@ -22,6 +22,10 @@ import type {
   ExpenseTypePayload,
   CreateInvoicePayloadWithMissPrint,
 } from './types';
+
+const getAuthorization = () => ({
+  Authorization: cookies().get('authorization')?.value || '',
+});
 
 const handleSearchParams = (
   baseUrl: string,
@@ -46,7 +50,7 @@ const get = async (
 ) => {
   const response = await fetch(handleSearchParams(url, paramsSource), {
     headers: {
-      Authorization: cookies().get('authorization')?.value || '',
+      ...getAuthorization(),
     },
   });
 
@@ -59,16 +63,14 @@ const get = async (
   return json;
 };
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const post = async (url: string, payload?: Record<string, any>) => {
   const options = payload
     ? {
         headers: {
           Accept: 'application/json',
           'Content-Type': 'application/json',
-          Authorization: cookies().get('authorization')?.value || '',
+          ...getAuthorization(),
         },
-
         body: JSON.stringify(payload),
       }
     : {};
@@ -87,23 +89,24 @@ const post = async (url: string, payload?: Record<string, any>) => {
   return json;
 };
 
-const patch = async (url: string, payload?: Record<string, any>) => {
+const put = async (url: string, payload?: Record<string, any>) => {
   const options = payload
     ? {
         headers: {
           Accept: 'application/json',
           'Content-Type': 'application/json',
-          Authorization: cookies().get('authorization')?.value || '',
+          ...getAuthorization(),
         },
-
         body: JSON.stringify(payload),
       }
     : {};
 
   const response = await fetch(url, {
-    method: 'patch',
+    method: 'put',
     ...options,
   });
+
+  console.log(response);
 
   try {
     const json = await response.json();
@@ -205,7 +208,7 @@ export const editInvoice = (
   invoiceId: number,
   payload: Partial<CreateInvoicePayloadWithMissPrint>
 ) => {
-  return patch(`https://jars.fly.dev/invoices/${invoiceId}`, payload);
+  return put(`https://jars.fly.dev/invoices/${invoiceId}`, payload);
 };
 
 export const getUsers = async (): Promise<Array<User>> => {
@@ -250,11 +253,12 @@ export const getInvoicesPageData = async ({
     ]);
 
   const fundraisingInvoices = getFundraisingInvoices(invoices, expensesTypes);
+  const deactivatedInvoices = deactivateInvoices(fundraisingInvoices, expenses);
 
   return {
     expensesTypes,
     expenses,
-    invoices: fundraisingInvoices,
+    invoices: deactivatedInvoices,
     jars,
     currentUser,
     users,
@@ -282,6 +286,7 @@ export const getFundraisingInfo = async ({
     ]);
 
   const fundraisingInvoices = getFundraisingInvoices(invoices, expensesTypes);
+  const deactivatedInvoices = deactivateInvoices(fundraisingInvoices, expenses);
 
   const jarsIds = jars.map((jar) => jar.id);
   const fundraisingStatistics = statistics.filter((record) =>
@@ -291,7 +296,7 @@ export const getFundraisingInfo = async ({
   return {
     expensesTypes,
     expenses,
-    invoices: fundraisingInvoices,
+    invoices: deactivatedInvoices,
     jars,
     statistics: fundraisingStatistics,
   };

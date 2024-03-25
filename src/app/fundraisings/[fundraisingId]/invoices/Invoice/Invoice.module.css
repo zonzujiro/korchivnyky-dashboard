@@ -16,10 +16,6 @@
   display: flex;
 }
 
-.invoice-image-preview-frame > div {
-  position: unset !important;
-}
-
 .invoice-name {
   margin: 10px 0;
 }

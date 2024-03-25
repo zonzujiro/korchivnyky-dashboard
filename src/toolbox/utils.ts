@@ -64,6 +64,10 @@ export const diff = <
   return changes as Partial<TSource>;
 };
 
+export const isEmpty = (maybeEmpty: Record<string, any>) => {
+  return !Object.keys(maybeEmpty).length;
+};
+
 export const addColorToJar = (jar: Jar) => ({
   ...jar,
   color: jar.color || randomColor(),

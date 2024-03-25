@@ -20,7 +20,6 @@ export const createInvoice = async (invoiceData: CreateInvoicePayload) => {
     await sendCreateRequest(payload);
 
     return 'Success';
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (e: any) {
     console.log({ e });
 
@@ -52,7 +51,6 @@ export const editInvoice = async (
     await sendEditRequest(invoiceId, payload);
 
     return 'Success';
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (e: any) {
     console.log({ e });
 

@@ -20,3 +20,6 @@ export const SubmitButton = ({ className }: { className?: string }) => {
 export const Fieldset = ({ children }: { children: ReactNode }) => {
   return <fieldset className={styles['form-inputs']}>{children}</fieldset>;
 };
+
+export const resetInputValidity = (ev: React.ChangeEvent<HTMLInputElement>) =>
+  ev.currentTarget.setCustomValidity('');
