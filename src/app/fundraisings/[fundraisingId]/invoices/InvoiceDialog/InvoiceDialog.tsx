@@ -1,34 +1,75 @@
 'use client';
 
-import { useRef } from 'react';
+import React, { ReactElement, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 
-import type { ExpenseType } from '@/types';
-import type { InvoicePayload } from '@/dal';
+import type { ExpenseType, Invoice } from '@/types';
+import type { CreateInvoicePayload, EditInvoicePayload } from '@/dal';
 import {
-  Button,
   Dialog,
   useDialog,
   SubmitButton,
   Fieldset,
   FileInput,
   useFileInput,
+  FileInputValue,
 } from '@/library';
-import { createInvoice } from '@/app/actions';
-import { removeBase64DataPrefix } from '@/toolbox';
+import { createInvoice, editInvoice } from '@/app/actions';
+import { diff, removeBase64DataPrefix } from '@/toolbox';
 
-import styles from './AddInvoiceDialog.module.css';
+import styles from './InvoiceDialog.module.css';
 
-type AddInvoiceDialogProps = {
+type InvoiceDialogProps = {
   expensesTypes: Array<ExpenseType>;
+  renderButton(onClick: () => void): ReactElement;
+  invoice?: Invoice;
+  invoices: Array<Invoice>;
 };
 
-export const AddInvoiceDialog = ({ expensesTypes }: AddInvoiceDialogProps) => {
+const getInvoicePayload = (
+  formData: FormData,
+  fileMetadata: FileInputValue[number],
+  invoice?: Invoice
+): CreateInvoicePayload | EditInvoicePayload => {
+  const userData = {
+    name: formData.get('name') as string,
+    amount: Number(formData.get('sum')),
+    expenseTypeId: Number(formData.get('expenseType')),
+  };
+
+  if (!invoice) {
+    return {
+      file: removeBase64DataPrefix(fileMetadata.src),
+      fileName: fileMetadata.name,
+      ...userData,
+    };
+  }
+
+  const result = diff(userData, invoice);
+
+  return invoice?.fileUrl === fileMetadata.src
+    ? result
+    : {
+        ...result,
+        file: removeBase64DataPrefix(fileMetadata.src),
+        fileName: fileMetadata.name,
+      };
+};
+
+export const InvoiceDialog = ({
+  expensesTypes,
+  renderButton,
+  invoice,
+  invoices,
+}: InvoiceDialogProps) => {
   const router = useRouter();
-
-  const fileInput = useFileInput();
-
   const formRef = useRef<HTMLFormElement>(null);
+  const nameInputRef = useRef<HTMLInputElement>(null);
+
+  const fileInputDefaultValue = invoice
+    ? [{ src: invoice.fileUrl, name: invoice.name }]
+    : undefined;
+  const fileInput = useFileInput();
 
   const { openDialog, dialogState, closeDialog } = useDialog({
     prepareClosing: () => {
@@ -39,29 +80,31 @@ export const AddInvoiceDialog = ({ expensesTypes }: AddInvoiceDialogProps) => {
 
   const handleSubmit = async (formData: FormData) => {
     const [fileMetadata] = fileInput.value;
+    const name = formData.get('name') as string;
+    let hasError = false;
 
     if (!fileMetadata) {
       fileInput.setErrorText('🤪 Не вистачає файлів!');
+      hasError = true;
+    }
+
+    if (invoices.some((invoice) => invoice.name === name)) {
+      nameInputRef.current?.setCustomValidity("Інвойс с таким ім'ям вже існує");
+      hasError = true;
+    }
+
+    if (hasError) {
+      formRef.current?.reportValidity();
       return;
     }
 
-    const maybeWithDescription = formData.get('description')
-      ? {
-          description: formData.get('description') as string,
-        }
-      : {};
+    const requestPayload = getInvoicePayload(formData, fileMetadata, invoice);
 
-    const requestPayload: InvoicePayload = {
-      file: removeBase64DataPrefix(fileMetadata.base64),
-      fileName: fileMetadata.name,
-      name: formData.get('name') as string,
-      amount: Number(formData.get('sum')),
-      // it's how it called on server :)
-      expensiveTypeId: Number(formData.get('expenseType')),
-      ...maybeWithDescription,
-    };
+    const request = !invoice
+      ? createInvoice(requestPayload as CreateInvoicePayload)
+      : editInvoice(invoice!.id, requestPayload);
 
-    const response = await createInvoice(requestPayload);
+    const response = await request;
 
     if (response === 'Success') {
       router.refresh();
@@ -74,10 +117,12 @@ export const AddInvoiceDialog = ({ expensesTypes }: AddInvoiceDialogProps) => {
   return (
     <Dialog
       dialogState={dialogState}
-      title='🧾 Додати рахунок'
-      renderButton={() => (
-        <Button onClick={openDialog}>➕ Додати рахунок</Button>
-      )}
+      title={
+        invoice
+          ? `✏️ Редагування рахунку: ${invoice.name}`
+          : '🧾 Додати рахунок'
+      }
+      renderButton={() => renderButton(openDialog)}
       renderContent={() => {
         return (
           <div className={styles['dialog-content']}>
@@ -91,23 +136,19 @@ export const AddInvoiceDialog = ({ expensesTypes }: AddInvoiceDialogProps) => {
                   <FileInput
                     filesInputState={fileInput}
                     title='Завантаження рахунку'
+                    defaultValue={fileInputDefaultValue}
                   />
                   <Fieldset>
                     <legend>Інформація про рахунок</legend>
                     <label htmlFor='invoice-name'>Назва рахунку</label>
                     <input
+                      ref={nameInputRef}
                       type='text'
                       name='name'
                       id='invoice-name'
                       placeholder='За СТО'
                       required
-                    />
-                    <label htmlFor='invoice-description'>Коментар</label>
-                    <input
-                      type='text'
-                      name='description'
-                      id='invoice-description'
-                      placeholder='Якісь деталі, для історії'
+                      defaultValue={invoice?.name}
                     />
                     <label htmlFor='sum-input'>Сума до сплати</label>
                     <input
@@ -117,14 +158,15 @@ export const AddInvoiceDialog = ({ expensesTypes }: AddInvoiceDialogProps) => {
                       name='sum'
                       id='sum-input'
                       placeholder='20 000'
+                      defaultValue={invoice?.amount}
                     />
-                    <label htmlFor='sum'>Дата рахунку</label>
-                    <input id='date' type='date' name='date' required />
                     <label htmlFor='expense-type'>Тип витрат</label>
                     <select
                       id='expense-type'
                       name='expenseType'
-                      defaultValue={expensesTypes[0].id}
+                      defaultValue={
+                        invoice?.expenseTypeId || expensesTypes[0].id
+                      }
                     >
                       {expensesTypes
                         .filter((expenseType) => expenseType.isActive)

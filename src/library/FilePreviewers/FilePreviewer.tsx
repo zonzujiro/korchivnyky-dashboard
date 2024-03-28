@@ -109,7 +109,6 @@ export const FilePreviewer = ({
   previewerState: { src: string; isPDF?: boolean };
 }) => {
   const { src } = previewerState;
-
   const isPDF = previewerState.isPDF ?? getIsPDF(src);
 
   if (!src) {
@@ -126,12 +125,6 @@ export const FilePreviewer = ({
         <ImagePreview src={src} />
       </div>
     );
-  }
-
-  if (isURL(src)) {
-    <div className={styles['file-preview-skeleton']}>
-      <span>🖼️</span>
-    </div>;
   }
 
   return <PDFPreviewer src={src} />;

@@ -22,14 +22,24 @@ export type CreateJarPayload = {
   color: string;
 };
 
-export type InvoicePayload = {
+type CreateInvoicePayloadBase = {
   name: string;
   amount: number;
   description?: string;
-  expensiveTypeId: number;
   fileName: string;
   file: string;
 };
+
+export type CreateInvoicePayloadWithMissPrint = CreateInvoicePayloadBase & {
+  // it's how it's called on server
+  expensiveTypeId: number;
+};
+
+export type CreateInvoicePayload = CreateInvoicePayloadBase & {
+  expenseTypeId: number;
+};
+
+export type EditInvoicePayload = Partial<CreateInvoicePayload>;
 
 export type ExpenseTypePayload = {
   fundraisingCampaignId: number;

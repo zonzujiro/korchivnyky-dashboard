@@ -1,5 +1,7 @@
 'use server';
 
+import { cookies } from 'next/headers';
+
 import type {
   ExpenseType,
   FundraisingCampaign,
@@ -10,15 +12,15 @@ import type {
   Primitive,
   ExpenseRecord,
 } from '@/types';
-import { NetworkError, addColorToJar, identity } from '@/toolbox';
-import { cookies } from 'next/headers';
+import { NetworkError, ParsingError, addColorToJar, identity } from '@/toolbox';
+
 import { getFundraisingInvoices } from './dataModificators';
 import type {
   CreateJarPayload,
   InvoiceTransactionPayload,
   JarsTransactionPayload,
-  InvoicePayload,
   ExpenseTypePayload,
+  CreateInvoicePayloadWithMissPrint,
 } from './types';
 
 const handleSearchParams = (
@@ -83,6 +85,43 @@ const post = async (url: string, payload?: Record<string, any>) => {
   }
 
   return json;
+};
+
+const patch = async (url: string, payload?: Record<string, any>) => {
+  const options = payload
+    ? {
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+          Authorization: cookies().get('authorization')?.value || '',
+        },
+
+        body: JSON.stringify(payload),
+      }
+    : {};
+
+  const response = await fetch(url, {
+    method: 'patch',
+    ...options,
+  });
+
+  try {
+    const json = await response.json();
+
+    if (!response.ok) {
+      throw new NetworkError(response, json);
+    }
+
+    return json;
+  } catch (e) {
+    if (e instanceof NetworkError) {
+      throw e;
+    }
+
+    if (e instanceof SyntaxError) {
+      throw new ParsingError(response, e);
+    }
+  }
 };
 
 export const getJars = async (
@@ -158,8 +197,15 @@ export const createJarsTransaction = (payload: JarsTransactionPayload) => {
   return post('https://jars.fly.dev/transactions/direct', payload);
 };
 
-export const createInvoice = (payload: InvoicePayload) => {
+export const createInvoice = (payload: CreateInvoicePayloadWithMissPrint) => {
   return post('https://jars.fly.dev/invoices', payload);
+};
+
+export const editInvoice = (
+  invoiceId: number,
+  payload: Partial<CreateInvoicePayloadWithMissPrint>
+) => {
+  return patch(`https://jars.fly.dev/invoices/${invoiceId}`, payload);
 };
 
 export const getUsers = async (): Promise<Array<User>> => {
