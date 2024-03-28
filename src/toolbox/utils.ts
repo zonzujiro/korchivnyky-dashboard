@@ -37,6 +37,15 @@ export const groupBy = <TItem>(
   }, {} as Record<string, Array<TItem>>);
 };
 
+export const uniqueBy = <TItem>(
+  array: Array<TItem>,
+  dataGetter: (value: TItem) => string | number
+) => {
+  const grouped = groupBy(array, dataGetter);
+
+  return Object.values(grouped).flat();
+};
+
 export const addColorToJar = (jar: Jar) => ({
   ...jar,
   color: jar.color || randomColor(),

@@ -1,7 +1,7 @@
 import classNames from 'classnames';
 
 import type { Jar } from '@/types';
-import { getGatheredMoney, toCurrency } from '@/toolbox';
+import { getGatheredMoney, toCurrency, uniqueBy } from '@/toolbox';
 
 import styles from './JarsInfo.module.css';
 
@@ -11,7 +11,7 @@ const getFinishedJars = (jars: Array<Jar>) =>
 const getAchievedGoalJars = (jars: Array<Jar>) =>
   jars.filter(
     (jar) =>
-      jar.goal && jar.accumulated + jar.otherSourcesAccumulated > jar.goal
+      jar.goal && jar.accumulated + jar.otherSourcesAccumulated >= jar.goal
   );
 
 const getCollectiveGoal = (jars: Array<Jar>) => {
@@ -44,7 +44,11 @@ export const JarsInfo = ({ jars }: JarsInfoProps) => {
       >
         💸 Доступно для витрат:{' '}
         <span className={styles['jars-info-tag-value']}>
-          {toCurrency(getGatheredMoney([...finishedJars, ...achievedGoals]))}
+          {toCurrency(
+            getGatheredMoney(
+              uniqueBy([...finishedJars, ...achievedGoals], (jar) => jar.id)
+            )
+          )}
         </span>
       </div>
       <h4 className={styles['invoice-info-header']}>Банки</h4>
