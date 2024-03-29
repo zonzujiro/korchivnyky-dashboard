@@ -1,5 +1,7 @@
 'use server';
 
+import { cookies } from 'next/headers';
+
 import type {
   ExpenseType,
   FundraisingCampaign,
@@ -10,16 +12,20 @@ import type {
   Primitive,
   ExpenseRecord,
 } from '@/types';
-import { NetworkError, addColorToJar, identity } from '@/toolbox';
-import { cookies } from 'next/headers';
-import { getFundraisingInvoices } from './dataModificators';
+import { NetworkError, ParsingError, addColorToJar, identity } from '@/toolbox';
+
+import { deactivateInvoices, getFundraisingInvoices } from './dataModificators';
 import type {
   CreateJarPayload,
   InvoiceTransactionPayload,
   JarsTransactionPayload,
-  InvoicePayload,
   ExpenseTypePayload,
+  CreateInvoicePayloadWithMissPrint,
 } from './types';
+
+const getAuthorization = () => ({
+  Authorization: cookies().get('authorization')?.value || '',
+});
 
 const handleSearchParams = (
   baseUrl: string,
@@ -44,7 +50,7 @@ const get = async (
 ) => {
   const response = await fetch(handleSearchParams(url, paramsSource), {
     headers: {
-      Authorization: cookies().get('authorization')?.value || '',
+      ...getAuthorization(),
     },
   });
 
@@ -57,16 +63,14 @@ const get = async (
   return json;
 };
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const post = async (url: string, payload?: Record<string, any>) => {
   const options = payload
     ? {
         headers: {
           Accept: 'application/json',
           'Content-Type': 'application/json',
-          Authorization: cookies().get('authorization')?.value || '',
+          ...getAuthorization(),
         },
-
         body: JSON.stringify(payload),
       }
     : {};
@@ -83,6 +87,44 @@ const post = async (url: string, payload?: Record<string, any>) => {
   }
 
   return json;
+};
+
+const put = async (url: string, payload?: Record<string, any>) => {
+  const options = payload
+    ? {
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+          ...getAuthorization(),
+        },
+        body: JSON.stringify(payload),
+      }
+    : {};
+
+  const response = await fetch(url, {
+    method: 'put',
+    ...options,
+  });
+
+  console.log(response);
+
+  try {
+    const json = await response.json();
+
+    if (!response.ok) {
+      throw new NetworkError(response, json);
+    }
+
+    return json;
+  } catch (e) {
+    if (e instanceof NetworkError) {
+      throw e;
+    }
+
+    if (e instanceof SyntaxError) {
+      throw new ParsingError(response, e);
+    }
+  }
 };
 
 export const getJars = async (
@@ -158,8 +200,15 @@ export const createJarsTransaction = (payload: JarsTransactionPayload) => {
   return post('https://jars.fly.dev/transactions/direct', payload);
 };
 
-export const createInvoice = (payload: InvoicePayload) => {
+export const createInvoice = (payload: CreateInvoicePayloadWithMissPrint) => {
   return post('https://jars.fly.dev/invoices', payload);
+};
+
+export const editInvoice = (
+  invoiceId: number,
+  payload: Partial<CreateInvoicePayloadWithMissPrint>
+) => {
+  return put(`https://jars.fly.dev/invoices/${invoiceId}`, payload);
 };
 
 export const getUsers = async (): Promise<Array<User>> => {
@@ -204,11 +253,12 @@ export const getInvoicesPageData = async ({
     ]);
 
   const fundraisingInvoices = getFundraisingInvoices(invoices, expensesTypes);
+  const deactivatedInvoices = deactivateInvoices(fundraisingInvoices, expenses);
 
   return {
     expensesTypes,
     expenses,
-    invoices: fundraisingInvoices,
+    invoices: deactivatedInvoices,
     jars,
     currentUser,
     users,
@@ -236,6 +286,7 @@ export const getFundraisingInfo = async ({
     ]);
 
   const fundraisingInvoices = getFundraisingInvoices(invoices, expensesTypes);
+  const deactivatedInvoices = deactivateInvoices(fundraisingInvoices, expenses);
 
   const jarsIds = jars.map((jar) => jar.id);
   const fundraisingStatistics = statistics.filter((record) =>
@@ -245,7 +296,7 @@ export const getFundraisingInfo = async ({
   return {
     expensesTypes,
     expenses,
-    invoices: fundraisingInvoices,
+    invoices: deactivatedInvoices,
     jars,
     statistics: fundraisingStatistics,
   };

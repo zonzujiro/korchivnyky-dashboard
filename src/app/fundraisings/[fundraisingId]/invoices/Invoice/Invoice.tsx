@@ -1,23 +1,25 @@
 import type {
   ExpenseRecord,
   ExpenseType,
-  Invoice as InvoiceType,
+  Invoice as IInvoice,
   Jar,
   User,
 } from '@/types';
 import { getDateString, toCurrency } from '@/toolbox';
-import { FilePreviewer } from '@/library';
+import { Button, FilePreviewer } from '@/library';
 
 import styles from './Invoice.module.css';
 import { InvoiceDetailsDialog } from './InvoiceDetailsDialog/InvoiceDetailsDialog';
 import { AddExpenseDialog } from './AddExpenseDialog/AddExpenseDialog';
+import { InvoiceDialog } from '../InvoiceDialog/InvoiceDialog';
 
 type InvoiceProps = {
-  invoice: InvoiceType;
-  invoiceExpenses: Array<ExpenseRecord>;
-  expenseType: ExpenseType;
+  invoice: IInvoice;
+  expenses: Array<ExpenseRecord>;
   jars: Array<Jar>;
   users: Array<User>;
+  expensesTypes: Array<ExpenseType>;
+  invoices: Array<IInvoice>;
 };
 
 const getSum = (expenses: Array<ExpenseRecord>) => {
@@ -26,19 +28,25 @@ const getSum = (expenses: Array<ExpenseRecord>) => {
 
 export const Invoice = ({
   invoice,
-  expenseType,
-  invoiceExpenses,
+  expensesTypes,
+  expenses,
   jars,
   users,
+  invoices,
 }: InvoiceProps) => {
-  const { name, amount, fileUrl, createdAt } = invoice;
+  const { name, amount, fileUrl, createdAt, isActive } = invoice;
+
+  const invoiceExpenses = expenses.filter(
+    (expense) => expense.invoiceId === invoice.id
+  );
+  const expenseType = expensesTypes.find(
+    (expenseType) => expenseType.id === invoice.expenseTypeId
+  )!;
 
   const payedSum = getSum(invoiceExpenses);
   const creationDate = getDateString(createdAt);
 
   const invoiceOwner = users.find((user) => user.id === invoice.userId)!;
-
-  const isActive = Boolean(amount - payedSum);
 
   return (
     <div className={styles.invoice}>
@@ -78,11 +86,23 @@ export const Invoice = ({
           jars={jars}
         />
         {isActive && (
-          <AddExpenseDialog
-            invoice={invoice}
-            jars={jars}
-            expenses={invoiceExpenses}
-          />
+          <>
+            <AddExpenseDialog
+              invoice={invoice}
+              jars={jars}
+              expenses={expenses}
+            />
+            <InvoiceDialog
+              invoice={invoice}
+              expensesTypes={expensesTypes}
+              invoices={invoices}
+              renderButton={(onClick) => (
+                <Button title='Редагувати' onClick={onClick}>
+                  ✏️
+                </Button>
+              )}
+            />
+          </>
         )}
       </div>
     </div>

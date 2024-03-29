@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import classNames from 'classnames';
 
 import { fileToBase64 } from '@/toolbox';
@@ -14,8 +14,9 @@ import formStyles from '../Form.module.css';
 
 import styles from './FileInput.module.css';
 
-const defaultState: Array<{ base64: string; name: string; isPDF: boolean }> =
-  [];
+export type FileInputValue = Array<{ src: string; name: string }>;
+
+const defaultState: FileInputValue = [];
 
 export const useFileInput = () => {
   const [errorText, setErrorText] = useState('');
@@ -48,16 +49,25 @@ type FileInputProps = {
   filesInputState: ReturnType<typeof useFileInput>;
   title: string;
   multiple?: boolean;
+  defaultValue?: FileInputValue;
 };
 
 export const FileInput = ({
   filesInputState,
   title,
   multiple,
+  defaultValue,
 }: FileInputProps) => {
   const [isDraggedOver, setIsDraggedOver] = useState(false);
 
-  const { value, validity, inputRef, setValue } = filesInputState;
+  const { value, validity, inputRef, setValue, setErrorText } = filesInputState;
+
+  useEffect(() => {
+    if (defaultValue) {
+      setValue(defaultValue);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleFileList = async (files: Array<File>) => {
     if (!files?.length) {
@@ -75,7 +85,7 @@ export const FileInput = ({
         const base64 = await fileToBase64(file);
 
         return {
-          base64,
+          src: base64,
           isPDF: file.type.includes('pdf'),
           name: file.name,
         };
@@ -91,6 +101,7 @@ export const FileInput = ({
       );
     });
 
+    setErrorText('');
     setValue(unique);
   };
 
@@ -166,11 +177,7 @@ export const FileInput = ({
         </div>
       ) : (
         <FilesPreviewer
-          filesMetadata={value.map(({ name, base64, isPDF }) => ({
-            src: base64,
-            isPDF,
-            name,
-          }))}
+          filesMetadata={value}
           removeFile={removeFileMetadata}
           multiple={multiple}
         />

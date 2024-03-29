@@ -1,5 +1,5 @@
 import randomColor from 'randomcolor';
-import type { Jar } from '@/types';
+import type { ExpenseRecord, Jar } from '@/types';
 
 export const getTimeString = (value: string) => {
   const date = new Date(value);
@@ -46,6 +46,28 @@ export const uniqueBy = <TItem>(
   return Object.values(grouped).flat();
 };
 
+export const diff = <
+  TSource extends Record<string, any>,
+  TTarget extends Record<string, any>
+>(
+  source: TSource,
+  target: TTarget
+) => {
+  const changes = {} as Record<string, any>;
+
+  Object.keys(source).forEach((key) => {
+    if (source[key] !== target[key]) {
+      changes[key] = source[key];
+    }
+  });
+
+  return changes as Partial<TSource>;
+};
+
+export const isEmpty = (maybeEmpty: Record<string, any>) => {
+  return !Object.keys(maybeEmpty).length;
+};
+
 export const addColorToJar = (jar: Jar) => ({
   ...jar,
   color: jar.color || randomColor(),
@@ -78,18 +100,41 @@ export const getFormValues = <InputsNames extends string>(formData: FormData) =>
 
 export class NetworkError extends Error {
   code: number;
-  message: string;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  customMessage: string;
   backendError?: any;
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   constructor(response: Response, body?: Record<string, any>) {
     super();
 
-    this.message = `(${response.url}): ${response.statusText}}`;
+    this.customMessage = `(${response.url}): ${response.statusText}}`;
     this.code = response.status;
     this.backendError = body;
 
-    console.log(`${this.code}: ${this.message}`);
+    console.log(`${this.code}: ${this.customMessage}`);
   }
 }
+
+export class ParsingError extends SyntaxError {
+  customMessage: string;
+  code: number;
+
+  constructor(response: Response, error: SyntaxError) {
+    super();
+
+    this.customMessage = `(${response.url}): ${response.statusText}}`;
+    this.code = response.status;
+    this.cause = error.cause;
+    this.message = error.message;
+
+    console.log(`${this.code}: ${this.customMessage}`);
+  }
+}
+
+export const getJarLeftovers = (jar: Jar, expenses: Array<ExpenseRecord>) => {
+  const jarExpenses = expenses.filter(
+    (expense) => expense.fromJarId === jar.id
+  );
+  const payedSum = jarExpenses.reduce((acc, expense) => acc + expense.sum, 0);
+
+  return jar.accumulated - payedSum;
+};

@@ -64,13 +64,14 @@ export const AddExpenseDialog = ({
     const sum = Number(formData.get('sum'));
     const jarId = Number(formData.get('jar'));
 
-    const creditJar = jars.find((jar) => jar.id === jarId)!;
+    // const creditJar = jars.find((jar) => jar.id === jarId)!;
+    // const leftovers = getJarLeftovers(creditJar, expenses);
 
-    if (sum > creditJar.accumulated) {
-      sumInputRef.current?.setCustomValidity('На банці недостатньо коштів');
-      sumInputRef.current?.reportValidity();
-      return;
-    }
+    // if (sum > leftovers) {
+    //   sumInputRef.current?.setCustomValidity('На банці недостатньо коштів');
+    //   sumInputRef.current?.reportValidity();
+    //   return;
+    // }
 
     const requestPayload: InvoiceTransactionPayload = {
       invoiceId: invoice.id,
@@ -79,7 +80,7 @@ export const AddExpenseDialog = ({
       otherSourcesAmount: 0,
       receipts: filesInput.value.map((metadata) => ({
         receiptName: metadata.name,
-        receipt: removeBase64DataPrefix(metadata.base64),
+        receipt: removeBase64DataPrefix(metadata.src),
       })),
     };
 
@@ -131,8 +132,6 @@ export const AddExpenseDialog = ({
                         placeholder='20 000'
                         required
                       />
-                      <label htmlFor='sum'>Дата оплати</label>
-                      <input id='date' type='date' name='date' required />
                     </fieldset>
                     <JarSelector
                       title='З якої банки оплата'
