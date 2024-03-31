@@ -200,8 +200,6 @@ export const JarSelector = ({
 
   const value = selectedJar || filteredJars[0];
 
-  console.log({ value });
-
   return (
     <fieldset className={classNames(styles['jars-selector'], className)}>
       <legend>{title}</legend>
