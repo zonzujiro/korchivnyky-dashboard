@@ -1,11 +1,10 @@
 import { ReactNode, useContext, useRef, useState } from 'react';
 import { useFormStatus } from 'react-dom';
-import classNames from 'classnames';
 
-import { postJar, type JarsPageState, putJar, JarsPageContext } from '@/dal';
-import type { CreateJarPayload, Jar } from '@/types';
-import { Button, CuratorsDropdown, Dialog, useDialog } from '@/library';
+import { postJar, putJar, JarsPageContext, CreateJarPayload } from '@/dal';
 import type { Jar } from '@/types';
+import { Button, CuratorsDropdown, Dialog, useDialog } from '@/library';
+import { diff } from '@/toolbox';
 
 import styles from './AddJarDialog.module.css';
 
@@ -19,24 +18,9 @@ const SubmitButton = () => {
   );
 };
 
-const getPayload = (userData: CreateJarPayload, jar: Jar) => {
-  const changedJar: Record<string, any> = {};
-
-  const keys = Object.keys(userData) as Array<keyof CreateJarPayload>;
-
-  keys.forEach((key) => {
-    if (userData[key] !== jar[key]) {
-      changedJar[key] = userData[key];
-    }
-  });
-
-  return changedJar as Partial<CreateJarPayload>;
-};
-
 export const AddJarDialog = ({
   fundraisingId,
   jar,
-  renderButton,
 }: {
   jars?: Array<Jar>;
   fundraisingId: string;
@@ -99,7 +83,7 @@ export const AddJarDialog = ({
     if (isEditMode) {
       const updatedJarPayload = {
         ...jar,
-        ...getPayload(createJarPayload, jar),
+        ...diff(createJarPayload, jar),
       };
       const response = await putJar(jar.id, updatedJarPayload);
       replaceJar(response);

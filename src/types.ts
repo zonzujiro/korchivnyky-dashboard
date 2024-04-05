@@ -1,4 +1,4 @@
-export type Primitive = string | number | boolean | null;
+export type Primitive = string | number | boolean | null | Array<any>;
 
 export type Jar = {
   id: number;

@@ -23,9 +23,10 @@ type JarItemProps = {
   jar: Jar;
   isSelected: boolean;
   onClick(): void;
+  fundraisingId: string;
 };
 
-const JarItem = ({ jar, isSelected, onClick }: JarItemProps) => {
+const JarItem = ({ jar, isSelected, onClick, fundraisingId }: JarItemProps) => {
   const { url, goal, debit, ownerName, isFinished, logo, color } = jar;
 
   const [copyClicked, setCopyClicked] = useState(false);
@@ -91,85 +92,12 @@ const JarItem = ({ jar, isSelected, onClick }: JarItemProps) => {
   );
 };
 
-const GeneralInfo = ({
-  jars,
-  lastRecord,
-  fundraisingId,
-  selectedJars,
-  addJar,
-}: {
-  jars: Array<Jar>;
-  lastRecord?: JarStatisticRecord;
-  fundraisingId: string;
-  selectedJars: Array<Jar>;
-  addJar: (jar: Jar) => void;
-}) => {
-  const finishedJars = getFinishedJars(jars);
-  const achievedGoals = getAchievedGoalJars(jars);
-
-  return (
-    <>
-      <div className={styles['jars-buttons']}>
-        <AddJarDialog
-          jars={jars}
-          fundraisingId={fundraisingId}
-          renderButton={(openDialog) => (
-            <Button onClick={openDialog}>Редагувати банку</Button>
-          )}
-        />
-        <TransferBetweenJarsDialog jars={jars} selectedJars={selectedJars} />
-      </div>
-      <div className={styles['jars-info']}>
-        <h4>Загальна інформація</h4>
-        {lastRecord ? (
-          <small title='Оновлення раз на 12 годин' className={styles.timestamp}>
-            Станом на: {getTimeString(lastRecord.createdAt)}{' '}
-            {getDateString(lastRecord!.createdAt)}
-          </small>
-        ) : null}
-        <div
-          className={classNames(styles['jars-info-tag'], styles['total-jars'])}
-        >
-          🫙 Усього банок: {jars.length}
-        </div>
-        <div
-          className={classNames(
-            styles['jars-info-tag'],
-            styles['gathered-money']
-          )}
-        >
-          💸 Доступно для витрат:{' '}
-          <span className={styles['jars-info-tag-value']}>
-            {toCurrency(getGatheredMoney([...finishedJars, ...achievedGoals]))}
-          </span>
-        </div>
-        <div className={styles['jars-info-tag']}>
-          🎯 Досягнули мети: {achievedGoals.length}
-        </div>
-        <div className={styles['jars-info-tag']}>
-          🔒 Закрили збір: {finishedJars.length}
-        </div>
-      </div>
-    </>
-  );
-};
-
-const getFinishedJars = (jars: Array<Jar>) =>
-  jars.filter((jar) => jar.isFinished);
-
-const getAchievedGoalJars = (jars: Array<Jar>) =>
-  jars.filter(
-    (jar) =>
-      jar.goal && jar.accumulated + jar.otherSourcesAccumulated > jar.goal
-  );
-
 export const JarsList = ({ fundraisingId }: { fundraisingId: string }) => {
   const {
     selectedJars,
     toggleJarSelection,
     jars,
     resetJarSelection,
-    addJar,
     expenses,
   } = useContext(JarsPageContext);
 
@@ -213,15 +141,11 @@ export const JarsList = ({ fundraisingId }: { fundraisingId: string }) => {
               <JarItem
                 key={item.id}
                 jar={item}
-                jars={jars}
                 isSelected={Boolean(
                   selectedJars.find((selectedJar) => selectedJar.id === item.id)
                 )}
                 onClick={() => toggleJarSelection(item)}
-<<<<<<< HEAD
-=======
                 fundraisingId={fundraisingId}
->>>>>>> 1a030b1 (added jar editing, fixed other small things)
               />
             );
           })}
@@ -229,9 +153,9 @@ export const JarsList = ({ fundraisingId }: { fundraisingId: string }) => {
         <div className={styles['jars-info-wrapper']}>
           <div className={styles['jars-buttons']}>
             <AddJarDialog
-              addJar={addJar}
               jars={jars}
               fundraisingId={fundraisingId}
+              renderButton={() => <div />}
             />
             <TransferBetweenJarsDialog
               jars={jars}

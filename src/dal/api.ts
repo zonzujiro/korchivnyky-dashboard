@@ -83,13 +83,23 @@ const sendPayload = async (
     method,
     ...options,
   });
+  try {
+    const json = await response.json();
 
-  const json = await response.json();
+    if (!response.ok) {
+      throw new NetworkError(response, json);
+    }
 
-  if (!response.ok) {
-    throw new NetworkError(response, json);
+    return json;
+  } catch (e) {
+    if (e instanceof NetworkError) {
+      throw e;
+    }
+
+    if (e instanceof SyntaxError) {
+      throw new ParsingError(response, e);
+    }
   }
-  return json;
 };
 
 const post = async (url: string, payload?: Record<string, Primitive>) => {
@@ -120,7 +130,7 @@ export const postJar = async (payload: CreateJarPayload): Promise<Jar> => {
 
 export const putJar = async (
   jarId: number,
-  payload: CreateJarPayload
+  payload: Partial<CreateJarPayload>
 ): Promise<Jar> => {
   return put(`https://jars.fly.dev/jars/${jarId}`, payload);
 };

@@ -20,6 +20,9 @@ export type CreateJarPayload = {
   ownerName?: string;
   fundraisingCampaignId: number;
   color: string;
+  goal?: number | null;
+  otherSourcesAccumulated: number;
+  isFinished: boolean;
 };
 
 type CreateInvoicePayloadBase = {
