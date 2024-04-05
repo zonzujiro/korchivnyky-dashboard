@@ -89,6 +89,7 @@ const sendPayload = async (
   if (!response.ok) {
     throw new NetworkError(response, json);
   }
+  return json;
 };
 
 const post = async (url: string, payload?: Record<string, Primitive>) => {
@@ -117,8 +118,11 @@ export const postJar = async (payload: CreateJarPayload): Promise<Jar> => {
   return post('https://jars.fly.dev/jars', payload);
 };
 
-export const putJar = async (payload: CreateJarPayload): Promise<Jar> => {
-  return put('https://jars.fly.dev/jars', payload);
+export const putJar = async (
+  jarId: number,
+  payload: CreateJarPayload
+): Promise<Jar> => {
+  return put(`https://jars.fly.dev/jars/${jarId}`, payload);
 };
 
 export const getExpensesTypes = (

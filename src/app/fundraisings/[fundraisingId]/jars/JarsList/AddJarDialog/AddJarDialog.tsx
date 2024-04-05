@@ -97,10 +97,11 @@ export const AddJarDialog = ({
     };
 
     if (isEditMode) {
-      const response = await Promise.resolve({
+      const updatedJarPayload = {
         ...jar,
         ...getPayload(createJarPayload, jar),
-      });
+      };
+      const response = await putJar(jar.id, updatedJarPayload);
       replaceJar(response);
     } else {
       const response = await postJar(createJarPayload);
