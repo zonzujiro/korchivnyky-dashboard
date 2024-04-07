@@ -9,10 +9,7 @@ const getFinishedJars = (jars: Array<Jar>) =>
   jars.filter((jar) => jar.isFinished);
 
 const getAchievedGoalJars = (jars: Array<Jar>) =>
-  jars.filter(
-    (jar) =>
-      jar.goal && jar.accumulated + jar.otherSourcesAccumulated >= jar.goal
-  );
+  jars.filter((jar) => jar.goal && jar.debit >= jar.goal);
 
 const getCollectiveGoal = (jars: Array<Jar>) => {
   return jars.reduce((acc, jar) => acc + Number(jar.goal), 0);

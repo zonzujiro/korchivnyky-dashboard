@@ -13,7 +13,7 @@ const StatisticsRow = ({ jar }: { jar: Jar }) => {
       </td>
       <td>{jar.isFinished ? 'Так' : 'Ні'}</td>
       <td>{jar.goal || DEFAULT_JAR_GOAL}</td>
-      <td>{jar.accumulated}</td>
+      <td>{jar.debit}</td>
     </>
   );
 };

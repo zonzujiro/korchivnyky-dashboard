@@ -34,10 +34,8 @@ export const StatisticsSection = ({
       )}
       <div className={styles['statistics-section']}>
         {jars.map((jar) => {
-          const accumulated = jar.accumulated + jar.otherSourcesAccumulated;
-
           const percentageOfGoal = `${Math.round(
-            (100 * accumulated) / (jar.goal || DEFAULT_JAR_GOAL)
+            (100 * jar.debit) / (jar.goal || DEFAULT_JAR_GOAL)
           )}%`;
 
           return (
@@ -53,7 +51,7 @@ export const StatisticsSection = ({
               <div className={styles['jar-owner']}>{jar.ownerName}</div>
               <Tooltip anchorSelect={`#statistics-bar-${jar.id}`}>
                 <p>
-                  <strong>Зібрано:</strong> {toCurrency(accumulated)}
+                  <strong>Зібрано:</strong> {toCurrency(jar.debit)}
                 </p>
                 {jar.goal && (
                   <p>

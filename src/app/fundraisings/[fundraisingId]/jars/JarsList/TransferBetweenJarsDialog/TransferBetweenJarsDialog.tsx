@@ -76,7 +76,7 @@ export const TransferBetweenJarsDialog = ({
 
     const amount = Number(formData.get('sum'));
 
-    if (amount > creditJar?.accumulated) {
+    if (amount > creditJar?.debit - creditJar?.credit) {
       amountInputRef.current?.setCustomValidity('На банці недостатньо коштів');
       amountInputRef.current?.reportValidity();
       return;

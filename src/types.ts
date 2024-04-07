@@ -9,13 +9,15 @@ export type Jar = {
   goal: number | null;
   logo: string;
   isFinished: boolean;
-  accumulated: number;
+  debit: number;
+  credit: number;
+  isTechnical: boolean;
+  longJarId: string;
   color: string;
   fundraisingCampaignId: number;
-  otherSourcesAccumulated: number;
   userId: number;
-  spent: number;
-  otherSourcesSpent: number;
+  checkedAt: string;
+  createdAt: string;
 };
 
 export type JarStatisticRecord = {

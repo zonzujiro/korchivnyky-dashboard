@@ -23,24 +23,10 @@ type JarItemProps = {
   jar: Jar;
   isSelected: boolean;
   onClick(): void;
-  context: React.Context<any>;
 };
 
-const JarItem = ({ jar, isSelected, onClick, context }: JarItemProps) => {
-  const {
-    url,
-    goal,
-    accumulated,
-    ownerName,
-    isFinished,
-    logo,
-    color,
-    otherSourcesAccumulated,
-  } = jar;
-
-  const propsContext = useContext(context);
-
-  console.log({ propsContext });
+const JarItem = ({ jar, isSelected, onClick }: JarItemProps) => {
+  const { url, goal, debit, ownerName, isFinished, logo, color } = jar;
 
   const [copyClicked, setCopyClicked] = useState(false);
 
@@ -88,9 +74,7 @@ const JarItem = ({ jar, isSelected, onClick, context }: JarItemProps) => {
           {ownerName} {isFinished ? <span>🔓</span> : null}
         </h3>
         <div className={styles['item-column']}>
-          <span>
-            Зібрано: {toCurrency(accumulated + otherSourcesAccumulated)}
-          </span>
+          <span>Зібрано: {toCurrency(debit)}</span>
           <span>{goal ? `Мета: ${toCurrency(goal)}` : 'Мета: Немає'}</span>
         </div>
       </div>
@@ -152,7 +136,6 @@ export const JarsList = ({ fundraisingId }: { fundraisingId: string }) => {
                   selectedJars.find((selectedJar) => selectedJar.id === item.id)
                 )}
                 onClick={() => toggleJarSelection(item)}
-                context={JarsPageContext}
               />
             );
           })}

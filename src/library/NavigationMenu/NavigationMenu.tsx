@@ -24,27 +24,45 @@ export const NavigationMenu = () => {
           <Link href='./'>Збори</Link>
         </li>
         <span className={styles['menu-separator']}>|</span>
+      </ol>
+    </nav>
+  );
+};
 
-        {isMainPage ? null : (
-          <>
-            <li
-              className={classNames(styles['menu-item'], {
-                [styles.active]: pathname.endsWith('/jars'),
-              })}
-            >
-              <Link href='./jars'>Банки</Link>
-            </li>
-            <span className={styles['menu-separator']}>|</span>
-            <li
-              className={classNames(styles['menu-item'], {
-                [styles.active]: pathname.endsWith('/invoices'),
-              })}
-            >
-              <Link href='./invoices'>Рахунки</Link>
-            </li>
-            <span className={styles['menu-separator']}>|</span>
-          </>
-        )}
+export const NavigationSubMenu = () => {
+  const pathname = usePathname();
+
+  const isMainPage =
+    !pathname.endsWith('/jars') && !pathname.endsWith('/invoices');
+
+  return (
+    <nav className={styles['navigation-wrapper']}>
+      <ol className={styles['main-menu']}>
+        <span className={styles['menu-separator']}>|</span>
+        <li
+          className={classNames(styles['menu-item'], {
+            [styles.active]: isMainPage,
+          })}
+        >
+          <Link href='./'>Збори</Link>
+        </li>
+        <span className={styles['menu-separator']}>|</span>
+        <li
+          className={classNames(styles['menu-item'], {
+            [styles.active]: pathname.endsWith('/jars'),
+          })}
+        >
+          <Link href='./jars'>Банки</Link>
+        </li>
+        <span className={styles['menu-separator']}>|</span>
+        <li
+          className={classNames(styles['menu-item'], {
+            [styles.active]: pathname.endsWith('/invoices'),
+          })}
+        >
+          <Link href='./invoices'>Рахунки</Link>
+        </li>
+        <span className={styles['menu-separator']}>|</span>
       </ol>
     </nav>
   );

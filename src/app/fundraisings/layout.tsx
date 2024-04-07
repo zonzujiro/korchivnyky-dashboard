@@ -1,6 +1,6 @@
 import { Suspense, type ReactNode } from 'react';
 
-import { Loader, NavigationMenu, SiteLogo } from '@/library';
+import { Loader, NavigationSubMenu, SiteLogo } from '@/library';
 
 import styles from './layout.module.css';
 
@@ -9,7 +9,7 @@ const FundraisingsLayout = async ({ children }: { children: ReactNode }) => {
     <>
       <header className={styles.header}>
         <SiteLogo className={styles.logo} />
-        <NavigationMenu />
+        <NavigationSubMenu />
       </header>
 
       <main className={styles.main}>

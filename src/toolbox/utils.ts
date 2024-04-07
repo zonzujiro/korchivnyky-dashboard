@@ -88,8 +88,7 @@ export const getGatheredMoney = (jars: Array<Jar>) => {
   const byIds = groupBy(jars, (jar) => jar.id);
 
   return Object.values(byIds).reduce((acc, jars) => {
-    const { accumulated, otherSourcesAccumulated } = jars[0];
-    return acc + accumulated + otherSourcesAccumulated;
+    return acc + jars[0].debit;
   }, 0);
 };
 
@@ -136,5 +135,5 @@ export const getJarLeftovers = (jar: Jar, expenses: Array<ExpenseRecord>) => {
   );
   const payedSum = jarExpenses.reduce((acc, expense) => acc + expense.sum, 0);
 
-  return jar.accumulated - payedSum;
+  return jar.debit - payedSum;
 };
