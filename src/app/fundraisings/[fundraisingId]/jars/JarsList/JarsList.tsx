@@ -6,7 +6,7 @@ import classNames from 'classnames';
 import {
   Image,
   Button,
-  TooltipComponent,
+  // TooltipComponent,
   CuratorsDropdown,
   JarsInfo,
   SelectedJarsInfo,
@@ -18,6 +18,7 @@ import { toCurrency } from '@/toolbox';
 import styles from './JarsList.module.css';
 import { AddJarDialog } from './AddJarDialog/AddJarDialog';
 import { TransferBetweenJarsDialog } from './TransferBetweenJarsDialog/TransferBetweenJarsDialog';
+import { Analytics } from '../Statistics/Statistics';
 
 type JarItemProps = {
   jar: Jar;
@@ -32,7 +33,7 @@ const JarItem = ({ jar, isSelected, onClick, fundraisingId }: JarItemProps) => {
 =======
 const JarProgress = ({ jar }: { jar: Jar }) => {
   const percentageOfGoal = `${Math.round(
-    (100 * (jar.accumulated || jar.debit)) / (jar.goal || 30000)
+    (100 * jar.debit) / (jar.goal || 30000)
   )}%`;
 
   return (
@@ -47,12 +48,11 @@ const JarProgress = ({ jar }: { jar: Jar }) => {
         </div>
       </div>
       <div className={styles['jar-progress-text']}>
-        <div className={styles['jar-progress-balance']}>{toCurrency(0)}</div>
-        <div className={styles['jar-progress-name']}>
-          {toCurrency(jar.accumulated || jar.debit)}, {percentageOfGoal}
+        <div className={styles['jar-progress-balance']}>
+          Мета: {toCurrency(jar.goal || 30000)}
         </div>
-        <div className={styles['jar-progress-goal']}>
-          {toCurrency(jar.goal || 30000)}
+        <div className={styles['jar-progress-name']}>
+          {toCurrency(jar.debit)}, {percentageOfGoal}
         </div>
       </div>
     </div>
@@ -60,20 +60,19 @@ const JarProgress = ({ jar }: { jar: Jar }) => {
 };
 
 const JarItem = ({ jar, isSelected, onClick }: JarItemProps) => {
-  const { url, goal, debit, ownerName, isFinished, logo, color, jarName } = jar;
->>>>>>> f50744a (changing jar item design)
+  const { ownerName, logo, color, jarName } = jar;
 
-  const [copyClicked, setCopyClicked] = useState(false);
+  // const [copyClicked, setCopyClicked] = useState(false);
 
-  const handleClickCopy = (ev: React.MouseEvent<HTMLSpanElement>) => {
-    ev.stopPropagation();
-    const timeout = setTimeout(() => {
-      navigator.clipboard.writeText(url);
-      setCopyClicked((current) => !current);
-    }, 300);
-    setCopyClicked((current) => !current);
-    return () => clearTimeout(timeout);
-  };
+  // const handleClickCopy = (ev: React.MouseEvent<HTMLSpanElement>) => {
+  //   ev.stopPropagation();
+  //   const timeout = setTimeout(() => {
+  //     navigator.clipboard.writeText(url);
+  //     setCopyClicked((current) => !current);
+  //   }, 300);
+  //   setCopyClicked((current) => !current);
+  //   return () => clearTimeout(timeout);
+  // };
 
   return (
     <li
@@ -92,6 +91,7 @@ const JarItem = ({ jar, isSelected, onClick }: JarItemProps) => {
           width={69}
           height={69}
         />
+        <div className={styles['jar-owner']}>{ownerName}</div>
         {/* <div className={styles['jar-settings']}>
           <span
             className={
@@ -116,11 +116,15 @@ const JarItem = ({ jar, isSelected, onClick }: JarItemProps) => {
       <div className={classNames(styles['item-column'], styles['jar-info'])}>
         <div className={styles['jar-title']}>{jarName}</div>
         <JarProgress jar={jar} />
+        {/* <div className={styles['jar-settings']}>
+          <Button>✏️ Редагувати</Button>
+          <Button>🔗 Посилання</Button>
+        </div> */}
         {/* <h3>
           {ownerName} {isFinished ? <span>🔓</span> : null}
         </h3>
         <div className={styles['item-column']}>
-          <span>Зібрано: {toCurrency(jar.accumulated || debit)}</span>
+          <span>Зібрано: {toCurrency(debit)}</span>
           <span>{goal ? `Мета: ${toCurrency(goal)}` : 'Мета: Немає'}</span>
         </div> */}
       </div>
@@ -135,9 +139,10 @@ export const JarsList = ({ fundraisingId }: { fundraisingId: string }) => {
     jars,
     resetJarSelection,
     expenses,
+    statistics,
   } = useContext(JarsPageContext);
 
-  const [isAllVisible, setIsAllVisible] = useState(jars.length < 10);
+  // const [isAllVisible, setIsAllVisible] = useState(jars.length < 10);
   const [selectedCurator, setSelectedCurator] = useState('all');
 
   const byCurator =
@@ -146,9 +151,13 @@ export const JarsList = ({ fundraisingId }: { fundraisingId: string }) => {
       : jars;
 
   const toRender =
-    selectedCurator === 'all' && isAllVisible
-      ? byCurator
-      : byCurator.slice(0, 10);
+    selectedCurator === 'all' ? byCurator : byCurator.slice(0, 10);
+
+  const usedJars = selectedJars.length ? selectedJars : jars;
+
+  const jarsRecords = statistics.filter((record) =>
+    usedJars.some((jar) => jar.id === record.jarId)
+  );
 
   return (
     <>
@@ -161,13 +170,13 @@ export const JarsList = ({ fundraisingId }: { fundraisingId: string }) => {
           <Button disabled={!selectedJars.length} onClick={resetJarSelection}>
             Відмінити вибір
           </Button>
-          {jars.length > 10 && (
+          {/* {jars.length > 10 && (
             <Button onClick={() => setIsAllVisible(!isAllVisible)}>
               {!isAllVisible
                 ? 'Показати всі банки 👀'
                 : 'Приховати частину банок 🫣'}
             </Button>
-          )}
+          )} */}
         </div>
       </div>
       <div className={styles['jars-main-content']}>
@@ -204,6 +213,7 @@ export const JarsList = ({ fundraisingId }: { fundraisingId: string }) => {
           {selectedJars.length ? (
             <SelectedJarsInfo selectedJars={selectedJars} />
           ) : null}
+          <Analytics jars={usedJars} jarsRecords={jarsRecords} />
         </div>
       </div>
     </>

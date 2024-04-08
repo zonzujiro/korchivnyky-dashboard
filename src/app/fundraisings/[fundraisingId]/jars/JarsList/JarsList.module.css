@@ -21,8 +21,8 @@
   min-height: 85px;
   height: fit-content;
   border-radius: 16px;
-  width: 380px;
-  height: 136px;
+  width: 305px;
+  height: 135px;
   background: #000000;
   color: #fff;
 }
@@ -42,18 +42,17 @@
 
 .jar-avatar {
   width: 135px;
-  max-width: 135px;
-  height: 136px;
+  padding-left: 16px;
+  padding-top: 10px;
   overflow: hidden;
   position: relative;
-  justify-content: center;
 }
 
 .jar-progress {
   color: rgba(255, 255, 255, 0.8);
   position: relative;
   width: 100%;
-  height: 32px;
+  height: 30px;
 }
 
 .jar-progress-background {
@@ -102,7 +101,6 @@
   width: 100%;
   justify-content: space-between;
   font-weight: 700;
-  font-size: 16px;
   line-height: 24px;
   padding: 4px 8px;
   overflow: hidden;
@@ -114,10 +112,10 @@
   grid-column-gap: 0px;
   grid-row-gap: 0px;
   height: auto;
-  text-shadow: none !important;
+  text-shadow: none;
   font-weight: 400;
-  padding-left: 0 !important;
-  padding-right: 0 !important;
+  padding-left: 0;
+  padding-right: 0;
   color: #fff;
 }
 
@@ -142,23 +140,26 @@
 
 .jar-title {
   font-weight: 700;
-  font-size: 18px;
   line-height: 20px;
-  margin-top: 20px;
   margin-bottom: 12px;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
-  width: 224px;
-}
-
-.selected {
-  background-color: lightgrey;
+  width: 170px;
+  padding-top: 12px;
 }
 
 .jar-info {
   flex-grow: 1;
   padding-right: 16px;
+  padding-left: 16px;
+}
+
+.jar-owner {
+  text-align: center;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  width: 100%;
 }
 
 .item-column {
@@ -181,12 +182,14 @@
 
 .logo {
   border-radius: 50%;
+  margin-bottom: 8px;
 }
 
 .jar-settings {
   display: flex;
   flex-direction: column;
   align-items: center;
+  margin-top: 25px;
 }
 
 .icon {
@@ -227,6 +230,11 @@
   animation: wave 0.3s infinite;
   pointer-events: none;
   user-select: none;
+}
+
+.jars-analytics {
+  display: flex;
+  flex-direction: row;
 }
 
 .copy-icon {

@@ -3,7 +3,7 @@
 import React, { useState, useContext } from 'react';
 import classNames from 'classnames';
 
-import { Jar } from '@/types';
+import { Jar, JarStatisticRecord } from '@/types';
 import { toCurrency } from '@/toolbox';
 import { JarsPageContext } from '@/dal';
 
@@ -75,23 +75,17 @@ const SpeedRow = ({
   );
 };
 
-export const Statistics = () => {
-  const { selectedJars, jars, expenses, expenseTypes, statistics, users } =
-    useContext(JarsPageContext);
-
-  const [activeTab, setActiveTab] = useState<'statistics' | 'expenses'>(
-    'statistics'
-  );
+export const Analytics = ({
+  jarsRecords,
+  jars,
+}: {
+  jarsRecords: Array<JarStatisticRecord>;
+  jars: Array<Jar>;
+}) => {
   const [startDate, setStartDate] = useState(
     getDateInputInitialValue(FIVE_DAYS_AGO)
   );
   const [endDate, setEndDate] = useState(getDateInputInitialValue(TODAY));
-
-  const usedJars = selectedJars.length ? selectedJars : jars;
-
-  const jarsRecords = statistics.filter((record) =>
-    usedJars.some((jar) => jar.id === record.jarId)
-  );
 
   const growth = getAccountsMovements(
     jarsRecords,
@@ -103,6 +97,72 @@ export const Statistics = () => {
     jarsRecords,
     new Date(startDate),
     new Date(endDate)
+  );
+
+  return (
+    <>
+      <div className={styles['analytics-content']}>
+        <div className={styles['column-header']}>
+          <div className={styles['date-inputs-wrapper']}>
+            <span className={styles['inputs-title-prefix']}>
+              Аналітика за період:
+            </span>
+            <div className={styles['date-inputs']}>
+              <input
+                type='date'
+                id='start-date'
+                className={styles['date-input']}
+                onChange={(ev) => setStartDate(ev.target.value)}
+                value={startDate}
+                max={endDate}
+              />
+              →
+              <input
+                type='date'
+                id='end-date'
+                className={styles['date-input']}
+                onChange={(ev) => setEndDate(ev.target.value)}
+                value={endDate}
+                min={startDate}
+              />
+            </div>
+          </div>
+        </div>
+        <h4>Динаміка по банкам</h4>
+        <div className={styles.growth}>
+          {growth.length
+            ? growth.map((dataEntry) => (
+                <GrowthRow key={dataEntry.jarId} jars={jars} {...dataEntry} />
+              ))
+            : NO_DATA_TEXT}
+        </div>
+      </div>
+      <div className={styles['analytics-content']}>
+        <h4>Середня швидкість</h4>
+        <div className={styles['gathering-speed-list']}>
+          {speed.length
+            ? speed.map((dataEntry) => (
+                <SpeedRow key={dataEntry.jarId} jars={jars} {...dataEntry} />
+              ))
+            : NO_DATA_TEXT}
+        </div>
+      </div>
+    </>
+  );
+};
+
+export const Statistics = () => {
+  const { selectedJars, jars, expenses, expenseTypes, statistics, users } =
+    useContext(JarsPageContext);
+
+  const [activeTab, setActiveTab] = useState<'statistics' | 'expenses'>(
+    'statistics'
+  );
+
+  const usedJars = selectedJars.length ? selectedJars : jars;
+
+  const jarsRecords = statistics.filter((record) =>
+    usedJars.some((jar) => jar.id === record.jarId)
   );
 
   return (
@@ -148,60 +208,7 @@ export const Statistics = () => {
           </div>
         ) : null}
         <div className={classNames(styles.column, styles.analytics)}>
-          <div className={styles['column-header']}>
-            <div className={styles['date-inputs-wrapper']}>
-              <span className={styles['inputs-title-prefix']}>
-                Аналітика за період:
-              </span>
-              <div className={styles['date-inputs']}>
-                <input
-                  type='date'
-                  id='start-date'
-                  className={styles['date-input']}
-                  onChange={(ev) => setStartDate(ev.target.value)}
-                  value={startDate}
-                  max={endDate}
-                />
-                →
-                <input
-                  type='date'
-                  id='end-date'
-                  className={styles['date-input']}
-                  onChange={(ev) => setEndDate(ev.target.value)}
-                  value={endDate}
-                  min={startDate}
-                />
-              </div>
-            </div>
-          </div>
-          <div className={styles['analytics-content']}>
-            <h4>Динаміка по банкам</h4>
-            <div className={styles.growth}>
-              {growth.length
-                ? growth.map((dataEntry) => (
-                    <GrowthRow
-                      key={dataEntry.jarId}
-                      jars={usedJars}
-                      {...dataEntry}
-                    />
-                  ))
-                : NO_DATA_TEXT}
-            </div>
-          </div>
-          <div className={styles['analytics-content']}>
-            <h4>Середня швидкість</h4>
-            <div className={styles['gathering-speed-list']}>
-              {speed.length
-                ? speed.map((dataEntry) => (
-                    <SpeedRow
-                      key={dataEntry.jarId}
-                      jars={usedJars}
-                      {...dataEntry}
-                    />
-                  ))
-                : NO_DATA_TEXT}
-            </div>
-          </div>
+          <Analytics jars={usedJars} jarsRecords={jarsRecords} />
         </div>
       </div>
     </div>

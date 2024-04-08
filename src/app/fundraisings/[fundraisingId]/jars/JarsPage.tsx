@@ -8,7 +8,7 @@ import { PageParams } from '@/types';
 
 import styles from './JarsPage.module.css';
 import { JarsList } from './JarsList/JarsList';
-import { Statistics } from './Statistics/Statistics';
+// import { Statistics } from './Statistics/Statistics';
 import { CampaignDescription } from './CampaignDescription/CampaignDescription';
 
 export const JarsPage = async ({ params }: PageParams) => {
@@ -45,7 +45,7 @@ export const JarsPage = async ({ params }: PageParams) => {
         users={users}
       >
         <JarsList fundraisingId={fundraisingId} />
-        <Statistics />
+        {/* <Statistics /> */}
       </JarsPageStateProvider>
     </>
   );
