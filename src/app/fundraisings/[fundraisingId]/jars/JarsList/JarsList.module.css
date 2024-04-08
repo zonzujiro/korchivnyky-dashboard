@@ -12,7 +12,6 @@
 }
 
 .item {
-  border: 1px solid black;
   border-radius: 10px;
   margin: 10px;
   padding: 5px;
@@ -21,6 +20,136 @@
   font-size: 0.8em;
   min-height: 85px;
   height: fit-content;
+  border-radius: 16px;
+  width: 380px;
+  height: 136px;
+  background: #000000;
+  color: #fff;
+}
+
+.item.selected {
+  background: linear-gradient(0deg, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1)),
+    linear-gradient(136.56deg, #8a53b6 0%, #cea2d0 97.42%);
+}
+
+.item.selected .jar-progress-background {
+  background: rgba(0, 0, 0, 0.3);
+}
+
+.item.selected .jar-progress-bar {
+  background: #000000;
+}
+
+.jar-avatar {
+  width: 135px;
+  max-width: 135px;
+  height: 136px;
+  overflow: hidden;
+  position: relative;
+  justify-content: center;
+}
+
+.jar-progress {
+  color: rgba(255, 255, 255, 0.8);
+  position: relative;
+  width: 100%;
+  height: 32px;
+}
+
+.jar-progress-background {
+  background: linear-gradient(
+    132.42deg,
+    #e7b5d3 0%,
+    #f4b9c1 50.79%,
+    #eac6bb 97.52%
+  );
+  border-radius: 12px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: inherit;
+}
+
+.jar-progress-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: inherit;
+}
+
+.jar-progress-clip {
+  border-radius: 12px;
+  height: 100%;
+  overflow: hidden;
+}
+
+.jar-progress-bar {
+  background: linear-gradient(
+    132.42deg,
+    #b93e88 0%,
+    #f58190 50.79%,
+    #fca78c 97.52%
+  );
+  height: 100%;
+}
+
+.jar-progress-text {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  justify-content: space-between;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 24px;
+  padding: 4px 8px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+  grid-column-gap: 0px;
+  grid-row-gap: 0px;
+  height: auto;
+  text-shadow: none !important;
+  font-weight: 400;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  color: #fff;
+}
+
+.jar-progress-balance {
+  grid-area: 2 / 1 / 3 / 2;
+  margin-top: 4px;
+}
+
+.jar-progress-name {
+  grid-area: 1 / 1 / 2 / 3;
+  text-align: center;
+  max-width: 100%;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  padding: 0 10px;
+}
+
+.jar-progress-goal {
+  grid-area: 2 / 2 / 3 / 3;
+  margin-top: 4px;
+}
+
+.jar-title {
+  font-weight: 700;
+  font-size: 18px;
+  line-height: 20px;
+  margin-top: 20px;
+  margin-bottom: 12px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  width: 224px;
 }
 
 .selected {
@@ -28,13 +157,13 @@
 }
 
 .jar-info {
-  padding: 0 10px;
+  flex-grow: 1;
+  padding-right: 16px;
 }
 
 .item-column {
   display: flex;
   flex-direction: column;
-  margin: 5px 0;
 }
 
 .item-column:first-child {

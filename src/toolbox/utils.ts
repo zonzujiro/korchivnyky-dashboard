@@ -85,10 +85,11 @@ export const fileToBase64 = (file: File | Blob): Promise<string> =>
   });
 
 export const getGatheredMoney = (jars: Array<Jar>) => {
+  console.log({ jars });
   const byIds = groupBy(jars, (jar) => jar.id);
 
   return Object.values(byIds).reduce((acc, jars) => {
-    return acc + jars[0].debit;
+    return acc + (jars[0].accumulated || jars[0].debit);
   }, 0);
 };
 

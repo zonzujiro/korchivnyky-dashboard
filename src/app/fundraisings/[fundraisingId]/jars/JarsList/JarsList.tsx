@@ -26,8 +26,42 @@ type JarItemProps = {
   fundraisingId: string;
 };
 
+<<<<<<< HEAD
 const JarItem = ({ jar, isSelected, onClick, fundraisingId }: JarItemProps) => {
   const { url, goal, debit, ownerName, isFinished, logo, color } = jar;
+=======
+const JarProgress = ({ jar }: { jar: Jar }) => {
+  const percentageOfGoal = `${Math.round(
+    (100 * (jar.accumulated || jar.debit)) / (jar.goal || 30000)
+  )}%`;
+
+  return (
+    <div className={styles['jar-progress']}>
+      <div className={styles['jar-progress-background']} />
+      <div className={styles['jar-progress-container']}>
+        <div className={styles['jar-progress-clip']}>
+          <div
+            className={styles['jar-progress-bar']}
+            style={{ width: percentageOfGoal }}
+          />
+        </div>
+      </div>
+      <div className={styles['jar-progress-text']}>
+        <div className={styles['jar-progress-balance']}>{toCurrency(0)}</div>
+        <div className={styles['jar-progress-name']}>
+          {toCurrency(jar.accumulated || jar.debit)}, {percentageOfGoal}
+        </div>
+        <div className={styles['jar-progress-goal']}>
+          {toCurrency(jar.goal || 30000)}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const JarItem = ({ jar, isSelected, onClick }: JarItemProps) => {
+  const { url, goal, debit, ownerName, isFinished, logo, color, jarName } = jar;
+>>>>>>> f50744a (changing jar item design)
 
   const [copyClicked, setCopyClicked] = useState(false);
 
@@ -48,17 +82,17 @@ const JarItem = ({ jar, isSelected, onClick, fundraisingId }: JarItemProps) => {
       })}
       onClick={onClick}
     >
-      <div className={styles['item-column']}>
+      <div className={classNames(styles['item-column'], styles['jar-avatar'])}>
         <Image
           src={logo ? logo : '/images/jar-logo.jpg'}
           fallbackSrc='/images/jar-logo.jpg'
           alt='jar logo'
           className={styles.logo}
           style={{ border: `2px solid ${color}` }}
-          width={50}
-          height={50}
+          width={69}
+          height={69}
         />
-        <div className={styles['jar-settings']}>
+        {/* <div className={styles['jar-settings']}>
           <span
             className={
               copyClicked ? styles['copy-icon-clicked'] : styles['copy-icon']
@@ -80,13 +114,15 @@ const JarItem = ({ jar, isSelected, onClick, fundraisingId }: JarItemProps) => {
         </div>
       </div>
       <div className={classNames(styles['item-column'], styles['jar-info'])}>
-        <h3>
+        <div className={styles['jar-title']}>{jarName}</div>
+        <JarProgress jar={jar} />
+        {/* <h3>
           {ownerName} {isFinished ? <span>🔓</span> : null}
         </h3>
         <div className={styles['item-column']}>
-          <span>Зібрано: {toCurrency(debit)}</span>
+          <span>Зібрано: {toCurrency(jar.accumulated || debit)}</span>
           <span>{goal ? `Мета: ${toCurrency(goal)}` : 'Мета: Немає'}</span>
-        </div>
+        </div> */}
       </div>
     </li>
   );
