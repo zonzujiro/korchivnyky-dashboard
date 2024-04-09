@@ -16,7 +16,7 @@ import { JarsPageContext } from '@/dal';
 import { getJarLeftovers, stopEvent, toCurrency } from '@/toolbox';
 
 import styles from './JarsList.module.css';
-import { AddJarDialog } from './AddJarDialog/AddJarDialog';
+import { AddJarDialog } from './JarDialog/JarDialog';
 import { TransferBetweenJarsDialog } from './TransferBetweenJarsDialog/TransferBetweenJarsDialog';
 import { Analytics } from '../Statistics/Statistics';
 
@@ -26,7 +26,6 @@ type JarItemProps = {
   onClick(): void;
   fundraisingId: string;
 };
-
 
 const JarProgress = ({ jar }: { jar: Jar }) => {
   const percentageOfGoal = `${Math.round(
@@ -53,7 +52,7 @@ const JarProgress = ({ jar }: { jar: Jar }) => {
   );
 };
 
-const JarItem = ({ jar, isSelected, onClick }: JarItemProps) => {
+const JarItem = ({ jar, isSelected, onClick, fundraisingId }: JarItemProps) => {
   const { ownerName, logo, color, jarName } = jar;
 
   // const [copyClicked, setCopyClicked] = useState(false);
@@ -96,17 +95,8 @@ const JarItem = ({ jar, isSelected, onClick }: JarItemProps) => {
           >
             <TooltipComponent />
           </span>
-          <span>
-            <AddJarDialog
-              jar={jar}
-              fundraisingId={fundraisingId}
-              renderButton={(openDialog) => (
-                <Button onClick={openDialog}>Редагувати банку</Button>
-              )}
-            />
-          </span>
-        </div>
-            </div>*/}
+        </div>*/}
+      </div>
       <div className={classNames(styles['item-column'], styles['jar-info'])}>
         <div className={styles['jar-title']}>{jarName}</div>
         <JarProgress jar={jar} />
@@ -117,9 +107,15 @@ const JarItem = ({ jar, isSelected, onClick }: JarItemProps) => {
           Залишок: {toCurrency(getJarLeftovers(jar))}
         </div>
         <div className={styles['jar-settings']}>
-          <Button onClick={stopEvent} className={styles['jar-button']}>
-            ✏️ Редагувати
-          </Button>
+          <AddJarDialog
+            jar={jar}
+            fundraisingId={fundraisingId}
+            renderButton={(openDialog) => (
+              <Button onClick={openDialog} className={styles['jar-button']}>
+                ✏️ Редагувати
+              </Button>
+            )}
+          />
           <Button onClick={stopEvent} className={styles['jar-button']}>
             🔗 Посилання
           </Button>
@@ -189,7 +185,9 @@ export const JarsList = ({ fundraisingId }: { fundraisingId: string }) => {
             <AddJarDialog
               jars={jars}
               fundraisingId={fundraisingId}
-              renderButton={() => <div />}
+              renderButton={(openDialog) => (
+                <Button onClick={openDialog}>➕ Додати банку</Button>
+              )}
             />
             <TransferBetweenJarsDialog
               jars={jars}

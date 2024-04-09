@@ -7,11 +7,7 @@ type ButtonProps = {
   className?: string;
   children: ReactNode;
   disabled?: boolean;
-<<<<<<< HEAD
   onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
-=======
-  onClick?: (ev: MouseEvent<HTMLButtonElement, globalThis.MouseEvent>) => void;
->>>>>>> e65cac7 (chaning jar design)
   pressed?: boolean;
   type?: 'submit';
   title?: string;
@@ -38,11 +34,7 @@ export const Button = ({
       className={classNames(styles.button, className, {
         [styles.pressed]: pressed,
       })}
-<<<<<<< HEAD
       onClick={handleClick}
-=======
-      onClick={(ev) => onClick?.(ev)}
->>>>>>> e65cac7 (chaning jar design)
       type={type}
     >
       {children}
