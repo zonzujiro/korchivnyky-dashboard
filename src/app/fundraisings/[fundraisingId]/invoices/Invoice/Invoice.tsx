@@ -87,11 +87,7 @@ export const Invoice = ({
         />
         {isActive && (
           <>
-            <AddExpenseDialog
-              invoice={invoice}
-              jars={jars}
-              expenses={expenses}
-            />
+            <AddExpenseDialog invoice={invoice} jars={jars} />
             <InvoiceDialog
               invoice={invoice}
               expensesTypes={expensesTypes}

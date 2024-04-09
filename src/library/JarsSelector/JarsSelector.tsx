@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
 
-import type { ExpenseRecord, Jar } from '@/types';
+import type { Jar } from '@/types';
 import { getJarLeftovers, toCurrency, useDependency } from '@/toolbox';
 
 import { CuratorsDropdown } from '../CuratorsDropdown/CuratorsDropdown';
@@ -39,9 +39,8 @@ const TabContent = (props: {
   value?: Jar;
   jars: Array<Jar>;
   selectJar: (id: number) => void;
-  expenses: Array<ExpenseRecord>;
 }) => {
-  const { id, selectCurator, selectJar, value, jars, expenses } = props;
+  const { id, selectCurator, selectJar, value, jars } = props;
 
   return (
     <>
@@ -63,7 +62,7 @@ const TabContent = (props: {
             </option>
           ))}
       </select>
-      <SelectedJarInfo jar={value} expenses={expenses} />
+      <SelectedJarInfo jar={value} />
     </>
   );
 };
@@ -75,7 +74,6 @@ type PastCampaignsTabProps = {
   curator: string;
   selectCurator: (curator: string) => void;
   selectedJar: Jar;
-  expenses: Array<ExpenseRecord>;
 };
 
 const useJarsSource = (
@@ -106,7 +104,6 @@ const PastCampaignsTab = (props: PastCampaignsTabProps) => {
     selectCurator,
     curator,
     selectedJar,
-    expenses,
   } = props;
 
   const { fundraisingId } = useParams<{
@@ -151,7 +148,6 @@ const PastCampaignsTab = (props: PastCampaignsTabProps) => {
           }}
           selectCurator={selectCurator}
           jars={filteredJars}
-          expenses={expenses}
         />
       </div>
     </Loader>
@@ -165,7 +161,6 @@ type JarSelectorProps = {
   jars: Array<Jar>;
   selectedJar: Jar;
   className?: string;
-  expenses: Array<ExpenseRecord>;
 };
 
 export const JarSelector = ({
@@ -175,7 +170,6 @@ export const JarSelector = ({
   selectJar,
   selectedJar,
   className,
-  expenses,
 }: JarSelectorProps) => {
   const [curator, selectCurator] = useState('all');
   const [activeTab, setActiveTab] = useState<'current' | 'past'>('current');
@@ -223,7 +217,6 @@ export const JarSelector = ({
             selectJar={(id) => selectJar(findJar(id))}
             selectCurator={selectCurator}
             jars={filteredJars}
-            expenses={expenses}
           />
         </div>
       ) : null}
@@ -235,7 +228,6 @@ export const JarSelector = ({
           curator={curator}
           selectCurator={selectCurator}
           selectedJar={value}
-          expenses={expenses}
         />
       ) : null}
     </fieldset>

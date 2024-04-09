@@ -131,7 +131,6 @@ export const JarsList = ({ fundraisingId }: { fundraisingId: string }) => {
     toggleJarSelection,
     jars,
     resetJarSelection,
-    expenses,
     statistics,
   } = useContext(JarsPageContext);
 
@@ -192,7 +191,6 @@ export const JarsList = ({ fundraisingId }: { fundraisingId: string }) => {
             <TransferBetweenJarsDialog
               jars={jars}
               selectedJars={selectedJars}
-              expenses={expenses}
             />
           </div>
           <JarsInfo jars={jars} />
