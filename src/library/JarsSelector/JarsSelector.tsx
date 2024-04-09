@@ -12,13 +12,7 @@ import classNames from 'classnames';
 import { getFundraisingCampaigns, getJars } from '@/dal';
 import { Loader } from '../Loader/Loader';
 
-const SelectedJarInfo = ({
-  jar,
-  expenses,
-}: {
-  jar?: Jar;
-  expenses: Array<ExpenseRecord>;
-}) => {
+const SelectedJarInfo = ({ jar }: { jar?: Jar }) => {
   if (!jar) {
     return (
       <div className={styles['jar-info']}>
@@ -28,7 +22,7 @@ const SelectedJarInfo = ({
     );
   }
 
-  const leftovers = getJarLeftovers(jar, expenses);
+  const leftovers = getJarLeftovers(jar);
 
   return (
     <div className={styles['jar-info']}>

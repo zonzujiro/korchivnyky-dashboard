@@ -51,8 +51,7 @@ export const StatisticsSection = ({
               <div className={styles['jar-owner']}>{jar.ownerName}</div>
               <Tooltip anchorSelect={`#statistics-bar-${jar.id}`}>
                 <p>
-                  <strong>Зібрано:</strong>{' '}
-                  {toCurrency(jar.accumulated || jar.debit)}
+                  <strong>Зібрано:</strong> {toCurrency(jar.debit)}
                 </p>
                 {jar.goal && (
                   <p>

@@ -14,36 +14,51 @@
 .item {
   border-radius: 10px;
   margin: 10px;
-  padding: 5px;
+  padding: 15px;
   display: flex;
   cursor: pointer;
   font-size: 0.8em;
-  min-height: 85px;
   height: fit-content;
   border-radius: 16px;
-  width: 305px;
-  height: 135px;
-  background: #000000;
+  width: 250px;
+  height: 295px;
+  background: linear-gradient(0deg, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1)),
+    linear-gradient(136.56deg, #8a53b6 0%, #cea2d0 97.42%);
   color: #fff;
+  align-items: center;
+  flex-direction: column;
 }
 
 .item.selected {
-  background: linear-gradient(0deg, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1)),
-    linear-gradient(136.56deg, #8a53b6 0%, #cea2d0 97.42%);
-}
-
-.item.selected .jar-progress-background {
-  background: rgba(0, 0, 0, 0.3);
-}
-
-.item.selected .jar-progress-bar {
   background: #000000;
 }
 
+.item.selected .jar-progress-background {
+  background: linear-gradient(
+    132.42deg,
+    #e7b5d3 0%,
+    #f4b9c1 50.79%,
+    #eac6bb 97.52%
+  );
+}
+
+.item.selected .jar-progress-bar,
+.item.selected .jar-button:not(:hover) {
+  background: linear-gradient(
+    132.42deg,
+    #b93e88 0%,
+    #f58190 50.79%,
+    #fca78c 97.52%
+  );
+}
+
+.item.selected .jar-button:hover {
+  background: black;
+  color: white;
+}
+
 .jar-avatar {
-  width: 135px;
-  padding-left: 16px;
-  padding-top: 10px;
+  width: 100%;
   overflow: hidden;
   position: relative;
 }
@@ -56,12 +71,7 @@
 }
 
 .jar-progress-background {
-  background: linear-gradient(
-    132.42deg,
-    #e7b5d3 0%,
-    #f4b9c1 50.79%,
-    #eac6bb 97.52%
-  );
+  background: rgba(0, 0, 0, 0.3);
   border-radius: 12px;
   position: absolute;
   top: 0;
@@ -85,12 +95,7 @@
 }
 
 .jar-progress-bar {
-  background: linear-gradient(
-    132.42deg,
-    #b93e88 0%,
-    #f58190 50.79%,
-    #fca78c 97.52%
-  );
+  background: #000000;
   height: 100%;
 }
 
@@ -131,6 +136,8 @@
   text-overflow: ellipsis;
   overflow: hidden;
   padding: 0 10px;
+  font-size: 1.1em;
+  font-weight: 600;
 }
 
 .jar-progress-goal {
@@ -149,10 +156,12 @@
   padding-top: 12px;
 }
 
+.jar-button:first-child {
+  margin-right: 5px;
+}
+
 .jar-info {
-  flex-grow: 1;
-  padding-right: 16px;
-  padding-left: 16px;
+  width: 100%;
 }
 
 .jar-owner {
@@ -209,7 +218,7 @@
 }
 
 .controls > * {
-  margin-right: 15px;
+  margin-right: 5px;
 }
 
 .form-error {
@@ -250,5 +259,13 @@
 @keyframes wave {
   50% {
     transform: translateY(-4px);
+  }
+}
+
+@media (max-width: 1200px) {
+  .jars-list {
+    width: 100%;
+    justify-content: center;
+    align-items: center;
   }
 }

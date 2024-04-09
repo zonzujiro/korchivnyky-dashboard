@@ -46,23 +46,28 @@ export const NavigationSubMenu = () => {
         >
           <Link href='./'>Збори</Link>
         </li>
+
         <span className={styles['menu-separator']}>|</span>
-        <li
-          className={classNames(styles['menu-item'], {
-            [styles.active]: pathname.endsWith('/jars'),
-          })}
-        >
-          <Link href='./jars'>Банки</Link>
-        </li>
-        <span className={styles['menu-separator']}>|</span>
-        <li
-          className={classNames(styles['menu-item'], {
-            [styles.active]: pathname.endsWith('/invoices'),
-          })}
-        >
-          <Link href='./invoices'>Рахунки</Link>
-        </li>
-        <span className={styles['menu-separator']}>|</span>
+        {!isMainPage && (
+          <>
+            <li
+              className={classNames(styles['menu-item'], {
+                [styles.active]: pathname.endsWith('/jars'),
+              })}
+            >
+              <Link href='./jars'>Банки</Link>
+            </li>
+            <span className={styles['menu-separator']}>|</span>
+            <li
+              className={classNames(styles['menu-item'], {
+                [styles.active]: pathname.endsWith('/invoices'),
+              })}
+            >
+              <Link href='./invoices'>Рахунки</Link>
+            </li>
+            <span className={styles['menu-separator']}>|</span>
+          </>
+        )}
       </ol>
     </nav>
   );

@@ -13,7 +13,7 @@ import {
 } from '@/library';
 import type { Jar } from '@/types';
 import { JarsPageContext } from '@/dal';
-import { toCurrency } from '@/toolbox';
+import { getJarLeftovers, stopEvent, toCurrency } from '@/toolbox';
 
 import styles from './JarsList.module.css';
 import { AddJarDialog } from './AddJarDialog/AddJarDialog';
@@ -27,10 +27,7 @@ type JarItemProps = {
   fundraisingId: string;
 };
 
-<<<<<<< HEAD
-const JarItem = ({ jar, isSelected, onClick, fundraisingId }: JarItemProps) => {
-  const { url, goal, debit, ownerName, isFinished, logo, color } = jar;
-=======
+
 const JarProgress = ({ jar }: { jar: Jar }) => {
   const percentageOfGoal = `${Math.round(
     (100 * jar.debit) / (jar.goal || 30000)
@@ -48,9 +45,6 @@ const JarProgress = ({ jar }: { jar: Jar }) => {
         </div>
       </div>
       <div className={styles['jar-progress-text']}>
-        <div className={styles['jar-progress-balance']}>
-          Мета: {toCurrency(jar.goal || 30000)}
-        </div>
         <div className={styles['jar-progress-name']}>
           {toCurrency(jar.debit)}, {percentageOfGoal}
         </div>
@@ -112,21 +106,24 @@ const JarItem = ({ jar, isSelected, onClick }: JarItemProps) => {
             />
           </span>
         </div>
-      </div>
+            </div>*/}
       <div className={classNames(styles['item-column'], styles['jar-info'])}>
         <div className={styles['jar-title']}>{jarName}</div>
         <JarProgress jar={jar} />
-        {/* <div className={styles['jar-settings']}>
-          <Button>✏️ Редагувати</Button>
-          <Button>🔗 Посилання</Button>
-        </div> */}
-        {/* <h3>
-          {ownerName} {isFinished ? <span>🔓</span> : null}
-        </h3>
-        <div className={styles['item-column']}>
-          <span>Зібрано: {toCurrency(debit)}</span>
-          <span>{goal ? `Мета: ${toCurrency(goal)}` : 'Мета: Немає'}</span>
-        </div> */}
+        <div className={styles['jar-progress-balance']}>
+          Мета: {toCurrency(jar.goal || 30000)}
+        </div>
+        <div className={styles['jar-leftovers']}>
+          Залишок: {toCurrency(getJarLeftovers(jar))}
+        </div>
+        <div className={styles['jar-settings']}>
+          <Button onClick={stopEvent} className={styles['jar-button']}>
+            ✏️ Редагувати
+          </Button>
+          <Button onClick={stopEvent} className={styles['jar-button']}>
+            🔗 Посилання
+          </Button>
+        </div>
       </div>
     </li>
   );
@@ -142,7 +139,6 @@ export const JarsList = ({ fundraisingId }: { fundraisingId: string }) => {
     statistics,
   } = useContext(JarsPageContext);
 
-  // const [isAllVisible, setIsAllVisible] = useState(jars.length < 10);
   const [selectedCurator, setSelectedCurator] = useState('all');
 
   const byCurator =
@@ -170,13 +166,6 @@ export const JarsList = ({ fundraisingId }: { fundraisingId: string }) => {
           <Button disabled={!selectedJars.length} onClick={resetJarSelection}>
             Відмінити вибір
           </Button>
-          {/* {jars.length > 10 && (
-            <Button onClick={() => setIsAllVisible(!isAllVisible)}>
-              {!isAllVisible
-                ? 'Показати всі банки 👀'
-                : 'Приховати частину банок 🫣'}
-            </Button>
-          )} */}
         </div>
       </div>
       <div className={styles['jars-main-content']}>
