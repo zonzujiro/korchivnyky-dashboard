@@ -63,7 +63,11 @@ const get = async (
   return json;
 };
 
-const post = async (url: string, payload?: Record<string, any>) => {
+const sendPayload = async (
+  method: 'post' | 'put',
+  url: string,
+  payload?: Record<string, Primitive>
+) => {
   const options = payload
     ? {
         headers: {
@@ -76,38 +80,9 @@ const post = async (url: string, payload?: Record<string, any>) => {
     : {};
 
   const response = await fetch(url, {
-    method: 'post',
+    method,
     ...options,
   });
-
-  const json = await response.json();
-
-  if (!response.ok) {
-    throw new NetworkError(response, json);
-  }
-
-  return json;
-};
-
-const put = async (url: string, payload?: Record<string, any>) => {
-  const options = payload
-    ? {
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-          ...getAuthorization(),
-        },
-        body: JSON.stringify(payload),
-      }
-    : {};
-
-  const response = await fetch(url, {
-    method: 'put',
-    ...options,
-  });
-
-  console.log(response);
-
   try {
     const json = await response.json();
 
@@ -127,6 +102,14 @@ const put = async (url: string, payload?: Record<string, any>) => {
   }
 };
 
+const post = async (url: string, payload?: Record<string, Primitive>) => {
+  return sendPayload('post', url, payload);
+};
+
+const put = async (url: string, payload?: Record<string, Primitive>) => {
+  return sendPayload('put', url, payload);
+};
+
 export const getJars = async (
   fundraisingCampaignId?: string
 ): Promise<Array<Jar>> => {
@@ -141,8 +124,15 @@ export const getStatistics = async (): Promise<Array<JarStatisticRecord>> => {
   return post('https://jars.fly.dev/statistics');
 };
 
-export const postJar = async (payload: CreateJarPayload) => {
+export const postJar = async (payload: CreateJarPayload): Promise<Jar> => {
   return post('https://jars.fly.dev/jars', payload);
+};
+
+export const putJar = async (
+  jarId: number,
+  payload: Partial<CreateJarPayload>
+): Promise<Jar> => {
+  return put(`https://jars.fly.dev/jars/${jarId}`, payload);
 };
 
 export const getExpensesTypes = (
