@@ -1,4 +1,4 @@
-import { ReactNode } from 'react';
+import type { ReactNode, MouseEvent } from 'react';
 import classNames from 'classnames';
 
 import styles from './Button.module.css';

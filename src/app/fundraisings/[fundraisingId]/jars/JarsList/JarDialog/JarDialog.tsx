@@ -1,4 +1,4 @@
-import { ReactNode, useContext, useRef, useState } from 'react';
+import { ReactElement, useContext, useRef, useState } from 'react';
 import { useFormStatus } from 'react-dom';
 
 import { postJar, putJar, JarsPageContext, CreateJarPayload } from '@/dal';
@@ -6,7 +6,7 @@ import type { Jar } from '@/types';
 import { Button, CuratorsDropdown, Dialog, useDialog } from '@/library';
 import { diff } from '@/toolbox';
 
-import styles from './AddJarDialog.module.css';
+import styles from './JarDialog.module.css';
 
 const SubmitButton = () => {
   const { pending } = useFormStatus();
@@ -21,11 +21,12 @@ const SubmitButton = () => {
 export const AddJarDialog = ({
   fundraisingId,
   jar,
+  renderButton,
 }: {
   jars?: Array<Jar>;
   fundraisingId: string;
   jar?: Jar;
-  renderButton(openDialog: () => void): ReactNode;
+  renderButton(openDialog: () => void): ReactElement;
 }) => {
   const { replaceJar, addJar, jars } = useContext(JarsPageContext);
 
@@ -102,16 +103,7 @@ export const AddJarDialog = ({
         isEditMode ? 'Давай відредагуємо баночку!' : 'Давай додамо баночку!'
       }
       dialogState={dialogState}
-      renderButton={() => (
-        <Button
-          className={`
-        ${isEditMode ? styles['edit-jar'] : styles['add-jar']}
-      `}
-          onClick={openDialog}
-        >
-          {isEditMode ? '🔧' : '➕ Додати банку'}
-        </Button>
-      )}
+      renderButton={() => renderButton(openDialog)}
       renderContent={() => (
         <div className={styles['add-jar-inputs-wrapper']}>
           <form

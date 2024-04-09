@@ -1,7 +1,12 @@
 import classNames from 'classnames';
 
 import type { Jar } from '@/types';
-import { getGatheredMoney, toCurrency, uniqueBy } from '@/toolbox';
+import {
+  getAvailableMoney,
+  getGatheredMoney,
+  toCurrency,
+  uniqueBy,
+} from '@/toolbox';
 
 import styles from './JarsInfo.module.css';
 
@@ -42,7 +47,7 @@ export const JarsInfo = ({ jars }: JarsInfoProps) => {
         💸 Доступно для витрат:{' '}
         <span className={styles['jars-info-tag-value']}>
           {toCurrency(
-            getGatheredMoney(
+            getAvailableMoney(
               uniqueBy([...finishedJars, ...achievedGoals], (jar) => jar.id)
             )
           )}

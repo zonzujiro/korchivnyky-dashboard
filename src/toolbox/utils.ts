@@ -1,5 +1,7 @@
+import type { MouseEvent } from 'react';
+
 import randomColor from 'randomcolor';
-import type { ExpenseRecord, Jar } from '@/types';
+import type { Jar } from '@/types';
 
 export const getTimeString = (value: string) => {
   const date = new Date(value);
@@ -92,6 +94,18 @@ export const getGatheredMoney = (jars: Array<Jar>) => {
   }, 0);
 };
 
+export const getPayedMoney = (jars: Array<Jar>) => {
+  const byIds = groupBy(jars, (jar) => jar.id);
+
+  return Object.values(byIds).reduce((acc, jars) => {
+    return acc + jars[0].credit;
+  }, 0);
+};
+
+export const getAvailableMoney = (jars: Array<Jar>) => {
+  return getGatheredMoney(jars) - getPayedMoney(jars);
+};
+
 export const identity = <T>(v: T) => v;
 
 export const getFormValues = <InputsNames extends string>(formData: FormData) =>
@@ -129,11 +143,11 @@ export class ParsingError extends SyntaxError {
   }
 }
 
-export const getJarLeftovers = (jar: Jar, expenses: Array<ExpenseRecord>) => {
-  const jarExpenses = expenses.filter(
-    (expense) => expense.fromJarId === jar.id
-  );
-  const payedSum = jarExpenses.reduce((acc, expense) => acc + expense.sum, 0);
+export const getJarLeftovers = (jar: Jar) => {
+  return jar.debit - jar.credit;
+};
 
-  return jar.debit - payedSum;
+export const stopEvent = (ev: MouseEvent<any, any>) => {
+  ev.stopPropagation();
+  ev.preventDefault();
 };
