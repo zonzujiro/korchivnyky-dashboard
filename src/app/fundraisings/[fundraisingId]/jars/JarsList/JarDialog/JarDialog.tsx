@@ -121,16 +121,19 @@ export const AddJarDialog = ({
               maxLength={30}
               defaultValue={jar?.ownerName}
             />
-            <label htmlFor='url-input'>Посилання на банку</label>
-            <input
-              id='url-input'
-              name='url'
-              placeholder='url'
-              type='url'
-              required
-              pattern='https://send.monobank.ua/jar/.*'
-              defaultValue={jar?.url}
-            />
+            {!isEditMode && (
+              <>
+                <label htmlFor='url-input'>Посилання на банку</label>
+                <input
+                  id='url-input'
+                  name='url'
+                  placeholder='url'
+                  type='url'
+                  required
+                  pattern='https://send.monobank.ua/jar/.*'
+                />
+              </>
+            )}
             <label htmlFor='goal-input'>Мета</label>
             <input
               type='number'
