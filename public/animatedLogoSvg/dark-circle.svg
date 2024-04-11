@@ -1,0 +1,9 @@
+<svg version="1.2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2040 1960" width="2040" height="1960">
+    <title>Black Circle SVG with Red Border</title>
+    <style>
+        .circleStyle { 
+            fill: #232330;
+        }
+    </style>
+    <circle cx="1020" cy="980" r="490" class="circleStyle"/>
+</svg>

@@ -1,0 +1,92 @@
+.mainCanvas {
+  width: 200px;
+  height: 200px;
+}
+
+.group {
+  cursor: pointer;
+}
+
+.group.active .wheelAndWrenches,
+.group.active .wheel,
+.group.active .title,
+.group.active .yellowBlue,
+.group.active .wheelFadeInOut {
+  transform-origin: 50% 50%; /* Центр кола */
+}
+
+.group.active .wheelAndWrenches {
+  animation: rotateAndScale 1.5s alternate;
+}
+
+.group.active .wheel {
+  animation: spin 1.5s linear;
+}
+
+.group.active .yellowBlue {
+  animation: swing 1.5s ease-in-out 1;
+}
+
+.wheelFadeInOut {
+  opacity: 0;
+}
+
+.group.active .wheelFadeInOut {
+  animation: spin 1.5s linear, fadeInOut 1.5s ease-in-out forwards;
+}
+
+@keyframes rotateAndScale {
+  0% {
+    transform: rotate(0deg) scale(1);
+  }
+
+  50% {
+    transform: rotate(180deg) scale(0.55);
+  }
+
+  100% {
+    transform: rotate(360deg) scale(1);
+  }
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes swing {
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+  10% {
+    transform: rotate(-5deg);
+  }
+  30% {
+    transform: rotate(5deg);
+  }
+  50% {
+    transform: rotate(-5deg);
+  }
+  70% {
+    transform: rotate(5deg);
+  }
+  90% {
+    transform: rotate(0deg);
+  }
+}
+
+@keyframes fadeInOut {
+  0%,
+  100% {
+    opacity: 0;
+  }
+  25%,
+  75% {
+    opacity: 1;
+  }
+}
