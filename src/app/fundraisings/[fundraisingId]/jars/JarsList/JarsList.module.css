@@ -160,8 +160,8 @@
   margin-right: 5px;
 }
 
-.jar-info {
-  width: 100%;
+.jar-link {
+  text-decoration: none;
 }
 
 .jar-owner {
@@ -200,15 +200,6 @@
   margin-top: 25px;
 }
 
-.icon {
-  font-size: 16px;
-  padding: 5px;
-}
-
-.icon:hover {
-  text-decoration: dashed underline;
-}
-
 .controls {
   display: flex;
   flex-wrap: wrap;
@@ -218,12 +209,6 @@
 
 .controls > * {
   margin-right: 5px;
-}
-
-.form-error {
-  margin-top: 20px;
-  font-size: 0.8em;
-  color: orange;
 }
 
 .curators-filter {
@@ -238,11 +223,6 @@
   animation: wave 0.3s infinite;
   pointer-events: none;
   user-select: none;
-}
-
-.jars-analytics {
-  display: flex;
-  flex-direction: row;
 }
 
 .copy-icon {

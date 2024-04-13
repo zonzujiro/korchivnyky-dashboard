@@ -38,7 +38,6 @@ export const FundraisingsPage = async (props: PageParams) => {
           })}
         </ul>
       </nav>
-
       <div className={styles['fundraisings-list-wrapper']}>
         <h3>Актуальні збори</h3>
         <ul className={styles['fundraisings-list']}>

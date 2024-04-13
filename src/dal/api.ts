@@ -135,7 +135,7 @@ export const putJar = async (
   return put(`https://jars.fly.dev/jars/${jarId}`, payload);
 };
 
-export const getExpensesTypes = (
+export const getExpenseTypes = (
   fundraisingCampaignId: string
 ): Promise<Array<ExpenseType>> => {
   return get('https://jars.fly.dev/expensive-types', {
@@ -214,7 +214,7 @@ export const getJarsPageData = async ({
     await Promise.all([
       getJars(fundraisingId),
       getExpenses(fundraisingId),
-      getExpensesTypes(fundraisingId),
+      getExpenseTypes(fundraisingId),
       getStatistics(),
       getFundraisingCampaigns(),
       getUsers(),
@@ -232,9 +232,9 @@ export const getInvoicesPageData = async ({
 }: {
   fundraisingId: string;
 }) => {
-  const [expensesTypes, expenses, invoices, jars, currentUser, users] =
+  const [expenseTypes, expenses, invoices, jars, currentUser, users] =
     await Promise.all([
-      getExpensesTypes(fundraisingId),
+      getExpenseTypes(fundraisingId),
       getExpenses(fundraisingId),
       getInvoices(),
       getJars(fundraisingId),
@@ -242,11 +242,11 @@ export const getInvoicesPageData = async ({
       getUsers(),
     ]);
 
-  const fundraisingInvoices = getFundraisingInvoices(invoices, expensesTypes);
+  const fundraisingInvoices = getFundraisingInvoices(invoices, expenseTypes);
   const deactivatedInvoices = deactivateInvoices(fundraisingInvoices, expenses);
 
   return {
-    expensesTypes,
+    expenseTypes,
     expenses,
     invoices: deactivatedInvoices,
     jars,
@@ -261,6 +261,19 @@ export const getFundraisingsPageData = async () => {
   return { fundraisings };
 };
 
+export const getExpenseTypesPageData = async (fundraisingId: string) => {
+  const [expensesTypes, invoices, expenses, jars] = await Promise.all([
+    getExpenseTypes(fundraisingId),
+    getInvoices(),
+    getExpenses(fundraisingId),
+    getJars(fundraisingId),
+  ]);
+
+  const fundraisingInvoices = getFundraisingInvoices(invoices, expensesTypes);
+
+  return { expensesTypes, expenses, invoices: fundraisingInvoices, jars };
+};
+
 export const getFundraisingInfo = async ({
   fundraisingId,
 }: {
@@ -268,7 +281,7 @@ export const getFundraisingInfo = async ({
 }) => {
   const [expensesTypes, expenses, invoices, jars, statistics] =
     await Promise.all([
-      getExpensesTypes(fundraisingId),
+      getExpenseTypes(fundraisingId),
       getExpenses(fundraisingId),
       getInvoices(),
       getJars(fundraisingId),

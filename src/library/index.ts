@@ -11,6 +11,6 @@ export * from './JarsSelector/JarsSelector';
 export * from './Loader/Loader';
 export * from './JarsInfo/JarsInfo';
 export * from './InvoicesInfo/InvoicesInfo';
-export * from './ExpensesTypesInfo/ExpensesTypesInfo';
+export * from './ExpenseTypesInfo/ExpenseTypesInfo';
 export * from './Form';
 export * from './FilePreviewers';

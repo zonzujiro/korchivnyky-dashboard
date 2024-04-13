@@ -20,7 +20,6 @@ export const ExpenseTypeDialog = ({
 
   const { dialogState, openDialog, closeDialog } = useDialog({
     prepareClosing: () => {
-      router.refresh();
       formRef.current?.reset();
     },
   });
@@ -42,6 +41,7 @@ export const ExpenseTypeDialog = ({
     );
 
     if (result === 'Success') {
+      router.refresh();
       closeDialog();
     }
   };

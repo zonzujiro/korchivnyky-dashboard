@@ -1,14 +1,13 @@
 import { use } from 'react';
-
-import { getFundraisingInfo } from '@/dal';
-import type { FundraisingCampaign } from '@/types';
-import { getDateString } from '@/toolbox';
-import { InvoicesInfo, Progress, JarsInfo, ExpensesTypesInfo } from '@/library';
-
-import styles from './FundraisingInfo.module.css';
 import Link from 'next/link';
 import classNames from 'classnames';
-import { ExpenseTypeDialog } from '../ExpenseTypeDialog/ExpenseTypeDialog';
+
+import type { FundraisingCampaign } from '@/types';
+import { getFundraisingInfo } from '@/dal';
+import { getDateString } from '@/toolbox';
+import { InvoicesInfo, Progress, JarsInfo, ExpenseTypesInfo } from '@/library';
+
+import styles from './FundraisingInfo.module.css';
 
 type FundraisingInfoProps = {
   fundraisingInfoPromise: ReturnType<typeof getFundraisingInfo>;
@@ -36,6 +35,7 @@ export const FundraisingInfo = (props: FundraisingInfoProps) => {
           <div className={classNames(styles.column, styles.links)}>
             <Link href={`./${fundraising.id}/jars`}>🫙 До банок</Link>
             <Link href={`./${fundraising.id}/invoices`}>🧾 До рахунків</Link>
+            <Link href={`./${fundraising.id}/expense-types`}>🧮 До витрат</Link>
           </div>
         </div>
         <div className={styles['progress-wrapper']}>
@@ -47,21 +47,13 @@ export const FundraisingInfo = (props: FundraisingInfoProps) => {
         </div>
         <div className={styles['jar-and-invoices-wrapper']}>
           <JarsInfo jars={jars} />
-          <InvoicesInfo
-            expensesTypes={expensesTypes}
+          <ExpenseTypesInfo
+            expenseTypes={expensesTypes}
             expenses={expenses}
             invoices={invoices}
+            jars={jars}
           />
-        </div>
-      </div>
-      <div className={styles.column}>
-        <div className={styles['expense-types-wrapper']}>
-          <ExpenseTypeDialog fundraisingCampaignId={fundraising.id} />
-          <ExpensesTypesInfo
-            expensesTypes={expensesTypes}
-            expenses={expenses}
-            invoices={invoices}
-          />
+          <InvoicesInfo expenses={expenses} invoices={invoices} />
         </div>
       </div>
     </div>
