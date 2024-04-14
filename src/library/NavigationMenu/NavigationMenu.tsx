@@ -32,8 +32,7 @@ export const NavigationMenu = () => {
 export const NavigationSubMenu = () => {
   const pathname = usePathname();
 
-  const isMainPage =
-    !pathname.endsWith('/jars') && !pathname.endsWith('/invoices');
+  const isMainPage = !isNaN(Number(pathname.split('/').at(-1)));
 
   return (
     <nav className={styles['navigation-wrapper']}>
@@ -64,6 +63,14 @@ export const NavigationSubMenu = () => {
               })}
             >
               <Link href='./invoices'>Рахунки</Link>
+            </li>
+            <span className={styles['menu-separator']}>|</span>
+            <li
+              className={classNames(styles['menu-item'], {
+                [styles.active]: pathname.endsWith('/expense-types'),
+              })}
+            >
+              <Link href='./expense-types'>Витрати</Link>
             </li>
             <span className={styles['menu-separator']}>|</span>
           </>

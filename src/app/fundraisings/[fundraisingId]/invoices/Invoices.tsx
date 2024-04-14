@@ -1,13 +1,13 @@
 import type { PageParams } from '@/types';
 import { getInvoicesPageData } from '@/dal';
-import { ExpensesTypesInfo, InvoicesInfo } from '@/library';
+import { ExpenseTypesInfo, InvoicesInfo } from '@/library';
 
 import { InvoicesList } from './InvoicesList';
 import styles from './Invoices.module.css';
 
 export const Invoices = async ({ params }: PageParams) => {
   const { fundraisingId } = params;
-  const { expensesTypes, invoices, expenses, jars, users } =
+  const { expenseTypes, invoices, expenses, jars, users } =
     await getInvoicesPageData({ fundraisingId });
 
   return (
@@ -16,24 +16,19 @@ export const Invoices = async ({ params }: PageParams) => {
         <InvoicesList
           expenses={expenses}
           jars={jars}
-          expensesTypes={expensesTypes}
+          expenseTypes={expenseTypes}
           users={users}
           invoices={invoices}
         />
       </div>
       <div className={styles['invoices-info']}>
-        <ExpensesTypesInfo
+        <InvoicesInfo expenses={expenses} invoices={invoices} />
+        <ExpenseTypesInfo
           expenses={expenses}
           invoices={invoices}
-          expensesTypes={expensesTypes}
+          expenseTypes={expenseTypes}
+          jars={jars}
         />
-        <div className={styles['invoices-info-wrapper']}>
-          <InvoicesInfo
-            expenses={expenses}
-            invoices={invoices}
-            expensesTypes={expensesTypes}
-          />
-        </div>
       </div>
     </div>
   );

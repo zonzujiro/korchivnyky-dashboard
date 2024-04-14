@@ -17,7 +17,7 @@ import styles from './InvoicesList.module.css';
 
 type InvoicesListProps = {
   expenses: Array<ExpenseRecord>;
-  expensesTypes: Array<ExpenseType>;
+  expenseTypes: Array<ExpenseType>;
   jars: Array<Jar>;
   users: Array<User>;
   invoices: Array<IInvoice>;
@@ -27,7 +27,7 @@ const defaultValue = 'all';
 
 export const InvoicesList = ({
   expenses,
-  expensesTypes,
+  expenseTypes,
   jars,
   users,
   invoices,
@@ -35,7 +35,7 @@ export const InvoicesList = ({
   const [selectedExpenseType, selectExpenseType] = useState<'all' | string>(
     defaultValue
   );
-  const [isOnlyActiveInvoices, setIsOnlyActiveInvoices] = useState(true);
+  const [isOnlyActiveInvoices, setIsOnlyActiveInvoices] = useState(false);
 
   const byExpenseType =
     selectedExpenseType !== 'all'
@@ -52,7 +52,7 @@ export const InvoicesList = ({
     <div className={styles['invoices-list-wrapper']}>
       <div className={styles['invoices-toolbox']}>
         <InvoiceDialog
-          expensesTypes={expensesTypes}
+          expenseTypes={expenseTypes}
           invoices={invoices}
           renderButton={(onClick) => (
             <Button onClick={onClick}>➕ Додати рахунок</Button>
@@ -71,7 +71,7 @@ export const InvoicesList = ({
             defaultValue={defaultValue}
           >
             <option value='all'>Всі</option>
-            {expensesTypes.map((expenseType) => (
+            {expenseTypes.map((expenseType) => (
               <option key={expenseType.id} value={expenseType.id}>
                 {expenseType.name}
               </option>
@@ -88,7 +88,7 @@ export const InvoicesList = ({
               expenses={expenses}
               jars={jars}
               users={users}
-              expensesTypes={expensesTypes}
+              expenseTypes={expenseTypes}
               invoices={invoices}
             />
           );

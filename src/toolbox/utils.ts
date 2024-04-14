@@ -87,18 +87,14 @@ export const fileToBase64 = (file: File | Blob): Promise<string> =>
   });
 
 export const getGatheredMoney = (jars: Array<Jar>) => {
-  const byIds = groupBy(jars, (jar) => jar.id);
-
-  return Object.values(byIds).reduce((acc, jars) => {
-    return acc + jars[0].debit;
+  return jars.reduce((acc, jar) => {
+    return acc + jar.debit;
   }, 0);
 };
 
 export const getPayedMoney = (jars: Array<Jar>) => {
-  const byIds = groupBy(jars, (jar) => jar.id);
-
-  return Object.values(byIds).reduce((acc, jars) => {
-    return acc + jars[0].credit;
+  return jars.reduce((acc, jar) => {
+    return acc + jar.credit;
   }, 0);
 };
 

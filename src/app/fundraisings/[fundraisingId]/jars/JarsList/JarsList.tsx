@@ -13,7 +13,7 @@ import {
 } from '@/library';
 import type { Jar } from '@/types';
 import { JarsPageContext } from '@/dal';
-import { getJarLeftovers, stopEvent, toCurrency } from '@/toolbox';
+import { getJarLeftovers, toCurrency } from '@/toolbox';
 
 import styles from './JarsList.module.css';
 import { AddJarDialog } from './JarDialog/JarDialog';
@@ -53,7 +53,7 @@ const JarProgress = ({ jar }: { jar: Jar }) => {
 };
 
 const JarItem = ({ jar, isSelected, onClick, fundraisingId }: JarItemProps) => {
-  const { ownerName, logo, color, jarName } = jar;
+  const { ownerName, logo, color, jarName, url } = jar;
 
   // const [copyClicked, setCopyClicked] = useState(false);
 
@@ -116,8 +116,10 @@ const JarItem = ({ jar, isSelected, onClick, fundraisingId }: JarItemProps) => {
               </Button>
             )}
           />
-          <Button onClick={stopEvent} className={styles['jar-button']}>
-            🔗 Посилання
+          <Button className={styles['jar-button']}>
+            <a href={url} target='_blank' className={styles['jar-link']}>
+              🔗 Посилання
+            </a>
           </Button>
         </div>
       </div>

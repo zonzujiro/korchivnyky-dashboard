@@ -22,7 +22,7 @@ import { diff, isEmpty, removeBase64DataPrefix } from '@/toolbox';
 import styles from './InvoiceDialog.module.css';
 
 type InvoiceDialogProps = {
-  expensesTypes: Array<ExpenseType>;
+  expenseTypes: Array<ExpenseType>;
   renderButton(onClick: () => void): ReactElement;
   invoice?: Invoice;
   invoices: Array<Invoice>;
@@ -88,7 +88,7 @@ const validateCreation = (
 };
 
 export const InvoiceDialog = ({
-  expensesTypes,
+  expenseTypes,
   renderButton,
   invoice,
   invoices,
@@ -201,10 +201,10 @@ export const InvoiceDialog = ({
                       id='expense-type'
                       name='expenseType'
                       defaultValue={
-                        invoice?.expenseTypeId || expensesTypes[0].id
+                        invoice?.expenseTypeId || expenseTypes[0].id
                       }
                     >
-                      {expensesTypes
+                      {expenseTypes
                         .filter((expenseType) => expenseType.isActive)
                         .map((expenseType) => (
                           <option key={expenseType.id} value={expenseType.id}>

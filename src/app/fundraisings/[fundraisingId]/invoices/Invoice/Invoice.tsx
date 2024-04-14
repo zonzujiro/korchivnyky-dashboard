@@ -18,7 +18,7 @@ type InvoiceProps = {
   expenses: Array<ExpenseRecord>;
   jars: Array<Jar>;
   users: Array<User>;
-  expensesTypes: Array<ExpenseType>;
+  expenseTypes: Array<ExpenseType>;
   invoices: Array<IInvoice>;
 };
 
@@ -28,7 +28,7 @@ const getSum = (expenses: Array<ExpenseRecord>) => {
 
 export const Invoice = ({
   invoice,
-  expensesTypes,
+  expenseTypes,
   expenses,
   jars,
   users,
@@ -39,7 +39,7 @@ export const Invoice = ({
   const invoiceExpenses = expenses.filter(
     (expense) => expense.invoiceId === invoice.id
   );
-  const expenseType = expensesTypes.find(
+  const expenseType = expenseTypes.find(
     (expenseType) => expenseType.id === invoice.expenseTypeId
   )!;
 
@@ -90,7 +90,7 @@ export const Invoice = ({
             <AddExpenseDialog invoice={invoice} jars={jars} />
             <InvoiceDialog
               invoice={invoice}
-              expensesTypes={expensesTypes}
+              expenseTypes={expenseTypes}
               invoices={invoices}
               renderButton={(onClick) => (
                 <Button title='Редагувати' onClick={onClick}>

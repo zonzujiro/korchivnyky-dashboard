@@ -1,0 +1,26 @@
+.expense-types-list {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.expense-types-tools {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.expense-types-tools > * {
+  margin: 0 5px;
+}
+
+.expense-types-content {
+  display: flex;
+}
+
+.expense-types-list {
+  width: 60%;
+}
+
+.expense-types-sidebar {
+  width: 40%;
+}
