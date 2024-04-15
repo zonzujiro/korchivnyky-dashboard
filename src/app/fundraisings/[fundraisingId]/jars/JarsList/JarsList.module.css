@@ -19,9 +19,7 @@
   cursor: pointer;
   font-size: 0.8em;
   height: fit-content;
-  border-radius: 16px;
-  width: 250px;
-  height: 295px;
+  width: 260px;
   background: linear-gradient(0deg, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1)),
     linear-gradient(136.56deg, #8a53b6 0%, #cea2d0 97.42%);
   color: #fff;
