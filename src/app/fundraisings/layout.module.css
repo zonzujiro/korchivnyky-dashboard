@@ -9,6 +9,12 @@
   flex-wrap: wrap;
 }
 
+@media (max-width: 600px) {
+  .header {
+    justify-content: center;
+  }
+}
+
 .logo {
   width: fit-content;
 }

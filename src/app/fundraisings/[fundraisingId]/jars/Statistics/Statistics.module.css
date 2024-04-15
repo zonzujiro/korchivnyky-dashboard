@@ -63,7 +63,7 @@
 }
 
 .analytics-content {
-  margin-bottom: 25px;
+  padding: 0 20px;
 }
 
 .analytics {
@@ -97,7 +97,7 @@
 .growth {
   display: flex;
   flex-direction: column;
-  padding: 5px;
+  margin-bottom: 20px;
 }
 
 .growth-header {
@@ -122,10 +122,17 @@
 }
 
 .cell {
-  margin-left: 10px;
-  padding: 6px;
   border-bottom: dashed 1px;
   width: fit-content;
+  padding: 6px;
+}
+
+.cell:not(:first-child) {
+  margin-left: 10px;
+}
+
+.cell:first-child {
+  padding-left: 0;
 }
 
 .positive-dynamic {

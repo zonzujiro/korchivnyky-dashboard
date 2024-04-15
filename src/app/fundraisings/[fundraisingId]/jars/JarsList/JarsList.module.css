@@ -9,6 +9,7 @@
   align-content: baseline;
   list-style: none;
   width: 60%;
+  margin-left: -10px;
 }
 
 .item {
@@ -53,6 +54,10 @@
 .item.selected .jar-button:hover {
   background: black;
   color: white;
+}
+
+.jars-info-wrapper {
+  flex-grow: 1;
 }
 
 .jar-avatar {
