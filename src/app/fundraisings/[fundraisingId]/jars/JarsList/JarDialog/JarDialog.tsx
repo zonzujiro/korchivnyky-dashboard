@@ -125,11 +125,13 @@ export const AddJarDialog = ({
             />
             {!isEditMode && (
               <>
-                <label htmlFor='url-input'>Посилання на банку</label>
+                <label htmlFor='url-input'>
+                  Посилання на сторінку віджету банки
+                </label>
                 <input
                   id='url-input'
                   name='url'
-                  placeholder='url'
+                  placeholder='https://send.monobank.ua/widget/...'
                   type='url'
                   required
                   pattern='https://send.monobank.ua/widget/.*'
