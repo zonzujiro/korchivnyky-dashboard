@@ -124,11 +124,11 @@ export const getStatistics = async (): Promise<Array<JarStatisticRecord>> => {
   return post('https://jars.fly.dev/statistics');
 };
 
-export const postJar = async (payload: CreateJarPayload): Promise<Jar> => {
+export const createJar = async (payload: CreateJarPayload): Promise<Jar> => {
   return post('https://jars.fly.dev/jars', payload);
 };
 
-export const putJar = async (
+export const editJar = async (
   jarId: number,
   payload: Partial<CreateJarPayload>
 ): Promise<Jar> => {

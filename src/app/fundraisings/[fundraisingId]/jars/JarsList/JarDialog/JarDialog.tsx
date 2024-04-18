@@ -1,7 +1,7 @@
 import { ReactElement, useContext, useRef, useState } from 'react';
 import { useFormStatus } from 'react-dom';
 
-import { postJar, putJar, JarsPageContext, CreateJarPayload } from '@/dal';
+import { createJar, editJar, JarsPageContext, CreateJarPayload } from '@/dal';
 import type { Jar } from '@/types';
 import { Button, CuratorsDropdown, Dialog, useDialog } from '@/library';
 import { diff } from '@/toolbox';
@@ -46,15 +46,15 @@ export const AddJarDialog = ({
 
   const handleSubmit = async (formData: FormData) => {
     const url = formData.get('url') as string;
-    const owner = formData.get('owner-name') as string;
+    const ownerName = formData.get('owner-name') as string;
     const color = formData.get('jar-color') as string;
     const goal = formData.get('goal') as string;
-    const otherIncoms = formData.get('other-incoms') as string;
     const isFinished = formData.get('is-finished') as string;
 
     const existingJar = jars?.find((jar) => {
       return jar.url === url || jar.ownerName === owner;
     });
+
     // temporary solution. add an event handler when editing
     if (existingJar && !isEditMode) {
       setErrorText(`Така банка вже є у ${existingJar.ownerName}`);
@@ -64,6 +64,7 @@ export const AddJarDialog = ({
     const existingColor = jars?.some((jar) => {
       return jar.color === color;
     });
+
     // temporary solution. add an event handler when editing
     if (existingColor && !isEditMode) {
       setErrorText('Цей колір вже зайнятий 😔 Спробуй обрати інший 😉');
@@ -73,11 +74,11 @@ export const AddJarDialog = ({
     // continue here
     const createJarPayload: CreateJarPayload = {
       url,
-      ownerName: owner,
+      ownerName,
       fundraisingCampaignId: Number(fundraisingId),
-      color: color,
+      color,
       goal: goal ? Number(goal) : null,
-      otherSourcesAccumulated: Number(otherIncoms),
+      otherSourcesAccumulated: 0,
       isFinished: isFinished === 'true',
     };
 
@@ -86,13 +87,14 @@ export const AddJarDialog = ({
         ...jar,
         ...diff(createJarPayload, jar),
       };
-      const response = await putJar(jar.id, updatedJarPayload);
+
+      const response = await editJar(jar.id, updatedJarPayload);
       replaceJar(response);
     } else {
-      const response = await postJar(createJarPayload);
+      const response = await createJar(createJarPayload);
       addJar(response);
     }
-    console.log(createJarPayload);
+
     resetForm();
     closeDialog();
   };
@@ -130,7 +132,7 @@ export const AddJarDialog = ({
                   placeholder='url'
                   type='url'
                   required
-                  pattern='https://send.monobank.ua/jar/.*'
+                  pattern='https://send.monobank.ua/widget/.*'
                 />
               </>
             )}
@@ -143,15 +145,6 @@ export const AddJarDialog = ({
               id='goal-input'
               placeholder='100 000'
               defaultValue={jar?.goal || ''}
-            />
-            <label htmlFor='other-incoms-input'>Інші надхождення</label>
-            <input
-              type='number'
-              min='0.00'
-              step='0.01'
-              name='other-incoms'
-              id='other-incoms-input'
-              placeholder='100 000'
             />
             <label htmlFor='color-input'>Який колір хочеш обрати?</label>
             <input
