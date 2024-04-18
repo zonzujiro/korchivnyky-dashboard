@@ -52,7 +52,7 @@ export const AddJarDialog = ({
     const isFinished = formData.get('is-finished') as string;
 
     const existingJar = jars?.find((jar) => {
-      return jar.url === url || jar.ownerName === owner;
+      return jar.url === url || jar.ownerName === ownerName;
     });
 
     // temporary solution. add an event handler when editing
