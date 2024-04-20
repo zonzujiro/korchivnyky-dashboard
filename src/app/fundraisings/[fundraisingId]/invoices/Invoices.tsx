@@ -7,14 +7,14 @@ import styles from './Invoices.module.css';
 
 export const Invoices = async ({ params }: PageParams) => {
   const { fundraisingId } = params;
-  const { expenseTypes, invoices, expenses, jars, users } =
+  const { expenseTypes, invoices, transactions, jars, users } =
     await getInvoicesPageData({ fundraisingId });
 
   return (
     <div className={styles['invoices-wrapper']}>
       <div className={styles['invoices-list']}>
         <InvoicesList
-          expenses={expenses}
+          transactions={transactions}
           jars={jars}
           expenseTypes={expenseTypes}
           users={users}
@@ -22,9 +22,9 @@ export const Invoices = async ({ params }: PageParams) => {
         />
       </div>
       <div className={styles['invoices-info']}>
-        <InvoicesInfo expenses={expenses} invoices={invoices} />
+        <InvoicesInfo transactions={transactions} invoices={invoices} />
         <ExpenseTypesInfo
-          expenses={expenses}
+          transactions={transactions}
           invoices={invoices}
           expenseTypes={expenseTypes}
           jars={jars}

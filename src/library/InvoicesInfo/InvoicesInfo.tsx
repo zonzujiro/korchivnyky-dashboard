@@ -1,25 +1,25 @@
 import classNames from 'classnames';
 
-import type { ExpenseRecord, Invoice } from '@/types';
+import type { Transaction, Invoice } from '@/types';
 import { toCurrency } from '@/toolbox';
 
 import styles from './InvoicesInfo.module.css';
 
 type InvoiceInfoProps = {
   invoices: Array<Invoice>;
-  expenses: Array<ExpenseRecord>;
+  transactions: Array<Transaction>;
 };
 
-const getPayedSum = (expenses: Array<ExpenseRecord>, invoiceId: number) => {
-  return expenses
-    .filter((expense) => expense.invoiceId === invoiceId)
-    .reduce((acc, expense) => {
-      return acc + expense.sum;
+const getPayedSum = (transactions: Array<Transaction>, invoiceId: number) => {
+  return transactions
+    .filter((transaction) => transaction.invoiceId === invoiceId)
+    .reduce((acc, transaction) => {
+      return acc + transaction.sum;
     }, 0);
 };
 
 export const InvoicesInfo = (props: InvoiceInfoProps) => {
-  const { invoices, expenses } = props;
+  const { invoices, transactions } = props;
 
   const totalInvoicesSum = invoices.reduce(
     (acc, invoice) => acc + invoice.amount,
@@ -27,13 +27,13 @@ export const InvoicesInfo = (props: InvoiceInfoProps) => {
   );
 
   const payedInvoices = invoices.filter((invoice) => {
-    const payedSum = getPayedSum(expenses, invoice.id);
+    const payedSum = getPayedSum(transactions, invoice.id);
 
     return payedSum >= invoice.amount;
   });
 
   const activeDebt = invoices.reduce((acc, invoice) => {
-    const payedSum = getPayedSum(expenses, invoice.id);
+    const payedSum = getPayedSum(transactions, invoice.id);
 
     return acc + (invoice.amount - payedSum);
   }, 0);

@@ -10,7 +10,7 @@ import {
   FileInput,
   useFileInput,
 } from '@/library';
-import { createExpense } from '@/app/actions';
+import { createInvoiceTransaction } from '@/app/actions';
 import type { Invoice, Jar } from '@/types';
 import type { InvoiceTransactionPayload } from '@/dal';
 import { removeBase64DataPrefix } from '@/toolbox';
@@ -79,7 +79,7 @@ export const AddExpenseDialog = ({ invoice, jars }: AddExpenseDialogProps) => {
       })),
     };
 
-    const status = await createExpense(requestPayload);
+    const status = await createInvoiceTransaction(requestPayload);
 
     if (status === 'Success') {
       router.refresh();

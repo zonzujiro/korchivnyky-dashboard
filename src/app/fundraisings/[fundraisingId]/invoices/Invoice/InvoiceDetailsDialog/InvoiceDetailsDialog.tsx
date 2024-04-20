@@ -2,7 +2,7 @@ import Link from 'next/link';
 
 import { Dialog, Button, FilePreviewer, useDialog } from '@/library';
 import { toCurrency } from '@/toolbox';
-import type { ExpenseRecord, ExpenseType, Invoice, Jar, User } from '@/types';
+import type { Transaction, ExpenseType, Invoice, Jar, User } from '@/types';
 
 import styles from './InvoiceDetails.module.css';
 
@@ -10,7 +10,7 @@ type InvoiceDetailsDialogProps = {
   invoice: Invoice;
   expenseType: ExpenseType;
   payedSum: number;
-  invoiceExpenses: Array<ExpenseRecord>;
+  invoiceTransactions: Array<Transaction>;
   creationDate: string;
   owner: User;
   jars: Array<Jar>;
@@ -21,7 +21,7 @@ export const InvoiceDetailsDialog = (props: InvoiceDetailsDialogProps) => {
     payedSum,
     expenseType,
     invoice,
-    invoiceExpenses,
+    invoiceTransactions,
     creationDate,
     owner,
     jars,
@@ -31,8 +31,8 @@ export const InvoiceDetailsDialog = (props: InvoiceDetailsDialogProps) => {
 
   const { openDialog, dialogState } = useDialog();
 
-  const getJarName = (expense: ExpenseRecord) => {
-    const jar = jars.find((jar) => expense.fromJarId === jar.id);
+  const getJarName = (transaction: Transaction) => {
+    const jar = jars.find((jar) => transaction.fromJarId === jar.id);
 
     return jar?.ownerName;
   };
@@ -86,24 +86,24 @@ export const InvoiceDetailsDialog = (props: InvoiceDetailsDialogProps) => {
             <div className={styles['expenses-header']}>
               <h4>Оплати</h4>
               <span>
-                Оплат загалом: {invoiceExpenses.length} | Сплачено:{' '}
+                Оплат загалом: {invoiceTransactions.length} | Сплачено:{' '}
                 {toCurrency(payedSum)}
               </span>
             </div>
             <div className={styles['expenses-list-wrapper']}>
               <ul className={styles['expenses-list']}>
-                {invoiceExpenses.map((expense, index) => (
+                {invoiceTransactions.map((transaction, index) => (
                   <li className={styles['expense-item']} key={index}>
                     <div className={styles['expense-info']}>
-                      <p>Сума: {toCurrency(expense.sum)}</p>
+                      <p>Сума: {toCurrency(transaction.sum)}</p>
                       <p>Дата: {creationDate}</p>
                       <p>
-                        Платник: <span>{getJarName(expense)}</span>
+                        Платник: <span>{getJarName(transaction)}</span>
                       </p>
                     </div>
                     <div className={styles['expense-actions']}>
-                      <Link href={expense.receiptUrl}>
-                        {expense.receiptUrl.includes('.zip')
+                      <Link href={transaction.receiptUrl}>
+                        {transaction.receiptUrl.includes('.zip')
                           ? '📦 Завантажити квитанції'
                           : '💾 Завантажити квитанцію'}
                       </Link>

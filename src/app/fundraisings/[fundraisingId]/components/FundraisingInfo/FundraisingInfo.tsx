@@ -17,7 +17,7 @@ type FundraisingInfoProps = {
 export const FundraisingInfo = (props: FundraisingInfoProps) => {
   const { fundraisingInfoPromise, fundraising } = props;
 
-  const { jars, statistics, expensesTypes, expenses, invoices } = use(
+  const { jars, statistics, expensesTypes, transactions, invoices } = use(
     fundraisingInfoPromise
   );
 
@@ -49,11 +49,11 @@ export const FundraisingInfo = (props: FundraisingInfoProps) => {
           <JarsInfo jars={jars} />
           <ExpenseTypesInfo
             expenseTypes={expensesTypes}
-            expenses={expenses}
+            transactions={transactions}
             invoices={invoices}
             jars={jars}
           />
-          <InvoicesInfo expenses={expenses} invoices={invoices} />
+          <InvoicesInfo transactions={transactions} invoices={invoices} />
         </div>
       </div>
     </div>

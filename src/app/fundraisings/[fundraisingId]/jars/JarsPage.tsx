@@ -14,7 +14,7 @@ import { CampaignDescription } from './CampaignDescription/CampaignDescription';
 export const JarsPage = async ({ params }: PageParams) => {
   const { fundraisingId } = params;
 
-  const { jars, expenseTypes, expenses, statistics, fundraisings, users } =
+  const { jars, expenseTypes, transactions, statistics, fundraisings, users } =
     await getJarsPageData({ fundraisingId });
 
   const fundraising = getCurrentFundraising(fundraisings, fundraisingId);
@@ -39,7 +39,7 @@ export const JarsPage = async ({ params }: PageParams) => {
       </div>
       <JarsPageStateProvider
         jars={jars}
-        expenses={expenses}
+        transactions={transactions}
         expenseTypes={expenseTypes}
         statistics={statistics}
         users={users}

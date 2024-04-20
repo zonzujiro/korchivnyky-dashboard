@@ -4,7 +4,7 @@ import { Button } from '@/library';
 import { toCurrency } from '@/toolbox';
 import type {
   Invoice,
-  ExpenseRecord,
+  Transaction,
   ExpenseType as IExpenseType,
 } from '@/types';
 
@@ -12,12 +12,12 @@ import styles from './ExpenseType.module.css';
 
 export const ExpenseType = ({
   expenseType,
-  expenses,
+  transactions,
   invoices,
 }: {
   expenseType: IExpenseType;
   invoices: Array<Invoice>;
-  expenses: Array<ExpenseRecord>;
+  transactions: Array<Transaction>;
 }) => {
   const { id, targetSum, name } = expenseType;
 
@@ -25,8 +25,8 @@ export const ExpenseType = ({
     .filter((invoice) => invoice.expenseTypeId === id)
     .map((invoice) => invoice.id);
 
-  const currentExpenses = expenses.filter((expense) =>
-    currentInvoicesIds.includes(expense.invoiceId)
+  const currentExpenses = transactions.filter((transaction) =>
+    currentInvoicesIds.includes(transaction.invoiceId)
   );
 
   const payedSum = currentExpenses.reduce((acc, item) => acc + item.sum, 0);

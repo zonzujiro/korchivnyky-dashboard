@@ -152,10 +152,10 @@ export const Analytics = ({
 };
 
 export const Statistics = () => {
-  const { selectedJars, jars, expenses, expenseTypes, statistics, users } =
+  const { selectedJars, jars, transactions, expenseTypes, statistics, users } =
     useContext(JarsPageContext);
 
-  const [activeTab, setActiveTab] = useState<'statistics' | 'expenses'>(
+  const [activeTab, setActiveTab] = useState<'statistics' | 'transactions'>(
     'statistics'
   );
 
@@ -178,9 +178,9 @@ export const Statistics = () => {
         </li>
         <li
           className={classNames(styles.tab, {
-            [styles.active]: activeTab === 'expenses',
+            [styles.active]: activeTab === 'transactions',
           })}
-          onClick={() => setActiveTab('expenses')}
+          onClick={() => setActiveTab('transactions')}
         >
           Видатки
         </li>
@@ -196,11 +196,11 @@ export const Statistics = () => {
             </div>
           </div>
         ) : null}
-        {activeTab === 'expenses' ? (
+        {activeTab === 'transactions' ? (
           <div className={classNames(styles.column, styles.statistics)}>
             <div className={styles.chart}>
               <ExpensesSection
-                expenses={expenses}
+                transactions={transactions}
                 expensesTypes={expenseTypes}
                 jars={selectedJars}
               />

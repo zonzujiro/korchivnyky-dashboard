@@ -1,5 +1,5 @@
 import type {
-  ExpenseRecord,
+  Transaction,
   ExpenseType,
   Invoice as IInvoice,
   Jar,
@@ -15,29 +15,29 @@ import { InvoiceDialog } from '../InvoiceDialog/InvoiceDialog';
 
 type InvoiceProps = {
   invoice: IInvoice;
-  expenses: Array<ExpenseRecord>;
+  transactions: Array<Transaction>;
   jars: Array<Jar>;
   users: Array<User>;
   expenseTypes: Array<ExpenseType>;
   invoices: Array<IInvoice>;
 };
 
-const getSum = (expenses: Array<ExpenseRecord>) => {
+const getSum = (expenses: Array<Transaction>) => {
   return expenses.reduce((acc, item) => acc + item.sum, 0);
 };
 
 export const Invoice = ({
   invoice,
   expenseTypes,
-  expenses,
+  transactions,
   jars,
   users,
   invoices,
 }: InvoiceProps) => {
   const { name, amount, fileUrl, createdAt, isActive } = invoice;
 
-  const invoiceExpenses = expenses.filter(
-    (expense) => expense.invoiceId === invoice.id
+  const invoiceExpenses = transactions.filter(
+    (transaction) => transaction.invoiceId === invoice.id
   );
   const expenseType = expenseTypes.find(
     (expenseType) => expenseType.id === invoice.expenseTypeId
@@ -80,7 +80,7 @@ export const Invoice = ({
           invoice={invoice}
           expenseType={expenseType}
           payedSum={payedSum}
-          invoiceExpenses={invoiceExpenses}
+          invoiceTransactions={invoiceExpenses}
           creationDate={creationDate}
           owner={invoiceOwner}
           jars={jars}

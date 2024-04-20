@@ -1,11 +1,16 @@
 'use server';
 
-import { InvoiceTransactionPayload, createInvoiceTransaction } from '@/dal';
+import {
+  InvoiceTransactionPayload,
+  createInvoiceTransaction as sendRequest,
+} from '@/dal';
 import { NetworkError } from '@/toolbox';
 
-export const createExpense = async (expenseData: InvoiceTransactionPayload) => {
+export const createInvoiceTransaction = async (
+  transactionData: InvoiceTransactionPayload
+) => {
   try {
-    await createInvoiceTransaction(expenseData);
+    await sendRequest(transactionData);
 
     return 'Success';
     // eslint-disable-next-line @typescript-eslint/no-explicit-any

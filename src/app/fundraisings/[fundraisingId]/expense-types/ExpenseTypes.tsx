@@ -8,7 +8,7 @@ import { ExpenseTypesInfo } from '@/library';
 
 export const ExpenseTypes = async ({ params }: PageParams) => {
   const { fundraisingId } = params;
-  const { expensesTypes, invoices, expenses, jars } =
+  const { expensesTypes, invoices, transactions, jars } =
     await getExpenseTypesPageData(fundraisingId);
 
   return (
@@ -24,7 +24,7 @@ export const ExpenseTypes = async ({ params }: PageParams) => {
                 key={expenseType.id}
                 expenseType={expenseType}
                 invoices={invoices}
-                expenses={expenses}
+                transactions={transactions}
               />
             );
           })}
@@ -33,7 +33,7 @@ export const ExpenseTypes = async ({ params }: PageParams) => {
           <ExpenseTypesInfo
             expenseTypes={expensesTypes}
             invoices={invoices}
-            expenses={expenses}
+            transactions={transactions}
             jars={jars}
           />
         </div>

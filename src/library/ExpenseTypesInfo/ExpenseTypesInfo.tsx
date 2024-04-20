@@ -1,21 +1,21 @@
 import classNames from 'classnames';
 
 import { getPayedMoney, toCurrency } from '@/toolbox';
-import type { ExpenseRecord, ExpenseType, Invoice, Jar } from '@/types';
+import type { Transaction, ExpenseType, Invoice, Jar } from '@/types';
 
 import styles from './ExpenseTypesInfo.module.css';
 
 type ExpenseTypesInfoProps = {
   expenseTypes: Array<ExpenseType>;
   invoices: Array<Invoice>;
-  expenses: Array<ExpenseRecord>;
+  transactions: Array<Transaction>;
   jars: Array<Jar>;
 };
 
 const getExpenseTypeExpenses = (
   expenseType: ExpenseType,
   invoices: Array<Invoice>,
-  expenses: Array<ExpenseRecord>
+  expenses: Array<Transaction>
 ) => {
   const expenseTypeInvoices = invoices
     .filter((invoice) => invoice.expenseTypeId === expenseType.id)
@@ -29,7 +29,7 @@ const getExpenseTypeExpenses = (
 const getExpenseTypePayedSum = (
   expenseType: ExpenseType,
   invoices: Array<Invoice>,
-  expenses: Array<ExpenseRecord>
+  expenses: Array<Transaction>
 ) => {
   const expenseTypeExpenses = getExpenseTypeExpenses(
     expenseType,
@@ -41,7 +41,7 @@ const getExpenseTypePayedSum = (
 };
 
 export const ExpenseTypesInfo = (props: ExpenseTypesInfoProps) => {
-  const { expenseTypes, expenses, invoices, jars } = props;
+  const { expenseTypes, transactions, invoices, jars } = props;
 
   if (!expenseTypes.length) {
     return (
@@ -57,7 +57,11 @@ export const ExpenseTypesInfo = (props: ExpenseTypesInfoProps) => {
   }, 0);
 
   const overPayed = expenseTypes.reduce((acc, expenseType) => {
-    const payedSum = getExpenseTypePayedSum(expenseType, invoices, expenses);
+    const payedSum = getExpenseTypePayedSum(
+      expenseType,
+      invoices,
+      transactions
+    );
 
     if (payedSum > expenseType.targetSum) {
       return acc + (payedSum - expenseType.targetSum);
@@ -67,7 +71,11 @@ export const ExpenseTypesInfo = (props: ExpenseTypesInfoProps) => {
   }, 0);
 
   const registeredPaymentsSum = expenseTypes.reduce((acc, expenseType) => {
-    const payedSum = getExpenseTypePayedSum(expenseType, invoices, expenses);
+    const payedSum = getExpenseTypePayedSum(
+      expenseType,
+      invoices,
+      transactions
+    );
 
     return acc + payedSum;
   }, 0);

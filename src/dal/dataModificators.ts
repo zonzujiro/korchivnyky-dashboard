@@ -1,5 +1,5 @@
 import type {
-  ExpenseRecord,
+  Transaction,
   ExpenseType,
   FundraisingCampaign,
   Invoice,
@@ -29,12 +29,9 @@ export const getFundraisingInvoices = (
 // Backend is not doing this
 export const deactivateInvoices = (
   invoices: Array<Invoice>,
-  expenses: Array<ExpenseRecord>
+  expenses: Array<Transaction>
 ) => {
-  const isActiveInvoice = (
-    invoice: Invoice,
-    expenses: Array<ExpenseRecord>
-  ) => {
+  const isActiveInvoice = (invoice: Invoice, expenses: Array<Transaction>) => {
     const invoiceExpenses = expenses.filter(
       (expense) => expense.invoiceId === invoice.id
     );

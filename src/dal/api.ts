@@ -10,7 +10,7 @@ import type {
   JarStatisticRecord,
   User,
   Primitive,
-  ExpenseRecord,
+  Transaction,
 } from '@/types';
 import { NetworkError, ParsingError, addColorToJar, identity } from '@/toolbox';
 
@@ -156,9 +156,9 @@ export const getInvoices = async (): Promise<Array<Invoice>> => {
   }));
 };
 
-export const getExpenses = (
+export const getTransactions = (
   fundraisingCampaignId?: string
-): Promise<Array<ExpenseRecord>> => {
+): Promise<Array<Transaction>> => {
   return get('https://jars.fly.dev/transactions', { fundraisingCampaignId });
 };
 
@@ -210,17 +210,17 @@ export const getJarsPageData = async ({
 }: {
   fundraisingId: string;
 }) => {
-  const [jars, expenses, expenseTypes, statistics, fundraisings, users] =
+  const [jars, transactions, expenseTypes, statistics, fundraisings, users] =
     await Promise.all([
       getJars(fundraisingId),
-      getExpenses(fundraisingId),
+      getTransactions(fundraisingId),
       getExpenseTypes(fundraisingId),
       getStatistics(),
       getFundraisingCampaigns(),
       getUsers(),
     ]);
 
-  return { jars, expenses, expenseTypes, statistics, fundraisings, users };
+  return { jars, transactions, expenseTypes, statistics, fundraisings, users };
 };
 
 export const getCurrentUser = async (): Promise<User> => {
@@ -232,10 +232,10 @@ export const getInvoicesPageData = async ({
 }: {
   fundraisingId: string;
 }) => {
-  const [expenseTypes, expenses, invoices, jars, currentUser, users] =
+  const [expenseTypes, transactions, invoices, jars, currentUser, users] =
     await Promise.all([
       getExpenseTypes(fundraisingId),
-      getExpenses(fundraisingId),
+      getTransactions(fundraisingId),
       getInvoices(),
       getJars(fundraisingId),
       getCurrentUser(),
@@ -243,11 +243,14 @@ export const getInvoicesPageData = async ({
     ]);
 
   const fundraisingInvoices = getFundraisingInvoices(invoices, expenseTypes);
-  const deactivatedInvoices = deactivateInvoices(fundraisingInvoices, expenses);
+  const deactivatedInvoices = deactivateInvoices(
+    fundraisingInvoices,
+    transactions
+  );
 
   return {
     expenseTypes,
-    expenses,
+    transactions,
     invoices: deactivatedInvoices,
     jars,
     currentUser,
@@ -262,16 +265,16 @@ export const getFundraisingsPageData = async () => {
 };
 
 export const getExpenseTypesPageData = async (fundraisingId: string) => {
-  const [expensesTypes, invoices, expenses, jars] = await Promise.all([
+  const [expensesTypes, invoices, transactions, jars] = await Promise.all([
     getExpenseTypes(fundraisingId),
     getInvoices(),
-    getExpenses(fundraisingId),
+    getTransactions(fundraisingId),
     getJars(fundraisingId),
   ]);
 
   const fundraisingInvoices = getFundraisingInvoices(invoices, expensesTypes);
 
-  return { expensesTypes, expenses, invoices: fundraisingInvoices, jars };
+  return { expensesTypes, transactions, invoices: fundraisingInvoices, jars };
 };
 
 export const getFundraisingInfo = async ({
@@ -279,17 +282,20 @@ export const getFundraisingInfo = async ({
 }: {
   fundraisingId: string;
 }) => {
-  const [expensesTypes, expenses, invoices, jars, statistics] =
+  const [expensesTypes, transactions, invoices, jars, statistics] =
     await Promise.all([
       getExpenseTypes(fundraisingId),
-      getExpenses(fundraisingId),
+      getTransactions(fundraisingId),
       getInvoices(),
       getJars(fundraisingId),
       getStatistics(),
     ]);
 
   const fundraisingInvoices = getFundraisingInvoices(invoices, expensesTypes);
-  const deactivatedInvoices = deactivateInvoices(fundraisingInvoices, expenses);
+  const deactivatedInvoices = deactivateInvoices(
+    fundraisingInvoices,
+    transactions
+  );
 
   const jarsIds = jars.map((jar) => jar.id);
   const fundraisingStatistics = statistics.filter((record) =>
@@ -298,7 +304,7 @@ export const getFundraisingInfo = async ({
 
   return {
     expensesTypes,
-    expenses,
+    transactions,
     invoices: deactivatedInvoices,
     jars,
     statistics: fundraisingStatistics,

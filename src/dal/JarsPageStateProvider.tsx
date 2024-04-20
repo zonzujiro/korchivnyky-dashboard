@@ -2,7 +2,7 @@
 
 import React from 'react';
 import type {
-  ExpenseRecord,
+  Transaction,
   ExpenseType,
   Jar,
   JarStatisticRecord,
@@ -12,7 +12,7 @@ import { addColorToJar } from '../toolbox/utils';
 
 type StateProviderProps = {
   jars: Array<Jar>;
-  expenses: Array<ExpenseRecord>;
+  transactions: Array<Transaction>;
   expenseTypes: Array<ExpenseType>;
   statistics: Array<JarStatisticRecord>;
   users: Array<User>;
@@ -24,13 +24,13 @@ export type JarsPageState = StateProviderProps & {
   addJar(jar: Jar): void;
   replaceJar(jar: Jar): void;
   resetJarSelection(): void;
-  addExpense(expense: ExpenseRecord): void;
+  addTransaction(expense: Transaction): void;
 };
 
 export const JarsPageContext = React.createContext<JarsPageState>({
   statistics: [],
   selectedJars: [],
-  expenses: [],
+  transactions: [],
   expenseTypes: [],
   jars: [],
   users: [],
@@ -38,12 +38,12 @@ export const JarsPageContext = React.createContext<JarsPageState>({
   addJar: () => {},
   replaceJar: () => {},
   resetJarSelection: () => {},
-  addExpense: () => {},
+  addTransaction: () => {},
 });
 
 export const JarsPageStateProvider = ({
   jars: serverJars,
-  expenses: serverExpenses,
+  transactions: serverTransactions,
   expenseTypes,
   children,
   statistics,
@@ -52,7 +52,7 @@ export const JarsPageStateProvider = ({
   children: React.ReactNode;
 }) => {
   const [selectedJars, setSelectedJars] = React.useState<Array<Jar>>([]);
-  const [expenses, setExpenses] = React.useState(serverExpenses);
+  const [transactions, setTransactions] = React.useState(serverTransactions);
   const [jars, setJars] = React.useState(serverJars);
 
   const resetJarSelection = () => {
@@ -82,8 +82,8 @@ export const JarsPageStateProvider = ({
     setJars(nextJars);
   };
 
-  const addExpense = (expense: ExpenseRecord) => {
-    setExpenses([...expenses, expense]);
+  const addTransaction = (expense: Transaction) => {
+    setTransactions([...transactions, expense]);
   };
 
   const value = {
@@ -93,9 +93,9 @@ export const JarsPageStateProvider = ({
     addJar,
     replaceJar,
     resetJarSelection,
-    expenses,
+    transactions,
     expenseTypes,
-    addExpense,
+    addTransaction,
     statistics,
     users,
   };

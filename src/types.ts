@@ -36,7 +36,7 @@ export type ExpenseType = {
   targetSum: number;
 };
 
-export type ExpenseRecord = {
+export type Transaction = {
   id: number;
   sum: number;
   fromJarId: number;

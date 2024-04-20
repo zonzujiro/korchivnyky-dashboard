@@ -1,10 +1,10 @@
-import type { Jar, ExpenseRecord, ExpenseType } from '@/types';
+import type { Jar, Transaction, ExpenseType } from '@/types';
 
 import styles from './ExpensesSection.module.css';
 
 type StatisticsProps = {
   jars: Array<Jar>;
-  expenses: Array<ExpenseRecord>;
+  transactions: Array<Transaction>;
   expensesTypes: Array<ExpenseType>;
 };
 

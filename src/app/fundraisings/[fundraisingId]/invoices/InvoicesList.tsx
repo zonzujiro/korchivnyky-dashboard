@@ -3,7 +3,7 @@
 import { useState } from 'react';
 
 import type {
-  ExpenseRecord,
+  Transaction,
   ExpenseType,
   Jar,
   User,
@@ -16,7 +16,7 @@ import { Invoice } from './Invoice/Invoice';
 import styles from './InvoicesList.module.css';
 
 type InvoicesListProps = {
-  expenses: Array<ExpenseRecord>;
+  transactions: Array<Transaction>;
   expenseTypes: Array<ExpenseType>;
   jars: Array<Jar>;
   users: Array<User>;
@@ -26,7 +26,7 @@ type InvoicesListProps = {
 const defaultValue = 'all';
 
 export const InvoicesList = ({
-  expenses,
+  transactions,
   expenseTypes,
   jars,
   users,
@@ -85,7 +85,7 @@ export const InvoicesList = ({
             <Invoice
               key={invoice.id}
               invoice={invoice}
-              expenses={expenses}
+              transactions={transactions}
               jars={jars}
               users={users}
               expenseTypes={expenseTypes}
