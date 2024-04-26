@@ -1,19 +1,32 @@
 'use client';
 
-import { useRef } from 'react';
+import { ReactElement, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 
-import { Button, Dialog, Fieldset, SubmitButton, useDialog } from '@/library';
-import { ExpenseTypePayload } from '@/dal';
+import type { ExpenseType } from '@/types';
+import {
+  CuratorsDropdown,
+  Dialog,
+  Fieldset,
+  FormButtons,
+  useDialog,
+} from '@/library';
+import { ExpenseTypePayload, deleteExpenseType } from '@/dal';
 import { getFormValues } from '@/toolbox';
 import { createExpenseType } from '@/app/actions';
 
 import styles from './ExpenseTypeDialog.module.css';
 
 export const ExpenseTypeDialog = ({
-  fundraisingCampaignId,
+  fundraisingId,
+  renderButton,
+  expenseType,
+  title,
 }: {
-  fundraisingCampaignId: number;
+  fundraisingId: string;
+  renderButton(openDialog: () => void): ReactElement;
+  expenseType?: ExpenseType;
+  title: string;
 }) => {
   const formRef = useRef<HTMLFormElement>(null);
   const router = useRouter();
@@ -24,15 +37,26 @@ export const ExpenseTypeDialog = ({
     },
   });
 
+  const close = () => {
+    router.refresh();
+    closeDialog();
+  };
+
+  const handleDeletion = async () => {
+    await deleteExpenseType(expenseType!.id);
+    close();
+  };
+
   const handleSubmit = async (formData: FormData) => {
     const record = getFormValues<
-      'name' | 'fundraisingCampaignId' | 'amount' | 'is-auto'
+      'name' | 'fundraisingCampaignId' | 'amount' | 'is-auto' | 'ownerId'
     >(formData);
 
     const expenseTypePayload: ExpenseTypePayload = {
       name: record.name,
-      fundraisingCampaignId,
+      fundraisingCampaignId: Number(fundraisingId),
       targetSum: Number(record.amount),
+      ownerId: Number(record.ownerId),
     };
 
     const result = await createExpenseType(
@@ -41,18 +65,15 @@ export const ExpenseTypeDialog = ({
     );
 
     if (result === 'Success') {
-      router.refresh();
-      closeDialog();
+      close();
     }
   };
 
   return (
     <Dialog
-      title='Запланувати витрати'
+      title={title}
       dialogState={dialogState}
-      renderButton={() => (
-        <Button onClick={openDialog}>🤑 Запланувати витрати</Button>
-      )}
+      renderButton={() => renderButton(openDialog)}
       renderContent={() => {
         return (
           <div className={styles['dialog-content']}>
@@ -72,6 +93,7 @@ export const ExpenseTypeDialog = ({
                     placeholder='На щось важливе'
                     maxLength={35}
                     required
+                    defaultValue={expenseType?.name}
                   />
                   <label htmlFor='expense-amount-input'>
                     Запланована вартість
@@ -84,15 +106,30 @@ export const ExpenseTypeDialog = ({
                     id='expense-amount-input'
                     placeholder='20 000'
                     required
+                    defaultValue={expenseType?.targetSum}
                   />
-                  <label className={styles['is-auto-checkbox']}>
-                    Це авто?
-                    <input type='checkbox' name='is-auto' /> Так
-                  </label>
-                  <small className={styles['is-auto-info']}>
-                    Якщо так - ми одразу заплануємо ремонт та фарбування
-                  </small>
-                  <SubmitButton />
+                  <label htmlFor='curator-input'>Від кого запит</label>
+                  <CuratorsDropdown
+                    name='ownerId'
+                    defaultValue={expenseType?.ownerId}
+                    isPersonOnly
+                  />
+                  {!expenseType ? (
+                    <>
+                      <label className={styles['is-auto-checkbox']}>
+                        Це авто?
+                        <input type='checkbox' name='is-auto' /> Так
+                      </label>
+                      <small className={styles['is-auto-info']}>
+                        Якщо так - ми одразу заплануємо ремонт та фарбування
+                      </small>
+                    </>
+                  ) : null}
+                  <div className={styles.buttons}>
+                    <FormButtons
+                      handleDeletion={expenseType ? handleDeletion : null}
+                    />
+                  </div>
                 </Fieldset>
               </div>
             </form>

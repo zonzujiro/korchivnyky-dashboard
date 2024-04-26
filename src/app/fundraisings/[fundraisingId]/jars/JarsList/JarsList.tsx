@@ -6,7 +6,6 @@ import classNames from 'classnames';
 import {
   Image,
   Button,
-  // TooltipComponent,
   CuratorsDropdown,
   JarsInfo,
   SelectedJarsInfo,

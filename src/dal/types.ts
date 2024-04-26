@@ -48,4 +48,5 @@ export type ExpenseTypePayload = {
   fundraisingCampaignId: number;
   name: string;
   targetSum: number;
+  ownerId: number;
 };

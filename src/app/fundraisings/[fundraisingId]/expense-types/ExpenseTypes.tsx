@@ -1,10 +1,10 @@
 import type { PageParams } from '@/types';
 import { getExpenseTypesPageData } from '@/dal';
+import { ExpenseTypesInfo } from '@/library';
 
 import style from './ExpenseTypes.module.css';
-import { ExpenseTypeDialog } from './ExpenseTypeDialog/ExpenseTypeDialog';
 import { ExpenseType } from './ExpenseType/ExpenseType';
-import { ExpenseTypesInfo } from '@/library';
+import { ExpenseTypeTools } from './ExpenseTypeTools';
 
 export const ExpenseTypes = async ({ params }: PageParams) => {
   const { fundraisingId } = params;
@@ -13,9 +13,7 @@ export const ExpenseTypes = async ({ params }: PageParams) => {
 
   return (
     <div className={style['expense-types-wrapper']}>
-      <div className={style['expense-types-tools']}>
-        <ExpenseTypeDialog fundraisingCampaignId={Number(fundraisingId)} />
-      </div>
+      <ExpenseTypeTools fundraisingId={fundraisingId} />
       <div className={style['expense-types-content']}>
         <div className={style['expense-types-list']}>
           {expensesTypes.map((expenseType) => {
@@ -25,6 +23,7 @@ export const ExpenseTypes = async ({ params }: PageParams) => {
                 expenseType={expenseType}
                 invoices={invoices}
                 transactions={transactions}
+                fundraisingId={fundraisingId}
               />
             );
           })}

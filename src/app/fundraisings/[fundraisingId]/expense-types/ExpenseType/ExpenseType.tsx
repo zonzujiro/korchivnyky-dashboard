@@ -9,15 +9,18 @@ import type {
 } from '@/types';
 
 import styles from './ExpenseType.module.css';
+import { ExpenseTypeDialog } from '../ExpenseTypeDialog/ExpenseTypeDialog';
 
 export const ExpenseType = ({
   expenseType,
   transactions,
   invoices,
+  fundraisingId,
 }: {
   expenseType: IExpenseType;
   invoices: Array<Invoice>;
   transactions: Array<Transaction>;
+  fundraisingId: string;
 }) => {
   const { id, targetSum, name } = expenseType;
 
@@ -45,7 +48,14 @@ export const ExpenseType = ({
         </p>
         <p>До сплати: {leftover >= 0 ? toCurrency(leftover) : 0}</p>
       </div>
-      <Button className={styles['edit-button']}>✏️ Редагувати</Button>
+      <ExpenseTypeDialog
+        title='Редагувати витрати'
+        fundraisingId={fundraisingId}
+        renderButton={(openDialog) => (
+          <Button onClick={openDialog}>✏️ Редагувати</Button>
+        )}
+        expenseType={expenseType}
+      />
     </div>
   );
 };

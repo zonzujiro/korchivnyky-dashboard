@@ -113,15 +113,20 @@ export class NetworkError extends Error {
   backendError?: any;
   traceId: string | null;
 
-  constructor(response: Response, body?: Record<string, any>) {
+  constructor(response: Response) {
     super();
 
     this.customMessage = `(${response.url}): ${response.statusText}}`;
     this.code = response.status;
-    this.backendError = body;
     this.traceId = response.headers.get('trace-id');
 
-    console.log(`${this.code}: ${this.customMessage} - ${this.traceId}`);
+    console.error(`${this.code}: ${this.customMessage} - ${this.traceId}`);
+
+    if (this.code === 400) {
+      response.json().then((body) => {
+        console.error(body);
+      });
+    }
   }
 }
 

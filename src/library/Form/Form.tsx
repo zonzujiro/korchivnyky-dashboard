@@ -54,7 +54,7 @@ export const DeleteButton = ({
 export const FormButtons = ({
   handleDeletion,
 }: {
-  handleDeletion?: () => Promise<void>;
+  handleDeletion?: null | (() => Promise<void>);
 }) => {
   const [deleting, setDeleting] = useState(false);
 

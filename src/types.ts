@@ -34,6 +34,7 @@ export type ExpenseType = {
   isActive: boolean;
   createdAt: string;
   targetSum: number;
+  ownerId: number;
 };
 
 export type Transaction = {
