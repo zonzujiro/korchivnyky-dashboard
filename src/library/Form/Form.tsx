@@ -76,5 +76,21 @@ export const Fieldset = ({ children }: { children: ReactNode }) => {
   return <fieldset className={styles['form-inputs']}>{children}</fieldset>;
 };
 
+export const UserSelect = ({ users }: { users: Array<User> }) => {
+  return (
+    <select
+      id='curator-input'
+      name='ownerId'
+      defaultValue={expenseType?.ownerId}
+    >
+      {users.map((user) => (
+        <option key={user.id} value={user.id}>
+          {user.name}
+        </option>
+      ))}
+    </select>
+  );
+};
+
 export const resetInputValidity = (ev: React.ChangeEvent<HTMLInputElement>) =>
   ev.currentTarget.setCustomValidity('');

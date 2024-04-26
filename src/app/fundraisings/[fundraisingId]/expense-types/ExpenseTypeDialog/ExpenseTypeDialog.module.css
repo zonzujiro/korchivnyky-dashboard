@@ -14,7 +14,8 @@
   margin-bottom: 20px;
 }
 
-.is-auto-checkbox input {
+.is-auto-checkbox input,
+.is-auto-checkbox select {
   margin-left: 10px;
   margin-bottom: 2px;
 }

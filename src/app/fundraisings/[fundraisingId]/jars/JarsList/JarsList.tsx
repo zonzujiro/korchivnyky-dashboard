@@ -3,13 +3,7 @@
 import React, { useState } from 'react';
 import classNames from 'classnames';
 
-import {
-  Image,
-  Button,
-  CuratorsDropdown,
-  JarsInfo,
-  SelectedJarsInfo,
-} from '@/library';
+import { Image, Button, JarsInfo, SelectedJarsInfo } from '@/library';
 import type { Jar, JarStatisticRecord, User } from '@/types';
 import { getJarLeftovers, toCurrency } from '@/toolbox';
 
@@ -156,7 +150,14 @@ export const JarsList = ({
       <div className={styles.controls}>
         <div className={styles['curators-filter']}>
           <span>Куратор</span>
-          <CuratorsDropdown onChange={setSelectedCurator} />
+          <select onChange={(ev) => setSelectedCurator(ev.target.value)}>
+            <option value='all'>Всі</option>
+            {users.map((user) => (
+              <option key={user.id} value={user.id}>
+                {user.name}
+              </option>
+            ))}
+          </select>
         </div>
         <div className={styles['jars-filters']}>
           <Button disabled={!selectedJars.length} onClick={resetJarSelection}>
