@@ -23,91 +23,101 @@ import type {
   CreateInvoicePayloadWithMissPrint,
 } from './types';
 
-const getAuthorization = () => ({
-  Authorization: cookies().get('authorization')?.value || '',
-});
-
-const handleSearchParams = (
-  baseUrl: string,
-  paramsSource?: Partial<Record<string, Primitive>>
-) => {
-  if (!paramsSource || !Object.values(paramsSource).filter(identity).length) {
-    return baseUrl;
-  }
-
-  const searchParams = new URLSearchParams();
-
-  Object.entries(paramsSource).forEach(([key, value]) => {
-    searchParams.append(key, `${value}`);
-  });
-
-  return `${baseUrl}?${searchParams.toString()}`;
-};
-
-const get = async (
-  url: string,
-  paramsSource?: Partial<Record<string, Primitive>>
-) => {
-  const response = await fetch(handleSearchParams(url, paramsSource), {
-    headers: {
-      ...getAuthorization(),
-    },
-  });
-
-  if (response.status > 200) {
-    throw new NetworkError(response);
-  }
-
-  const json = await response.json();
-
-  return json;
-};
-
-const sendPayload = async (
-  method: 'post' | 'put',
+const sendRequest = async (
+  method: 'post' | 'put' | 'delete' | 'get',
   url: string,
   payload?: Record<string, Primitive>
 ) => {
-  const options = payload
+  const authorization = {
+    Authorization: cookies().get('authorization')?.value || '',
+  };
+
+  const contentHeaders = {
+    Accept: 'application/json',
+    'Content-Type': 'application/json',
+  };
+
+  const config = payload
     ? {
         headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-          ...getAuthorization(),
+          ...authorization,
+          ...contentHeaders,
         },
         body: JSON.stringify(payload),
       }
-    : {};
+    : {
+        headers: authorization,
+      };
 
   const response = await fetch(url, {
     method,
-    ...options,
+    ...config,
   });
+
+  if (!response.ok) {
+    throw new NetworkError(response);
+  }
+
+  return response;
+};
+
+const handleBody = async (response: Response) => {
   try {
     const json = await response.json();
 
-    if (!response.ok) {
-      throw new NetworkError(response, json);
-    }
-
     return json;
   } catch (e) {
-    if (e instanceof NetworkError) {
-      throw e;
-    }
-
     if (e instanceof SyntaxError) {
       throw new ParsingError(response, e);
     }
   }
 };
 
+const get = async (
+  url: string,
+  paramsSource?: Partial<Record<string, Primitive>>
+) => {
+  const handleSearchParams = (
+    baseUrl: string,
+    paramsSource?: Partial<Record<string, Primitive>>
+  ) => {
+    if (!paramsSource || !Object.values(paramsSource).filter(identity).length) {
+      return baseUrl;
+    }
+
+    const searchParams = new URLSearchParams();
+
+    Object.entries(paramsSource).forEach(([key, value]) => {
+      searchParams.append(key, `${value}`);
+    });
+
+    return `${baseUrl}?${searchParams.toString()}`;
+  };
+
+  const response = await sendRequest(
+    'get',
+    handleSearchParams(url, paramsSource)
+  );
+
+  return handleBody(response);
+};
+
 const post = async (url: string, payload?: Record<string, Primitive>) => {
-  return sendPayload('post', url, payload);
+  const response = await sendRequest('post', url, payload);
+
+  return handleBody(response);
 };
 
 const put = async (url: string, payload?: Record<string, Primitive>) => {
-  return sendPayload('put', url, payload);
+  const response = await sendRequest('put', url, payload);
+
+  return handleBody(response);
+};
+
+const remove = async (url: string) => {
+  await sendRequest('delete', url);
+
+  return true;
 };
 
 export const getJars = async (
@@ -190,7 +200,9 @@ export const createJarsTransaction = (payload: JarsTransactionPayload) => {
   return post('https://jars.fly.dev/transactions/direct', payload);
 };
 
-export const createInvoice = (payload: CreateInvoicePayloadWithMissPrint) => {
+export const createInvoice = (
+  payload: CreateInvoicePayloadWithMissPrint
+): Promise<Invoice> => {
   return post('https://jars.fly.dev/invoices', payload);
 };
 
@@ -199,6 +211,10 @@ export const editInvoice = (
   payload: Partial<CreateInvoicePayloadWithMissPrint>
 ) => {
   return put(`https://jars.fly.dev/invoices/${invoiceId}`, payload);
+};
+
+export const deleteInvoice = (invoiceId: number) => {
+  return remove(`https://jars.fly.dev/invoices/${invoiceId}`);
 };
 
 export const getUsers = async (): Promise<Array<User>> => {

@@ -9,6 +9,17 @@
   width: fit-content;
 }
 
+.button.red {
+  color: #d1242f;
+  background: white;
+  border-color: lightgrey;
+}
+
+.button.red:hover {
+  color: #ffffff;
+  background: #d1242f;
+}
+
 .button:hover,
 .button.pressed {
   background: white;

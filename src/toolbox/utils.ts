@@ -111,6 +111,7 @@ export class NetworkError extends Error {
   code: number;
   customMessage: string;
   backendError?: any;
+  traceId: string | null;
 
   constructor(response: Response, body?: Record<string, any>) {
     super();
@@ -118,8 +119,9 @@ export class NetworkError extends Error {
     this.customMessage = `(${response.url}): ${response.statusText}}`;
     this.code = response.status;
     this.backendError = body;
+    this.traceId = response.headers.get('trace-id');
 
-    console.log(`${this.code}: ${this.customMessage}`);
+    console.log(`${this.code}: ${this.customMessage} - ${this.traceId}`);
   }
 }
 

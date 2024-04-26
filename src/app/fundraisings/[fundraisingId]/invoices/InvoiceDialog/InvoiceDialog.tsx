@@ -4,17 +4,21 @@ import React, { ReactElement, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 
 import type { ExpenseType, Invoice } from '@/types';
-import { type CreateInvoicePayload, type EditInvoicePayload } from '@/dal';
+import {
+  deleteInvoice,
+  type CreateInvoicePayload,
+  type EditInvoicePayload,
+} from '@/dal';
 import {
   Dialog,
   useDialog,
-  SubmitButton,
   Fieldset,
   FileInput,
   useFileInput,
   FileInputValue,
   resetInputValidity,
   isURL,
+  FormButtons,
 } from '@/library';
 import { createInvoice, editInvoice } from '@/app/actions';
 import { diff, isEmpty, removeBase64DataPrefix } from '@/toolbox';
@@ -108,6 +112,12 @@ export const InvoiceDialog = ({
       fileInput.reset();
     },
   });
+
+  const handleDeletion = async () => {
+    await deleteInvoice(invoice!.id);
+    router.refresh();
+    closeDialog();
+  };
 
   const handleSubmit = async (formData: FormData) => {
     const [fileMetadata] = fileInput.value;
@@ -212,7 +222,9 @@ export const InvoiceDialog = ({
                           </option>
                         ))}
                     </select>
-                    <SubmitButton />
+                    <div className={styles.buttons}>
+                      <FormButtons handleDeletion={handleDeletion} />
+                    </div>
                   </Fieldset>
                 </div>
               </form>

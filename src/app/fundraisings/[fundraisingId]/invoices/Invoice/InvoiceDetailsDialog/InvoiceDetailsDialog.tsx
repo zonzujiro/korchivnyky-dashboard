@@ -74,9 +74,11 @@ export const InvoiceDetailsDialog = (props: InvoiceDetailsDialogProps) => {
               <p>
                 <strong>Створений:</strong> {creationDate}
               </p>
-              <p>
-                <strong>Створив:</strong> {owner.name}
-              </p>
+              {owner && (
+                <p>
+                  <strong>Створив:</strong> {owner.name}
+                </p>
+              )}
               <Link className={styles['invoice-link']} href={fileUrl}>
                 💾 Завантажити інвойс
               </Link>

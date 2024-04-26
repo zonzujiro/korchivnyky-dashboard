@@ -28,7 +28,7 @@ type JarItemProps = {
 };
 
 const JarProgress = ({ jar }: { jar: Jar }) => {
-  const percentageOfGoal = `${Math.round(
+  const percentageOfGoal = `${Math.floor(
     (100 * jar.debit) / (jar.goal || 30000)
   )}%`;
 
@@ -55,18 +55,6 @@ const JarProgress = ({ jar }: { jar: Jar }) => {
 const JarItem = ({ jar, isSelected, onClick, fundraisingId }: JarItemProps) => {
   const { ownerName, logo, color, jarName, url } = jar;
 
-  // const [copyClicked, setCopyClicked] = useState(false);
-
-  // const handleClickCopy = (ev: React.MouseEvent<HTMLSpanElement>) => {
-  //   ev.stopPropagation();
-  //   const timeout = setTimeout(() => {
-  //     navigator.clipboard.writeText(url);
-  //     setCopyClicked((current) => !current);
-  //   }, 300);
-  //   setCopyClicked((current) => !current);
-  //   return () => clearTimeout(timeout);
-  // };
-
   return (
     <li
       className={classNames(styles.item, {
@@ -85,17 +73,6 @@ const JarItem = ({ jar, isSelected, onClick, fundraisingId }: JarItemProps) => {
           height={69}
         />
         <div className={styles['jar-owner']}>{ownerName}</div>
-        {/* <div className={styles['jar-settings']}>
-          <span
-            className={
-              copyClicked ? styles['copy-icon-clicked'] : styles['copy-icon']
-            }
-            onClick={handleClickCopy}
-            title='Скопіювати посилання на банку'
-          >
-            <TooltipComponent />
-          </span>
-        </div>*/}
       </div>
       <div className={classNames(styles['item-column'], styles['jar-info'])}>
         <div className={styles['jar-title']}>{jarName}</div>
