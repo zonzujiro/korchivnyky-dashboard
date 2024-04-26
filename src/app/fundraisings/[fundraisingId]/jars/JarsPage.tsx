@@ -1,21 +1,17 @@
-import {
-  JarsPageStateProvider,
-  getJarsPageData,
-  getCurrentFundraising,
-} from '@/dal';
+import { getJarsPageData, getCurrentFundraising } from '@/dal';
 import { Progress } from '@/library';
 import { PageParams } from '@/types';
 
 import styles from './JarsPage.module.css';
 import { JarsList } from './JarsList/JarsList';
-// import { Statistics } from './Statistics/Statistics';
 import { CampaignDescription } from './CampaignDescription/CampaignDescription';
 
 export const JarsPage = async ({ params }: PageParams) => {
   const { fundraisingId } = params;
 
-  const { jars, expenseTypes, transactions, statistics, fundraisings, users } =
-    await getJarsPageData({ fundraisingId });
+  const { jars, statistics, fundraisings, users } = await getJarsPageData({
+    fundraisingId,
+  });
 
   const fundraising = getCurrentFundraising(fundraisings, fundraisingId);
 
@@ -37,16 +33,13 @@ export const JarsPage = async ({ params }: PageParams) => {
           />
         </div>
       </div>
-      <JarsPageStateProvider
-        jars={jars}
-        transactions={transactions}
-        expenseTypes={expenseTypes}
+
+      <JarsList
+        fundraisingId={fundraisingId}
         statistics={statistics}
         users={users}
-      >
-        <JarsList fundraisingId={fundraisingId} />
-        {/* <Statistics /> */}
-      </JarsPageStateProvider>
+        jars={jars}
+      />
     </>
   );
 };

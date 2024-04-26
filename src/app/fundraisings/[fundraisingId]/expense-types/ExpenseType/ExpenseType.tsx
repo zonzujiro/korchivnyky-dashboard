@@ -6,6 +6,7 @@ import type {
   Invoice,
   Transaction,
   ExpenseType as IExpenseType,
+  User,
 } from '@/types';
 
 import styles from './ExpenseType.module.css';
@@ -16,11 +17,13 @@ export const ExpenseType = ({
   transactions,
   invoices,
   fundraisingId,
+  users,
 }: {
   expenseType: IExpenseType;
   invoices: Array<Invoice>;
   transactions: Array<Transaction>;
   fundraisingId: string;
+  users: Array<User>;
 }) => {
   const { id, targetSum, name } = expenseType;
 
@@ -55,6 +58,7 @@ export const ExpenseType = ({
           <Button onClick={openDialog}>✏️ Редагувати</Button>
         )}
         expenseType={expenseType}
+        users={users}
       />
     </div>
   );

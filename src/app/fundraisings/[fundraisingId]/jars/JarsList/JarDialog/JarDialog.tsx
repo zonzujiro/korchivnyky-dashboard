@@ -1,7 +1,8 @@
-import { ReactElement, useContext, useRef, useState } from 'react';
+import { ReactElement, useRef, useState } from 'react';
 import { useFormStatus } from 'react-dom';
+import { useRouter } from 'next/navigation';
 
-import { createJar, editJar, JarsPageContext, CreateJarPayload } from '@/dal';
+import { createJar, editJar, CreateJarPayload } from '@/dal';
 import type { Jar } from '@/types';
 import { Button, CuratorsDropdown, Dialog, useDialog } from '@/library';
 import { diff } from '@/toolbox';
@@ -22,13 +23,14 @@ export const AddJarDialog = ({
   fundraisingId,
   jar,
   renderButton,
+  jars,
 }: {
-  jars?: Array<Jar>;
+  jars: Array<Jar>;
   fundraisingId: string;
   jar?: Jar;
   renderButton(openDialog: () => void): ReactElement;
 }) => {
-  const { replaceJar, addJar, jars } = useContext(JarsPageContext);
+  const router = useRouter();
 
   const isEditMode = jar !== undefined;
   const formRef = useRef<HTMLFormElement>(null);
@@ -88,13 +90,12 @@ export const AddJarDialog = ({
         ...diff(createJarPayload, jar),
       };
 
-      const response = await editJar(jar.id, updatedJarPayload);
-      replaceJar(response);
+      await editJar(jar.id, updatedJarPayload);
     } else {
-      const response = await createJar(createJarPayload);
-      addJar(response);
+      await createJar(createJarPayload);
     }
 
+    router.refresh();
     resetForm();
     closeDialog();
   };

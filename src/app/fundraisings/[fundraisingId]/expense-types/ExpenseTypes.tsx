@@ -8,12 +8,12 @@ import { ExpenseTypeTools } from './ExpenseTypeTools';
 
 export const ExpenseTypes = async ({ params }: PageParams) => {
   const { fundraisingId } = params;
-  const { expensesTypes, invoices, transactions, jars } =
+  const { expensesTypes, invoices, transactions, jars, users } =
     await getExpenseTypesPageData(fundraisingId);
 
   return (
     <div className={style['expense-types-wrapper']}>
-      <ExpenseTypeTools fundraisingId={fundraisingId} />
+      <ExpenseTypeTools fundraisingId={fundraisingId} users={users} />
       <div className={style['expense-types-content']}>
         <div className={style['expense-types-list']}>
           {expensesTypes.map((expenseType) => {
@@ -24,6 +24,7 @@ export const ExpenseTypes = async ({ params }: PageParams) => {
                 invoices={invoices}
                 transactions={transactions}
                 fundraisingId={fundraisingId}
+                users={users}
               />
             );
           })}

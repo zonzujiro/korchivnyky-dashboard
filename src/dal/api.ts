@@ -230,17 +230,14 @@ export const getJarsPageData = async ({
 }: {
   fundraisingId: string;
 }) => {
-  const [jars, transactions, expenseTypes, statistics, fundraisings, users] =
-    await Promise.all([
-      getJars(fundraisingId),
-      getTransactions(fundraisingId),
-      getExpenseTypes(fundraisingId),
-      getStatistics(),
-      getFundraisingCampaigns(),
-      getUsers(),
-    ]);
+  const [jars, statistics, fundraisings, users] = await Promise.all([
+    getJars(fundraisingId),
+    getStatistics(),
+    getFundraisingCampaigns(),
+    getUsers(),
+  ]);
 
-  return { jars, transactions, expenseTypes, statistics, fundraisings, users };
+  return { jars, statistics, fundraisings, users };
 };
 
 export const getCurrentUser = async (): Promise<User> => {
@@ -285,16 +282,24 @@ export const getFundraisingsPageData = async () => {
 };
 
 export const getExpenseTypesPageData = async (fundraisingId: string) => {
-  const [expensesTypes, invoices, transactions, jars] = await Promise.all([
-    getExpenseTypes(fundraisingId),
-    getInvoices(),
-    getTransactions(fundraisingId),
-    getJars(fundraisingId),
-  ]);
+  const [expensesTypes, invoices, transactions, jars, users] =
+    await Promise.all([
+      getExpenseTypes(fundraisingId),
+      getInvoices(),
+      getTransactions(fundraisingId),
+      getJars(fundraisingId),
+      getUsers(),
+    ]);
 
   const fundraisingInvoices = getFundraisingInvoices(invoices, expensesTypes);
 
-  return { expensesTypes, transactions, invoices: fundraisingInvoices, jars };
+  return {
+    expensesTypes,
+    transactions,
+    invoices: fundraisingInvoices,
+    jars,
+    users,
+  };
 };
 
 export const getFundraisingInfo = async ({

@@ -3,14 +3,8 @@
 import { ReactElement, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 
-import type { ExpenseType } from '@/types';
-import {
-  CuratorsDropdown,
-  Dialog,
-  Fieldset,
-  FormButtons,
-  useDialog,
-} from '@/library';
+import type { ExpenseType, User } from '@/types';
+import { Dialog, Fieldset, FormButtons, useDialog } from '@/library';
 import { ExpenseTypePayload, deleteExpenseType } from '@/dal';
 import { getFormValues } from '@/toolbox';
 import { createExpenseType } from '@/app/actions';
@@ -22,11 +16,13 @@ export const ExpenseTypeDialog = ({
   renderButton,
   expenseType,
   title,
+  users,
 }: {
   fundraisingId: string;
   renderButton(openDialog: () => void): ReactElement;
   expenseType?: ExpenseType;
   title: string;
+  users: Array<User>;
 }) => {
   const formRef = useRef<HTMLFormElement>(null);
   const router = useRouter();
@@ -109,11 +105,17 @@ export const ExpenseTypeDialog = ({
                     defaultValue={expenseType?.targetSum}
                   />
                   <label htmlFor='curator-input'>Від кого запит</label>
-                  <CuratorsDropdown
+                  <select
+                    id='curator-input'
                     name='ownerId'
                     defaultValue={expenseType?.ownerId}
-                    isPersonOnly
-                  />
+                  >
+                    {users.map((user) => (
+                      <option key={user.id} value={user.id}>
+                        {user.name}
+                      </option>
+                    ))}
+                  </select>
                   {!expenseType ? (
                     <>
                       <label className={styles['is-auto-checkbox']}>

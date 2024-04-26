@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useContext } from 'react';
+import React, { useState } from 'react';
 import classNames from 'classnames';
 
 import {
@@ -10,8 +10,7 @@ import {
   JarsInfo,
   SelectedJarsInfo,
 } from '@/library';
-import type { Jar } from '@/types';
-import { JarsPageContext } from '@/dal';
+import type { Jar, JarStatisticRecord, User } from '@/types';
 import { getJarLeftovers, toCurrency } from '@/toolbox';
 
 import styles from './JarsList.module.css';
@@ -24,6 +23,7 @@ type JarItemProps = {
   isSelected: boolean;
   onClick(): void;
   fundraisingId: string;
+  jars: Array<Jar>;
 };
 
 const JarProgress = ({ jar }: { jar: Jar }) => {
@@ -51,7 +51,13 @@ const JarProgress = ({ jar }: { jar: Jar }) => {
   );
 };
 
-const JarItem = ({ jar, isSelected, onClick, fundraisingId }: JarItemProps) => {
+const JarItem = ({
+  jar,
+  isSelected,
+  onClick,
+  fundraisingId,
+  jars,
+}: JarItemProps) => {
   const { ownerName, logo, color, jarName, url } = jar;
 
   return (
@@ -86,6 +92,7 @@ const JarItem = ({ jar, isSelected, onClick, fundraisingId }: JarItemProps) => {
           <AddJarDialog
             jar={jar}
             fundraisingId={fundraisingId}
+            jars={jars}
             renderButton={(openDialog) => (
               <Button onClick={openDialog} className={styles['jar-button']}>
                 ✏️ Редагувати
@@ -103,14 +110,30 @@ const JarItem = ({ jar, isSelected, onClick, fundraisingId }: JarItemProps) => {
   );
 };
 
-export const JarsList = ({ fundraisingId }: { fundraisingId: string }) => {
-  const {
-    selectedJars,
-    toggleJarSelection,
-    jars,
-    resetJarSelection,
-    statistics,
-  } = useContext(JarsPageContext);
+export const JarsList = ({
+  fundraisingId,
+  statistics,
+  users,
+  jars,
+}: {
+  fundraisingId: string;
+  statistics: Array<JarStatisticRecord>;
+  users: Array<User>;
+  jars: Array<Jar>;
+}) => {
+  const [selectedJars, setSelectedJars] = React.useState<Array<Jar>>([]);
+
+  const resetJarSelection = () => {
+    setSelectedJars([]);
+  };
+
+  const toggleJarSelection = (jar: Jar) => {
+    if (selectedJars.find(({ id }) => id === jar.id)) {
+      setSelectedJars(selectedJars.filter(({ id }) => id !== jar.id));
+    } else {
+      setSelectedJars([...selectedJars, jar]);
+    }
+  };
 
   const [selectedCurator, setSelectedCurator] = useState('all');
 
@@ -148,11 +171,12 @@ export const JarsList = ({ fundraisingId }: { fundraisingId: string }) => {
               <JarItem
                 key={item.id}
                 jar={item}
-                isSelected={Boolean(
-                  selectedJars.find((selectedJar) => selectedJar.id === item.id)
+                isSelected={selectedJars.some(
+                  (selectedJar) => selectedJar.id === item.id
                 )}
                 onClick={() => toggleJarSelection(item)}
                 fundraisingId={fundraisingId}
+                jars={jars}
               />
             );
           })}
@@ -172,11 +196,10 @@ export const JarsList = ({ fundraisingId }: { fundraisingId: string }) => {
             />
           </div>
           <JarsInfo jars={jars} />
-
           {selectedJars.length ? (
             <SelectedJarsInfo selectedJars={selectedJars} />
           ) : null}
-          <Analytics jars={usedJars} jarsRecords={jarsRecords} />
+          <Analytics jars={usedJars} jarsRecords={jarsRecords} users={users} />
         </div>
       </div>
     </>

@@ -1,17 +1,14 @@
 'use client';
 
-import React, { useState, useContext } from 'react';
+import React, { useState } from 'react';
 import classNames from 'classnames';
 
-import { Jar, JarStatisticRecord } from '@/types';
+import { Jar, JarStatisticRecord, User } from '@/types';
 import { toCurrency } from '@/toolbox';
-import { JarsPageContext } from '@/dal';
 
 import styles from './Statistics.module.css';
-import { StatisticsSection } from './StatisticsSection/StatisticsSection';
 import { getAccountsMovements, getGatheringSpeed } from './analytics';
 import { ExportStatisticsDialog } from './ExportStatisticsDialog/ExportStatisticsDialog';
-import { ExpensesSection } from './ExpensesSection/ExpensesSection';
 
 const FIVE_DAYS_AGO = new Date();
 FIVE_DAYS_AGO.setDate(FIVE_DAYS_AGO.getDate() - 5);
@@ -78,9 +75,11 @@ const SpeedRow = ({
 export const Analytics = ({
   jarsRecords,
   jars,
+  users,
 }: {
   jarsRecords: Array<JarStatisticRecord>;
   jars: Array<Jar>;
+  users: Array<User>;
 }) => {
   const [startDate, setStartDate] = useState(
     getDateInputInitialValue(FIVE_DAYS_AGO)
@@ -102,6 +101,7 @@ export const Analytics = ({
   return (
     <>
       <div className={styles['analytics-content']}>
+        <ExportStatisticsDialog jars={jars} users={users} />
         <div className={styles['column-header']}>
           <div className={styles['date-inputs-wrapper']}>
             <span className={styles['inputs-title-prefix']}>
@@ -151,66 +151,66 @@ export const Analytics = ({
   );
 };
 
-export const Statistics = () => {
-  const { selectedJars, jars, transactions, expenseTypes, statistics, users } =
-    useContext(JarsPageContext);
+// export const Statistics = () => {
+//   const { selectedJars, jars, transactions, expenseTypes, statistics, users } =
+//     useContext(JarsPageContext);
 
-  const [activeTab, setActiveTab] = useState<'statistics' | 'transactions'>(
-    'statistics'
-  );
+//   const [activeTab, setActiveTab] = useState<'statistics' | 'transactions'>(
+//     'statistics'
+//   );
 
-  const usedJars = selectedJars.length ? selectedJars : jars;
+//   const usedJars = selectedJars.length ? selectedJars : jars;
 
-  const jarsRecords = statistics.filter((record) =>
-    usedJars.some((jar) => jar.id === record.jarId)
-  );
+//   const jarsRecords = statistics.filter((record) =>
+//     usedJars.some((jar) => jar.id === record.jarId)
+//   );
 
-  return (
-    <div className={styles['section-content']}>
-      <ul className={styles.tabs}>
-        <li
-          className={classNames(styles.tab, {
-            [styles.active]: activeTab === 'statistics',
-          })}
-          onClick={() => setActiveTab('statistics')}
-        >
-          Поточний стан
-        </li>
-        <li
-          className={classNames(styles.tab, {
-            [styles.active]: activeTab === 'transactions',
-          })}
-          onClick={() => setActiveTab('transactions')}
-        >
-          Видатки
-        </li>
-      </ul>
-      <div className={styles['statistics-wrapper']}>
-        {activeTab === 'statistics' ? (
-          <div className={classNames(styles.column, styles.statistics)}>
-            <div className={styles['column-header']}>
-              <ExportStatisticsDialog jars={jars} users={users} />
-            </div>
-            <div className={styles.chart}>
-              <StatisticsSection jars={usedJars} />
-            </div>
-          </div>
-        ) : null}
-        {activeTab === 'transactions' ? (
-          <div className={classNames(styles.column, styles.statistics)}>
-            <div className={styles.chart}>
-              <ExpensesSection
-                transactions={transactions}
-                expensesTypes={expenseTypes}
-                jars={selectedJars}
-              />
-            </div>
-          </div>
-        ) : null}
-        <div className={classNames(styles.column, styles.analytics)}>
-          <Analytics jars={usedJars} jarsRecords={jarsRecords} />
-        </div>
-      </div>
-    </div>
-  );
-};
+//   return (
+//     <div className={styles['section-content']}>
+//       <ul className={styles.tabs}>
+//         <li
+//           className={classNames(styles.tab, {
+//             [styles.active]: activeTab === 'statistics',
+//           })}
+//           onClick={() => setActiveTab('statistics')}
+//         >
+//           Поточний стан
+//         </li>
+//         <li
+//           className={classNames(styles.tab, {
+//             [styles.active]: activeTab === 'transactions',
+//           })}
+//           onClick={() => setActiveTab('transactions')}
+//         >
+//           Видатки
+//         </li>
+//       </ul>
+//       <div className={styles['statistics-wrapper']}>
+//         {activeTab === 'statistics' ? (
+//           <div className={classNames(styles.column, styles.statistics)}>
+//             <div className={styles['column-header']}>
+//               <ExportStatisticsDialog jars={jars} users={users} />
+//             </div>
+//             <div className={styles.chart}>
+//               <StatisticsSection jars={usedJars} />
+//             </div>
+//           </div>
+//         ) : null}
+//         {activeTab === 'transactions' ? (
+//           <div className={classNames(styles.column, styles.statistics)}>
+//             <div className={styles.chart}>
+//               <ExpensesSection
+//                 transactions={transactions}
+//                 expensesTypes={expenseTypes}
+//                 jars={selectedJars}
+//               />
+//             </div>
+//           </div>
+//         ) : null}
+//         <div className={classNames(styles.column, styles.analytics)}>
+//           <Analytics jars={usedJars} jarsRecords={jarsRecords} />
+//         </div>
+//       </div>
+//     </div>
+//   );
+// };
