@@ -1,16 +1,16 @@
 'use client';
 
+import classNames from 'classnames';
 import { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
 
-import type { Jar } from '@/types';
+import type { Jar, User } from '@/types';
 import { getJarLeftovers, toCurrency, useDependency } from '@/toolbox';
-
-import { CuratorsDropdown } from '../CuratorsDropdown/CuratorsDropdown';
-import styles from './JarsSelector.module.css';
-import classNames from 'classnames';
 import { getFundraisingCampaigns, getJars } from '@/dal';
+
+import styles from './JarsSelector.module.css';
 import { Loader } from '../Loader/Loader';
+import { UserSelect } from '../Form';
 
 const SelectedJarInfo = ({ jar }: { jar?: Jar }) => {
   if (!jar) {
@@ -39,13 +39,17 @@ const TabContent = (props: {
   value?: Jar;
   jars: Array<Jar>;
   selectJar: (id: number) => void;
+  users: Array<User>;
 }) => {
-  const { id, selectCurator, selectJar, value, jars } = props;
+  const { id, selectCurator, selectJar, value, jars, users } = props;
 
   return (
     <>
       <label htmlFor='curator-input'>Оберіть куратора</label>
-      <CuratorsDropdown onChange={selectCurator} />
+      <UserSelect
+        users={users}
+        onChange={(ev) => selectCurator(ev.target.value)}
+      />
       <label htmlFor={id}>Оберіть банку</label>
       <select
         id={id}
@@ -74,6 +78,7 @@ type PastCampaignsTabProps = {
   curator: string;
   selectCurator: (curator: string) => void;
   selectedJar: Jar;
+  users: Array<User>;
 };
 
 const useJarsSource = (
@@ -104,6 +109,7 @@ const PastCampaignsTab = (props: PastCampaignsTabProps) => {
     selectCurator,
     curator,
     selectedJar,
+    users,
   } = props;
 
   const { fundraisingId } = useParams<{
@@ -148,6 +154,7 @@ const PastCampaignsTab = (props: PastCampaignsTabProps) => {
           }}
           selectCurator={selectCurator}
           jars={filteredJars}
+          users={users}
         />
       </div>
     </Loader>
@@ -161,6 +168,7 @@ type JarSelectorProps = {
   jars: Array<Jar>;
   selectedJar: Jar;
   className?: string;
+  users: Array<User>;
 };
 
 export const JarSelector = ({
@@ -170,6 +178,7 @@ export const JarSelector = ({
   selectJar,
   selectedJar,
   className,
+  users,
 }: JarSelectorProps) => {
   const [curator, selectCurator] = useState('all');
   const [activeTab, setActiveTab] = useState<'current' | 'past'>('current');
@@ -217,6 +226,7 @@ export const JarSelector = ({
             selectJar={(id) => selectJar(findJar(id))}
             selectCurator={selectCurator}
             jars={filteredJars}
+            users={users}
           />
         </div>
       ) : null}
@@ -228,6 +238,7 @@ export const JarSelector = ({
           curator={curator}
           selectCurator={selectCurator}
           selectedJar={value}
+          users={users}
         />
       ) : null}
     </fieldset>

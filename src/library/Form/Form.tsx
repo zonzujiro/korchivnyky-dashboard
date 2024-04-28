@@ -1,7 +1,9 @@
 'use client';
 
-import { useState, type ReactNode } from 'react';
+import { type ChangeEvent, useState, type ReactNode } from 'react';
 import { useFormStatus } from 'react-dom';
+
+import type { User } from '@/types';
 
 import { Button } from '../Button/Button';
 
@@ -76,13 +78,25 @@ export const Fieldset = ({ children }: { children: ReactNode }) => {
   return <fieldset className={styles['form-inputs']}>{children}</fieldset>;
 };
 
-export const UserSelect = ({ users }: { users: Array<User> }) => {
+export const UserSelect = ({
+  users,
+  defaultValue,
+  name = 'userId',
+  onChange,
+}: {
+  users: Array<User>;
+  defaultValue?: string | number;
+  name?: string;
+  onChange?: (ev: ChangeEvent<HTMLSelectElement>) => void;
+}) => {
   return (
     <select
-      id='curator-input'
-      name='ownerId'
-      defaultValue={expenseType?.ownerId}
+      id='user-select'
+      name={name}
+      defaultValue={defaultValue}
+      onChange={onChange}
     >
+      <option value='all'>Всі</option>
       {users.map((user) => (
         <option key={user.id} value={user.id}>
           {user.name}

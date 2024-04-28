@@ -45,6 +45,11 @@ export const ExpenseType = ({
     <div key={id} className={styles['expense-type']}>
       <h4>{name}</h4>
       <div className={styles['expense-type-info']}>
+        <p>
+          Від кого:{' '}
+          {users.find((user) => user.id === expenseType.ownerId)?.name ||
+            'John Doe'}
+        </p>
         <p>Заплановано: {toCurrency(targetSum)}</p>
         <p>
           Сплачено: {toCurrency(payedSum)}, {percentageValue}%

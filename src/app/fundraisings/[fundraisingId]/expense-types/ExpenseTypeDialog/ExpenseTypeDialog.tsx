@@ -7,7 +7,7 @@ import type { ExpenseType, User } from '@/types';
 import { Dialog, Fieldset, FormButtons, useDialog } from '@/library';
 import { ExpenseTypePayload, deleteExpenseType } from '@/dal';
 import { getFormValues } from '@/toolbox';
-import { createExpenseType } from '@/app/actions';
+import { createExpenseType, editExpenseType } from '@/app/actions';
 
 import styles from './ExpenseTypeDialog.module.css';
 
@@ -55,10 +55,11 @@ export const ExpenseTypeDialog = ({
       ownerId: Number(record.ownerId),
     };
 
-    const result = await createExpenseType(
-      expenseTypePayload,
-      record['is-auto'] === 'on'
-    );
+    const request = expenseType
+      ? editExpenseType(expenseType.id, expenseTypePayload)
+      : createExpenseType(expenseTypePayload, record['is-auto'] === 'on');
+
+    const result = await request;
 
     if (result === 'Success') {
       close();
@@ -87,7 +88,6 @@ export const ExpenseTypeDialog = ({
                     name='name'
                     id='expense-type-name'
                     placeholder='На щось важливе'
-                    maxLength={35}
                     required
                     defaultValue={expenseType?.name}
                   />

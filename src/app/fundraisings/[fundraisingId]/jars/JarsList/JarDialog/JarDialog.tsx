@@ -3,8 +3,8 @@ import { useFormStatus } from 'react-dom';
 import { useRouter } from 'next/navigation';
 
 import { createJar, editJar, CreateJarPayload } from '@/dal';
-import type { Jar } from '@/types';
-import { Button, CuratorsDropdown, Dialog, useDialog } from '@/library';
+import type { Jar, User } from '@/types';
+import { Button, Dialog, UserSelect, useDialog } from '@/library';
 import { diff } from '@/toolbox';
 
 import styles from './JarDialog.module.css';
@@ -24,11 +24,13 @@ export const AddJarDialog = ({
   jar,
   renderButton,
   jars,
+  users,
 }: {
   jars: Array<Jar>;
   fundraisingId: string;
   jar?: Jar;
   renderButton(openDialog: () => void): ReactElement;
+  users: Array<User>;
 }) => {
   const router = useRouter();
 
@@ -158,7 +160,7 @@ export const AddJarDialog = ({
               required
             />
             <label htmlFor='curator-input'>Обери куратора</label>
-            <CuratorsDropdown name='parentJarId' />
+            <UserSelect name='parentJarId' users={users} />
             <label htmlFor='is-finished-input'>Збір завершений?</label>
             <input type='checkbox' name='is-finished' id='is-finished-input' />
             <SubmitButton />

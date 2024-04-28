@@ -3,6 +3,7 @@
 import {
   type ExpenseTypePayload,
   createExpenseType as postExpenseType,
+  editExpenseType as putExpenseType,
 } from '@/dal';
 import { NetworkError } from '@/toolbox';
 
@@ -11,14 +12,16 @@ const createRepairPayload = (expenseTypeData: ExpenseTypePayload) => {
     fundraisingCampaignId: expenseTypeData.fundraisingCampaignId,
     targetSum: 40000,
     name: `Ремонт ${expenseTypeData.name}`,
+    ownerId: expenseTypeData.ownerId,
   };
 };
 
 const createPaintingPayload = (expenseTypeData: ExpenseTypePayload) => {
   return {
     fundraisingCampaignId: expenseTypeData.fundraisingCampaignId,
-    targetSum: 10000,
-    name: `Фарбування ${expenseTypeData.name}`,
+    targetSum: 20000,
+    name: `Тюнінг ${expenseTypeData.name}`,
+    ownerId: expenseTypeData.ownerId,
   };
 };
 
@@ -38,7 +41,27 @@ export const createExpenseType = async (
     }
 
     return 'Success';
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (e: any) {
+    console.log({ e });
+
+    const message = `${e.code}: ${e.message}`;
+
+    if (e instanceof NetworkError) {
+      return e.backendError ? e.backendError : message;
+    }
+
+    return message;
+  }
+};
+
+export const editExpenseType = async (
+  id: number,
+  expenseTypeData: ExpenseTypePayload
+) => {
+  try {
+    await putExpenseType(id, expenseTypeData);
+
+    return 'Success';
   } catch (e: any) {
     console.log({ e });
 

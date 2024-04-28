@@ -11,7 +11,7 @@ import {
   useFileInput,
 } from '@/library';
 import { createInvoiceTransaction } from '@/app/actions';
-import type { Invoice, Jar } from '@/types';
+import type { Invoice, Jar, User } from '@/types';
 import type { InvoiceTransactionPayload } from '@/dal';
 import { removeBase64DataPrefix } from '@/toolbox';
 
@@ -30,9 +30,14 @@ const SubmitButton = () => {
 type AddExpenseDialogProps = {
   invoice: Invoice;
   jars: Array<Jar>;
+  users: Array<User>;
 };
 
-export const AddExpenseDialog = ({ invoice, jars }: AddExpenseDialogProps) => {
+export const AddExpenseDialog = ({
+  invoice,
+  jars,
+  users,
+}: AddExpenseDialogProps) => {
   const router = useRouter();
   const [selectedJar, setSelectedJar] = useState(jars[0]);
 
@@ -58,15 +63,6 @@ export const AddExpenseDialog = ({ invoice, jars }: AddExpenseDialogProps) => {
 
     const sum = Number(formData.get('sum'));
     const jarId = Number(formData.get('jar'));
-
-    // const creditJar = jars.find((jar) => jar.id === jarId)!;
-    // const leftovers = getJarLeftovers(creditJar, expenses);
-
-    // if (sum > leftovers) {
-    //   sumInputRef.current?.setCustomValidity('На банці недостатньо коштів');
-    //   sumInputRef.current?.reportValidity();
-    //   return;
-    // }
 
     const requestPayload: InvoiceTransactionPayload = {
       invoiceId: invoice.id,
@@ -135,6 +131,7 @@ export const AddExpenseDialog = ({ invoice, jars }: AddExpenseDialogProps) => {
                       id='jar'
                       jars={jars}
                       className={styles['jar-selector']}
+                      users={users}
                     />
                     <SubmitButton />
                   </div>

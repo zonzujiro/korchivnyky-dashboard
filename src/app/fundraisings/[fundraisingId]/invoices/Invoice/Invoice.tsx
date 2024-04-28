@@ -95,7 +95,9 @@ export const Invoice = ({
             </Button>
           )}
         />
-        {isActive && <AddExpenseDialog invoice={invoice} jars={jars} />}
+        {isActive && (
+          <AddExpenseDialog invoice={invoice} jars={jars} users={users} />
+        )}
       </div>
     </div>
   );

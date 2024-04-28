@@ -157,6 +157,10 @@ export const createExpenseType = (payload: ExpenseTypePayload) => {
   return post('https://jars.fly.dev/expensive-types', payload);
 };
 
+export const editExpenseType = (id: number, payload: ExpenseTypePayload) => {
+  return put(`https://jars.fly.dev/expensive-types/${id}`, payload);
+};
+
 export const deleteExpenseType = (expenseTypeId: number) => {
   return remove(`https://jars.fly.dev/expensive-types/${expenseTypeId}`);
 };

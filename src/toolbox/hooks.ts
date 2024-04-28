@@ -26,7 +26,6 @@ export function useDependency<TFetcher extends () => Promise<unknown>>(
     };
 
     if (!isLoading) {
-      console.log('Starting fetch');
       runFetcher();
     }
     //eslint-disable-next-line react-hooks/exhaustive-deps

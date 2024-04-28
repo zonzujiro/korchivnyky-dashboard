@@ -3,7 +3,13 @@
 import React, { useState } from 'react';
 import classNames from 'classnames';
 
-import { Image, Button, JarsInfo, SelectedJarsInfo } from '@/library';
+import {
+  Image,
+  Button,
+  JarsInfo,
+  SelectedJarsInfo,
+  UserSelect,
+} from '@/library';
 import type { Jar, JarStatisticRecord, User } from '@/types';
 import { getJarLeftovers, toCurrency } from '@/toolbox';
 
@@ -18,6 +24,7 @@ type JarItemProps = {
   onClick(): void;
   fundraisingId: string;
   jars: Array<Jar>;
+  users: Array<User>;
 };
 
 const JarProgress = ({ jar }: { jar: Jar }) => {
@@ -51,6 +58,7 @@ const JarItem = ({
   onClick,
   fundraisingId,
   jars,
+  users,
 }: JarItemProps) => {
   const { ownerName, logo, color, jarName, url } = jar;
 
@@ -87,6 +95,7 @@ const JarItem = ({
             jar={jar}
             fundraisingId={fundraisingId}
             jars={jars}
+            users={users}
             renderButton={(openDialog) => (
               <Button onClick={openDialog} className={styles['jar-button']}>
                 ✏️ Редагувати
@@ -116,6 +125,7 @@ export const JarsList = ({
   jars: Array<Jar>;
 }) => {
   const [selectedJars, setSelectedJars] = React.useState<Array<Jar>>([]);
+  const [selectedCurator, setSelectedCurator] = useState('all');
 
   const resetJarSelection = () => {
     setSelectedJars([]);
@@ -128,8 +138,6 @@ export const JarsList = ({
       setSelectedJars([...selectedJars, jar]);
     }
   };
-
-  const [selectedCurator, setSelectedCurator] = useState('all');
 
   const byCurator =
     selectedCurator !== 'all'
@@ -150,14 +158,10 @@ export const JarsList = ({
       <div className={styles.controls}>
         <div className={styles['curators-filter']}>
           <span>Куратор</span>
-          <select onChange={(ev) => setSelectedCurator(ev.target.value)}>
-            <option value='all'>Всі</option>
-            {users.map((user) => (
-              <option key={user.id} value={user.id}>
-                {user.name}
-              </option>
-            ))}
-          </select>
+          <UserSelect
+            users={users}
+            onChange={(ev) => setSelectedCurator(ev.target.value)}
+          />
         </div>
         <div className={styles['jars-filters']}>
           <Button disabled={!selectedJars.length} onClick={resetJarSelection}>
@@ -178,6 +182,7 @@ export const JarsList = ({
                 onClick={() => toggleJarSelection(item)}
                 fundraisingId={fundraisingId}
                 jars={jars}
+                users={users}
               />
             );
           })}
@@ -190,10 +195,12 @@ export const JarsList = ({
               renderButton={(openDialog) => (
                 <Button onClick={openDialog}>➕ Додати банку</Button>
               )}
+              users={users}
             />
             <TransferBetweenJarsDialog
               jars={jars}
               selectedJars={selectedJars}
+              users={users}
             />
           </div>
           <JarsInfo jars={jars} />

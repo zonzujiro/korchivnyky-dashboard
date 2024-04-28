@@ -1,9 +1,26 @@
 import { Fragment } from 'react';
 import { Dialog, Button, useDialog } from '@/library';
-import { CURATORS_COLORS, DEFAULT_JAR_GOAL } from '@/app/constants';
 import { Jar, User } from '@/types';
 
 import styles from './ExportStatisticsDialog.module.css';
+
+const CURATORS_IDS = {
+  babenko: 8,
+  voloshenko: 9,
+  petrynyak: 4,
+  tytarenko: 7,
+  makogon: 6,
+  gryshenko: 10,
+};
+
+const CURATORS_COLORS = {
+  [CURATORS_IDS.voloshenko]: '#C9DAF8',
+  [CURATORS_IDS.petrynyak]: '#D9D2E9',
+  [CURATORS_IDS.babenko]: '#FFF2CC',
+  [CURATORS_IDS.gryshenko]: '#FF85DC',
+  [CURATORS_IDS.tytarenko]: '#B6D7A8',
+  [CURATORS_IDS.makogon]: '#D5A6BD',
+};
 
 const StatisticsRow = ({ jar }: { jar: Jar }) => {
   return (
@@ -12,7 +29,7 @@ const StatisticsRow = ({ jar }: { jar: Jar }) => {
         <a href={jar.url}>{jar.ownerName}</a>
       </td>
       <td>{jar.isFinished ? 'Так' : 'Ні'}</td>
-      <td>{jar.goal || DEFAULT_JAR_GOAL}</td>
+      <td>{jar.goal || 30000}</td>
       <td>{jar.debit}</td>
     </>
   );

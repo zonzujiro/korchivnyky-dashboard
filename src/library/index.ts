@@ -6,7 +6,6 @@ export * from './NavigationMenu/NavigationMenu';
 export * from './Progress/Progress';
 export * from './TooltipComponent/TooltipComponent';
 export * from './FilePreviewers/FilePreviewer';
-export * from './CuratorsDropdown/CuratorsDropdown';
 export * from './JarsSelector/JarsSelector';
 export * from './Loader/Loader';
 export * from './JarsInfo/JarsInfo';
