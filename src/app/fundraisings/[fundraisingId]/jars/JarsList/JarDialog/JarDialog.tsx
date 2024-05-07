@@ -19,6 +19,11 @@ const SubmitButton = () => {
   );
 };
 
+const jarDefaultValues = {
+  color: 'FFFFFF',
+  otherSourcesAccumulated: 0,
+};
+
 export const AddJarDialog = ({
   fundraisingId,
   jar,
@@ -51,7 +56,6 @@ export const AddJarDialog = ({
   const handleSubmit = async (formData: FormData) => {
     const url = formData.get('url') as string;
     const ownerName = formData.get('owner-name') as string;
-    const color = formData.get('jar-color') as string;
     const goal = formData.get('goal') as string;
     const isFinished = formData.get('is-finished') as string;
 
@@ -65,24 +69,13 @@ export const AddJarDialog = ({
       return;
     }
 
-    const existingColor = jars?.some((jar) => {
-      return jar.color === color;
-    });
-
-    // temporary solution. add an event handler when editing
-    if (existingColor && !isEditMode) {
-      setErrorText('Цей колір вже зайнятий 😔 Спробуй обрати інший 😉');
-      return;
-    }
-
     // continue here
     const createJarPayload: CreateJarPayload = {
+      ...jarDefaultValues,
       url,
       ownerName,
       fundraisingCampaignId: Number(fundraisingId),
-      color,
       goal: goal ? Number(goal) : null,
-      otherSourcesAccumulated: 0,
       isFinished: isFinished === 'true',
     };
 
@@ -116,16 +109,6 @@ export const AddJarDialog = ({
             className={styles['add-jar-inputs']}
             action={handleSubmit}
           >
-            <label htmlFor='owner-input'>Як звуть власника банки?</label>
-            <input
-              name='owner-name'
-              id='owner-input'
-              placeholder='Джейсон Стетхем'
-              type='text'
-              required
-              maxLength={30}
-              defaultValue={jar?.ownerName}
-            />
             {!isEditMode && (
               <>
                 <label htmlFor='url-input'>
@@ -141,6 +124,16 @@ export const AddJarDialog = ({
                 />
               </>
             )}
+            <label htmlFor='owner-input'>Як звуть власника банки?</label>
+            <input
+              name='owner-name'
+              id='owner-input'
+              placeholder='Джейсон Стетхем'
+              type='text'
+              required
+              maxLength={30}
+              defaultValue={jar?.ownerName}
+            />
             <label htmlFor='goal-input'>Мета</label>
             <input
               type='number'
@@ -150,14 +143,6 @@ export const AddJarDialog = ({
               id='goal-input'
               placeholder='100 000'
               defaultValue={jar?.goal || ''}
-            />
-            <label htmlFor='color-input'>Який колір хочеш обрати?</label>
-            <input
-              name='jar-color'
-              id='color-input'
-              type='color'
-              defaultValue={jar?.color}
-              required
             />
             <label htmlFor='curator-input'>Обери куратора</label>
             <UserSelect name='parentJarId' users={users} />
