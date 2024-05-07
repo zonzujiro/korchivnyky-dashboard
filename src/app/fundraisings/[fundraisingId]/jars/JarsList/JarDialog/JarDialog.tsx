@@ -161,8 +161,10 @@ export const AddJarDialog = ({
             />
             <label htmlFor='curator-input'>Обери куратора</label>
             <UserSelect name='parentJarId' users={users} />
-            <label htmlFor='is-finished-input'>Збір завершений?</label>
-            <input type='checkbox' name='is-finished' id='is-finished-input' />
+            <label className={styles['is-finished-selector']}>
+              Збір завершений?
+              <input type='checkbox' name='is-finished' />
+            </label>
             <SubmitButton />
 
             {errorText && (
