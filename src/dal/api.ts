@@ -226,7 +226,9 @@ export const deleteInvoice = (invoiceId: number) => {
 };
 
 export const getUsers = async (): Promise<Array<User>> => {
-  return get('https://jars.fly.dev/users');
+  const users: Array<User> = await get('https://jars.fly.dev/users');
+
+  return users.filter((user) => user.name !== 'Тест Юзер');
 };
 
 export const getJarsPageData = async ({
