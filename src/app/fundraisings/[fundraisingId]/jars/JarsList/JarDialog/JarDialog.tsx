@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { createJar, editJar, CreateJarPayload } from '@/dal';
 import type { Jar, User } from '@/types';
 import { Button, Dialog, UserSelect, useDialog } from '@/library';
-import { diff } from '@/toolbox';
+import { diff, getFormValues } from '@/toolbox';
 
 import styles from './JarDialog.module.css';
 
@@ -37,6 +37,7 @@ export const AddJarDialog = ({
   renderButton(openDialog: () => void): ReactElement;
   users: Array<User>;
 }) => {
+  console.log({ jar });
   const router = useRouter();
 
   const isEditMode = jar !== undefined;
@@ -54,10 +55,9 @@ export const AddJarDialog = ({
   });
 
   const handleSubmit = async (formData: FormData) => {
-    const url = formData.get('url') as string;
-    const ownerName = formData.get('owner-name') as string;
-    const goal = formData.get('goal') as string;
-    const isFinished = formData.get('is-finished') as string;
+    const { isFinished, url, userId, ownerName, goal } = getFormValues<
+      'isFinished' | 'url' | 'userId' | 'ownerName' | 'goal'
+    >(formData);
 
     const existingJar = jars?.find((jar) => {
       return jar.url === url || jar.ownerName === ownerName;
@@ -72,11 +72,12 @@ export const AddJarDialog = ({
     // continue here
     const createJarPayload: CreateJarPayload = {
       ...jarDefaultValues,
-      url,
+      url: url || (jar?.url as string),
       ownerName,
       fundraisingCampaignId: Number(fundraisingId),
       goal: goal ? Number(goal) : null,
-      isFinished: isFinished === 'true',
+      isFinished: isFinished === 'on',
+      userId: Number(userId),
     };
 
     if (isEditMode) {
@@ -84,6 +85,8 @@ export const AddJarDialog = ({
         ...jar,
         ...diff(createJarPayload, jar),
       };
+
+      console.log({ updatedJarPayload });
 
       await editJar(jar.id, updatedJarPayload);
     } else {
@@ -126,7 +129,7 @@ export const AddJarDialog = ({
             )}
             <label htmlFor='owner-input'>Як звуть власника банки?</label>
             <input
-              name='owner-name'
+              name='ownerName'
               id='owner-input'
               placeholder='Джейсон Стетхем'
               type='text'
@@ -145,10 +148,14 @@ export const AddJarDialog = ({
               defaultValue={jar?.goal || ''}
             />
             <label htmlFor='curator-input'>Обери куратора</label>
-            <UserSelect name='parentJarId' users={users} />
+            <UserSelect
+              name='userId'
+              users={users}
+              defaultValue={jar?.userId}
+            />
             <label className={styles['is-finished-selector']}>
               Збір завершений?
-              <input type='checkbox' name='is-finished' />
+              <input type='checkbox' name='isFinished' />
             </label>
             <SubmitButton />
 
