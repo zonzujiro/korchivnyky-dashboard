@@ -37,7 +37,6 @@ export const AddJarDialog = ({
   renderButton(openDialog: () => void): ReactElement;
   users: Array<User>;
 }) => {
-  console.log({ jar });
   const router = useRouter();
 
   const isEditMode = jar !== undefined;
@@ -55,9 +54,10 @@ export const AddJarDialog = ({
   });
 
   const handleSubmit = async (formData: FormData) => {
-    const { isFinished, url, userId, ownerName, goal } = getFormValues<
-      'isFinished' | 'url' | 'userId' | 'ownerName' | 'goal'
-    >(formData);
+    const { isFinished, url, userId, ownerName, goal, isTechnical } =
+      getFormValues<
+        'isFinished' | 'url' | 'userId' | 'ownerName' | 'goal' | 'isTechnical'
+      >(formData);
 
     const existingJar = jars?.find((jar) => {
       return jar.url === url || jar.ownerName === ownerName;
@@ -78,6 +78,7 @@ export const AddJarDialog = ({
       goal: goal ? Number(goal) : null,
       isFinished: isFinished === 'on',
       userId: Number(userId),
+      isTechnical: isTechnical === 'on',
     };
 
     if (isEditMode) {
@@ -85,8 +86,6 @@ export const AddJarDialog = ({
         ...jar,
         ...diff(createJarPayload, jar),
       };
-
-      console.log({ updatedJarPayload });
 
       await editJar(jar.id, updatedJarPayload);
     } else {
@@ -156,6 +155,10 @@ export const AddJarDialog = ({
             <label className={styles['is-finished-selector']}>
               Збір завершений?
               <input type='checkbox' name='isFinished' />
+            </label>
+            <label className={styles['is-finished-selector']}>
+              Банка виключно для витрат?
+              <input type='checkbox' name='isTechnical' />
             </label>
             <SubmitButton />
 

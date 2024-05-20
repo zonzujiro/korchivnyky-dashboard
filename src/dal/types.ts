@@ -23,6 +23,7 @@ export type CreateJarPayload = {
   goal?: number | null;
   otherSourcesAccumulated: number;
   isFinished: boolean;
+  isTechnical: boolean;
   userId: number;
 };
 
